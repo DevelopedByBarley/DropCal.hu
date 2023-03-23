@@ -1,0 +1,25 @@
+/* User registration pages style*/
+.user-registration-tab {
+    min-height: 80vh;
+    position: relative;
+}
+
+.user-navigation-buttons {
+    position: absolute;
+    bottom: 20px;
+}
+
+.user-registration-content {
+  animation-name: fadeInTab;
+  animation-duration: 1.3s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInTab {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
