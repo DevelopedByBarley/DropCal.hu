@@ -1,16 +1,81 @@
 /* User registration pages style*/
 .user-registration-tab {
-    min-height: 80vh;
-    position: relative;
+  min-height: 80vh;
+  position: relative;
 }
 
 .user-navigation-buttons {
-    position: absolute;
-    bottom: 20px;
+  position: absolute;
+  bottom: 0;
 }
 
 .user-registration-content {
   animation-name: fadeInTab;
+  animation-duration: 1.3s;
+  animation-fill-mode: forwards;
+}
+
+.btn-group-allergens label {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  margin-right: 10px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.4s ease-in-out;
+}
+
+.btn-group-allergens label:hover {
+  border-bottom: 1px solid black;
+}
+.btn-group-allergens input[type="radio"],
+.btn-group-allergens input[type="checkbox"] {
+  display: none;
+}
+
+.btn-group-allergens label:focus,
+.btn-group-allergens label:active {
+  border: 2px solid black;
+}
+
+.btn-group-allergens input:checked + label {
+  border: 2px solid black;
+}
+
+.btn-group-allergens span {
+  margin-top: 5px;
+  font-size: 12px;
+  text-align: center;
+}
+
+
+.custom-file-upload {
+  border: 1px solid #ccc;
+  display: inline-block;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  color: #555;
+  background-color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all .6s ease-in-out;
+}
+
+.custom-file-upload:hover {
+  color: #333;
+  padding: 30px 40px;
+}
+
+.custom-file-input {
+  display: none;
+}
+
+#preview {
+  animation: fadeInTab;
   animation-duration: 1.3s;
   animation-fill-mode: forwards;
 }

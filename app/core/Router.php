@@ -9,6 +9,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
 
     //User Routes
     $r->addRoute('GET', '/user/registration', [UserController::class, 'registrationStart']);
+    $r->addRoute('POST', '/user/registration', [UserController::class, 'registration']);
 
 
 

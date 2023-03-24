@@ -23,6 +23,7 @@
         </div>
     </div>
     <?php include 'includes/Footer.php' ?>
+    <script src="public/js/fileReader.js"></script>
 </body>
 
 </html>
