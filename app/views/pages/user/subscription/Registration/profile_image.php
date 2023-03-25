@@ -1,4 +1,4 @@
-<div class="row user-registration-tab d-flex align-items-center justify-content-center">
+<div class="row border rounded mt-2  user-registration-tab d-flex align-items-center justify-content-center">
     <div class="col">
         <form method="POST" action="/user/registration" enctype="multipart/form-data">
             <div class="user-registration-content row">
@@ -6,7 +6,7 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-12 text-center d-flex align-items-center justify-content-center">
-                            <img id="preview" src="" alt="Preview Image" style="width: 200px; height: auto; display: none; border-radius: 50%">
+                            <img id="preview" src="" alt="Preview Image" style="width: 200px; height: 200px; display: none; border-radius: 50%">
                         </div>
                         <div class="col-12 mt-3 mb-5">
                             <h1 class="text-center display-4 mb-2">Töltsd fel a profil képedet!</h1>

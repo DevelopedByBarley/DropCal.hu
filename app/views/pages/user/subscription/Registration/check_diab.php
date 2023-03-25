@@ -1,7 +1,7 @@
-<div class="row user-registration-tab d-flex align-items-center justify-content-center">
+<div class="row border rounded mt-2  user-registration-tab d-flex align-items-center justify-content-center">
     <div class="col">
         <form method="POST" action="/user/registration/<?= (int)substr($_SERVER["REQUEST_URI"], -1) + 1 ?>">
-            <div class="user-registration-content row d-flex align-items-center justify-content-center">
+            <div class="user-registration-content row d-flex align-items-center justify-content-center mb-5">
                 <div class="col-md-6 text-center d-flex align-items-center justify-content-center flex-column">
                     <h1 class="text-center mt-5 display-5 mb-4">Add meg hogy cukorbeteg vagy-e!</h1>
                     <p>
@@ -9,6 +9,7 @@
                         ajánlunk neked recepteket, hozzávalókat és figyelmeztetünk ha valamelyik számodra
                         nem optimális!
                     </p>
+                    <p><b>Cukorbetegséged megjelöléséhez klikk az ikonra!</b></p>
                     <hr>
                     <div class="btn-group-allergens">
                         <div class="col-12 d-flex align-items-center justify-content-center">

@@ -6,20 +6,16 @@ class UserController
     protected $renderer;
     protected $userModel;
     protected $stepModel;
+    protected $registrationData;
     public function __construct()
     {
 
         $this->renderer = new Renderer();
         $this->userModel = new UserModel();
         $this->stepModel = new StepModel();
+        $this->registrationData = isset($_COOKIE["registrationData"]) ?json_decode($_COOKIE["registrationData"], true) : "";
     }
 
-    public function registrationStart()
-    {
-        echo $this->renderer->render("Layout.php", [
-            "content" => $this->renderer->render("/pages/user/subscription/Registration/greetings.php", [])
-        ]);
-    }
 
     public function registration()
     {
@@ -41,7 +37,10 @@ class StepsController extends UserController
     {
         $currentStepPage = $this->stepModel->prevStep($vars);
         echo $this->renderer->render("Layout.php", [
-            "content" => $this->renderer->render("/pages/user/subscription/Registration/$currentStepPage", [])
+            "content" => $this->renderer->render("/pages/user/subscription/Registration/$currentStepPage", [
+                "registrationData" => $this->registrationData
+            ]),
+            "currentStepId" => $_COOKIE["currentStepId"] ?? 0
         ]);
     }
 
@@ -49,7 +48,10 @@ class StepsController extends UserController
     {
         $currentStepPage = $this->stepModel->nextStep($vars, $_POST);
         echo $this->renderer->render("Layout.php", [
-            "content" => $this->renderer->render("/pages/user/subscription/Registration/$currentStepPage", [])
+            "content" => $this->renderer->render("/pages/user/subscription/Registration/$currentStepPage", [
+                "registrationData" => $this->registrationData
+            ]),
+            "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0
         ]);
     }
 }

@@ -1,7 +1,7 @@
-<div class="row user-registration-tab">
+<div class="row border rounded mt-2  user-registration-tab">
     <div class="col mt-5">
         <form method="POST" action="/user/registration/<?= (int)substr($_SERVER["REQUEST_URI"], -1) + 1 ?>">
-            <div class="user-registration-content">
+            <div class="user-registration-content mb-5">
                 <h1 class="display-6 text-center mb-4">
                     Válaszd ki ha van valamilyen allergiád!
                 </h1>
@@ -64,7 +64,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" style="margin-top: 80px;">
 
                 <div class="col-xs-12 user-navigation-buttons d-flex">
                     <a class="btn btn-outline-dark m-2 p-3" href="/user/registration/<?= (int)substr($_SERVER["REQUEST_URI"], -1) - 1 ?>">Vissza</a>

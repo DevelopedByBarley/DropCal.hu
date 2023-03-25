@@ -1,8 +1,8 @@
-<div class="row user-registration-tab d-flex align-items-center justify-content-center">
+<div class="row border rounded mt-2 user-registration-tab d-flex align-items-center justify-content-center">
     <div class="col">
         <form method="POST" action="/user/registration/<?= (int)substr($_SERVER["REQUEST_URI"], -1) + 1 ?>">
             <div class="user-registration-content row ">
-                <div class="col-12 d-flex align-items-center justify-content-center flex-column mb-5">
+                <div class="col-12 d-flex align-items-center justify-content-center flex-column">
                     <img src="/public/assets/icons/vegan.gif" style="height: 150px; width: 150px;" />
                 </div>
                 <div class="col-md-6 text-center">

@@ -1,4 +1,4 @@
-<div class="row user-registration-tab d-flex align-items-center justify-content-center">
+<div class="row border rounded mt-2  user-registration-tab d-flex align-items-center justify-content-center">
     <div class="col">
         <form method="POST" action="/user/registration/<?= (int)substr($_SERVER["REQUEST_URI"], -1) + 1 ?>" enctype="multipart/form-data">
             <div class="user-registration-content row mb-5">
@@ -11,7 +11,7 @@
                         <div class="col-12 col-sm-4 mb-2">
                             <div class="form-outline mb-4 w-100">
                                 <label class="form-label" for="form1Example1">Születési év</label>
-                                <input type="number" min="1" value="1950" id="form1Example0" class="form-control" style="background: none; border: none; border-bottom: 1px solid" name="yearOfBirth" value="<?= $_SESSION["registrationData"]["yearOfBirth"] ?? "" ?>" required />
+                                <input type="number" min="1" id="form1Example0" class="form-control" style="background: none; border: none; border-bottom: 1px solid" name="yearOfBirth" value="<?= $params["registrationData"]["yearOfBirth"] ?? "1950" ?>" required />
                             </div>
                         </div>
                         <div class="col-12 col-sm-4  mb-2">
@@ -27,13 +27,13 @@
                         <div class="col-12 col-sm-4  mb-2">
                             <div class="form-outline mb-4 w-100">
                                 <label class="form-label" for="form1Example1">Jelenlegi testsúly</label>
-                                <input type="text" value="<?= $_SESSION["registrationData"]["currentWeight"] ?? "" ?>" id="form1Example1" class="form-control" placeholder="testsúly/kg" style="background: none; border: none; border-bottom: 1px solid " name="currentWeight" required />
+                                <input type="text" value="<?= $params["registrationData"]["currentWeight"] ?? "" ?>" id="form1Example1" class="form-control" placeholder="testsúly/kg" style="background: none; border: none; border-bottom: 1px solid " name="currentWeight" required />
                             </div>
                         </div>
                         <div class="col-12 col-sm-3  mb-2">
                             <div class="form-outline mb-4 w-100">
                                 <label class="form-label" for="form1Example1">Magasság</label>
-                                <input type="number" min="1" value="<?= $_SESSION["registrationData"]["height"] ?? "" ?>" id="form1Example1" class="form-control" placeholder="Magasság" style="background: none; border: none; border-bottom: 1px solid " name="height" required />
+                                <input type="number" min="1" value="<?= $params["registrationData"]["height"] ?? "" ?>" id="form1Example1" class="form-control" placeholder="Magasság" style="background: none; border: none; border-bottom: 1px solid " name="height" required />
                             </div>
                         </div>
                         <div class="col-12 col-sm-9  mb-2">

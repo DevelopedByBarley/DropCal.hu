@@ -36,34 +36,8 @@ class Calculators
         ];
     }
 
-    private function checkActivity($activity, $BMR)
-    {
-        $BMR = (int)$BMR;
-        $activity = (int)$activity;
-        switch ($activity) {
-            case 1:
-                $BMR *= 1.2;
-                return $BMR;
-                break;
-            case 2:
-                $BMR *= 1.4;
-                return $BMR;
-                break;
-            case 3:
-                $BMR *= 1.6;
-                return $BMR;
-                break;
-            case 4:
-                $BMR *= 1.8;
-                return $BMR;
-                break;
-            case 5:
-                $BMR *= 2.0;
-                break;
-            default:
-                return "Something is went wrong";
-        }
-    }
+
+
 
     public function resultOfBMI($BMI)
     {
@@ -112,6 +86,49 @@ class Calculators
             return $kcalByGoal;
         } else {
             return $BMR;
+        }
+    }
+
+    public function getMacro($BMR) {
+        $protein = ($BMR * 0.25) / 4.2;
+        $carbohydrate = ($BMR * 0.53) / 4.1;
+        $fat = ($BMR * 0.22) / 9.3;
+      
+        return [
+          "protein"=> round($protein, 0),
+          "carbohydrate" => round($carbohydrate, 0),
+          "fat" => round($fat, 0)
+        ];
+      }
+
+
+
+    private function checkActivity($activity, $BMR)
+    {
+        $BMR = (int)$BMR;
+        $activity = (int)$activity;
+        switch ($activity) {
+            case 1:
+                $BMR *= 1.2;
+                return $BMR;
+                break;
+            case 2:
+                $BMR *= 1.375;
+                return $BMR;
+                break;
+            case 3:
+                $BMR *= 1.55;
+                return $BMR;
+                break;
+            case 4:
+                $BMR *= 1.725;
+                return $BMR;
+                break;
+            case 5:
+                $BMR *= 1.9                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ;
+                break;
+            default:
+                return "Something is went wrong";
         }
     }
 }

@@ -15,11 +15,10 @@ class HomeController
 
     public function getHomePage()
     {
-        
 
-        echo $this->renderer->render("Layout.php",[
-            "content" => $this->renderer->render("/pages/Home.php", [])
+        echo $this->renderer->render("Layout.php", [
+            "content" => $this->renderer->render("/pages/Home.php", []),
+            "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0
         ]);
     }
-
 }

@@ -1,5 +1,6 @@
 <?php
     require 'vendor/autoload.php';
+    require 'app/helpers/Cookie.php';
     require 'config/Database.php';
     require 'app/helpers/Renderer.php';
     require 'app/helpers/Mailer.php';
