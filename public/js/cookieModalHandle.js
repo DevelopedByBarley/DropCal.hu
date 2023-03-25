@@ -1,4 +1,5 @@
 const acceptCookie = document.getElementById('accept_cookie');
+const layout = document.getElementById('layout');
 
 acceptCookie.addEventListener('click', (event) => {
   event.preventDefault();
@@ -7,5 +8,6 @@ acceptCookie.addEventListener('click', (event) => {
   const expires = "expires=" + d.toUTCString();
   const cookieValue = "true"; // itt tároljuk el az elfogadás állapotát
   document.cookie = "cookie_accepted=" + cookieValue + ";" + expires + ";path=/"; // itt állítjuk be a cookie-t
-  event.target.parentElement.classList.remove("active");
+  event.target.parentElement.parentElement.classList.remove("active");
+  layout.classList.remove("inactive");
 })

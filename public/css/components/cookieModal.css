@@ -3,7 +3,7 @@
   height: 100vh;
   position: fixed;
   bottom: 0;
-  background-color: hsla(99, 100%, 0%, 0.9);
+  background-color: hsla(0, 0%, 0%, 0.393);
   display: none;
 }
 
@@ -12,4 +12,18 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+}
+
+
+.cookie-modal-content {
+  width: 85%;
+  margin: 0 auto;
+  padding: 2rem;
+  border-radius: 12px;
+}
+
+@media(min-width: 768px) {
+  .cookie-modal-content {
+    width: 40%;
+  }
 }
