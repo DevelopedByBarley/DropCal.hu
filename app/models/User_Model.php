@@ -6,6 +6,7 @@ class UserModel
     protected $pdo;
     protected $calculators;
     protected $cookie;
+    private $mailer;
 
     public function __construct()
     {
@@ -13,6 +14,53 @@ class UserModel
         $this->pdo = $db->getConnect();
         $this->calculators = new Calculators();
         $this->cookie = new Coookie();
+        $this->mailer = new Mailer();
+    }
+
+
+    public function verificationEmail($email)
+    {
+
+        session_start();
+        $verificationCode = rand(1000, 9999);
+        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = :email");
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $emailBody = "";
+
+        $_SESSION["emailVerificationCode"] = $verificationCode;
+   
+        if(!$user) {
+            $emailBody .= "
+            <h1>A te email hitelesítő kódód:</h1>
+            <h3>$verificationCode</h3> 
+        ";
+        } else {
+            $emailBody .= "
+            <h1>Ezen az email címen már egyszer regisztráltál , vagy valaki megpróbált a te adataiddal regisztrálni!</h1>
+            <p>Kérlek ezen a linken <a href=\"#\">link</a> próbálj meg belépni!</p> 
+        ";
+        }
+
+        $this->mailer->send($email, $emailBody);
+    }
+
+    public function verification($verificationCode) {
+        session_start();
+        $isVerified = $verificationCode === (int)$_SESSION["emailVerificationCode"];
+        if(!$isVerified) {
+            echo json_encode(
+                ["state" => false]
+            );
+            return;
+        };
+
+        $_SESSION["isEmailVerified"] = true;
+        
+        echo json_encode(
+            ["state" => true]
+        );
     }
 
 
@@ -106,12 +154,17 @@ class StepModel extends UserModel
     public function nextStep($vars, $body)
     {
 
-
+        session_start();
         $currentPageId = $vars["id"];
-
+        
         if (($currentPageId > $this->maxStep) || ($currentPageId > 2 && !isset($_COOKIE["registrationData"]))) {
             $this->cookie->setCookie('currentStepId', '', time() - 3600, '/');
             header("Location: /user/registration/" . $this->maxStep);
+            exit;
+        }
+        
+        if((int)$currentPageId === 2 && !isset($_SESSION["isEmailVerified"])) {
+            header("Location: /user/registration/1?isVerificationFail=1");
             exit;
         }
 

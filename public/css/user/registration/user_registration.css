@@ -9,11 +9,13 @@
   bottom: 0;
 }
 
+
 .user-registration-content {
   animation-name: fadeInTab;
   animation-duration: 1.3s;
   animation-fill-mode: forwards;
 }
+/*--------> allergens section*/
 
 .btn-group-allergens label {
   display: inline-flex;
@@ -52,6 +54,8 @@
 }
 
 
+/*----> file upload section*/
+
 .custom-file-upload {
   border: 1px solid #ccc;
   display: inline-block;
@@ -88,3 +92,14 @@
     opacity: 1;
   }
 }
+
+
+/*subscription_data section*/
+
+.email_verification_container {
+  display: none;
+}
+.email_verification_container.active {
+  display: block;
+}
+

@@ -31,6 +31,7 @@
     <script src="public/js/fileReader.js"></script>
     <script src="public/js/preLoader.js"></script>
     <script src="public/js/cookieModalHandle.js"></script>
+    <script src="public/js/emailVerification.js"></script>
 </body>
 
 </html>

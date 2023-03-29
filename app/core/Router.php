@@ -9,6 +9,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
 
     //User Routes
     $r->addRoute('GET', '/user/registration', [UserController::class, 'registrationStart']);
+    $r->addRoute('GET', '/user/verification/email/send/{email}', [UserController::class, 'sendEmailVerification']);
+    $r->addRoute('GET', '/user/verification/{verificationCode}', [UserController::class, 'emailVerification']);
     $r->addRoute('POST', '/user/registration', [UserController::class, 'registration']);
 
 
