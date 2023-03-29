@@ -163,7 +163,7 @@ class StepModel extends UserModel
             exit;
         }
         
-        if((int)$currentPageId === 2 && !isset($_SESSION["isEmailVerified"])) {
+        if((int)$currentPageId >= 2 && !isset($_SESSION["isEmailVerified"])) {
             header("Location: /user/registration/1?isVerificationFail=1");
             exit;
         }

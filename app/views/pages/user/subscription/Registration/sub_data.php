@@ -1,4 +1,4 @@
-<div class="row border rounded mt-2  user-registration-tab d-flex align-items-center justify-content-center">
+<div class="row rounded mt-2  user-registration-tab d-flex align-items-center justify-content-center">
     <div class="col">
         <form method="POST" action="/user/registration/<?= (int)substr($_SERVER["REQUEST_URI"], -1) + 1 ?>">
             <div class="user-registration-content row">
@@ -31,7 +31,7 @@
                             </div>
 
                             <input type="number" name="verification_code" placeholder="hitelesítő kód">
-                            <button class="verification_btn mb-2 btn btn-outline-info">Hitelesítés</button>
+                            <button class="verification_btn mb-2 btn btn-info text-light">Elküld</button>
                         </span>
                     </div>
 
