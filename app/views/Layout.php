@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    <div id="layout" class="<?php echo isset($_COOKIE["cookie_accepted"]) ? '' : 'inactive' ?>">
+    <div id="layout">
         <?php include 'includes/Header.php' ?>
         <?php include 'components/Preloader.php' ?>
         <div class="container" id="root" style="margin-bottom: 100px;">

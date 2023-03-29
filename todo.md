@@ -1,1 +1,1 @@
-
+1. Cookie modal megváltoztatása 
