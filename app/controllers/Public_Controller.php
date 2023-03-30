@@ -1,14 +1,14 @@
 <?php
-require './app/models/Home_Model.php';
+require './app/models/Public_Model.php';
 
-class HomeController
+class PublicController
 {
     private $homeModel;
     private $mailer;
     private $renderer;
     public function __construct()
     {
-        $this->homeModel = new HomeModel();
+        $this->homeModel = new PublicModel();
         $this->mailer = new Mailer();
         $this->renderer = new Renderer();
     }
@@ -17,7 +17,7 @@ class HomeController
     {
 
         echo $this->renderer->render("Layout.php", [
-            "content" => $this->renderer->render("/pages/Home.php", []),
+            "content" => $this->renderer->render("/pages/public/Home.php", []),
             "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0
         ]);
     }

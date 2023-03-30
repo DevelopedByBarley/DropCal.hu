@@ -1,23 +1,11 @@
 <?php
-require './app/controllers/Home_Controller.php';
-require './app/controllers/User_Controller.php';
+
 
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
-    //Home Routes
-    $r->addRoute('GET', '/', [HomeController::class, 'getHomePage']);
-
-
-    //User Routes
-    $r->addRoute('GET', '/user/registration', [UserController::class, 'registrationStart']);
-    $r->addRoute('GET', '/user/verification/email/send/{email}', [UserController::class, 'sendEmailVerification']);
-    $r->addRoute('GET', '/user/verification/{verificationCode}', [UserController::class, 'emailVerification']);
-    $r->addRoute('POST', '/user/registration', [UserController::class, 'registration']);
-
-
-
-    //Steps Routes
-    $r->addRoute('GET', '/user/registration/{id}', [StepsController::class, 'prevStep']);
-    $r->addRoute('POST', '/user/registration/{id}', [StepsController::class, 'nextStep']);
+    require 'app/routes/public_routes.php';
+    require 'app/routes/user_routes.php';
+    require 'app/routes/steps_routes.php';
+    require 'app/routes/private_routes.php';
 });
 
 // Fetch method and URI from somewhere

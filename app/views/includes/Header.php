@@ -29,7 +29,7 @@
                     <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
                 </li>
             </ul>
-            <?php if (!isset($_COOKIE["userId"])) : ?>
+            <?php if (!isset($_SESSION["userId"])) : ?>
                 <div class="d-flex">
                     <a class="btn btn-outline-dark" href="/user/registration/<?= $params["currentStepId"] ?>">Regisztráció</a>
                     <a class="btn btn-outline-dark" href="/user/login">Bejelentkezés</a>

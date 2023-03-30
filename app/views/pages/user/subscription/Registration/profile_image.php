@@ -1,7 +1,7 @@
-<div class="row  rounded mt-2  user-registration-tab d-flex align-items-center justify-content-center">
+<div class="row  rounded mt-2  user-subscription-tab d-flex align-items-center justify-content-center">
     <div class="col">
         <form method="POST" action="/user/registration" enctype="multipart/form-data">
-            <div class="user-registration-content row">
+            <div class="user-subscription-content row">
 
                 <div class="col-12">
                     <div class="row">

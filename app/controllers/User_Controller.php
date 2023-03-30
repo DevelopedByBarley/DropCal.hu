@@ -1,18 +1,16 @@
 <?php
-require_once 'app/models/User_Model.php';
 
 class UserController
 {
     protected $renderer;
     protected $userModel;
-    protected $stepModel;
+
     protected $registrationData;
     public function __construct()
     {
 
         $this->renderer = new Renderer();
         $this->userModel = new UserModel();
-        $this->stepModel = new StepModel();
         $this->registrationData = isset($_COOKIE["registrationData"]) ? json_decode($_COOKIE["registrationData"], true) : "";
     }
 
@@ -29,42 +27,56 @@ class UserController
     }
 
     public function emailVerification($vars)
-    {       
+    {
         $verificationCode = (int)$vars["verificationCode"];
-        $this->userModel->verification($verificationCode);
-    }
-}
-
-class StepsController extends UserController
-{
-    public function __construct()
-    {
-        parent::__construct();
+        $this->userModel->sendVerification($verificationCode);
     }
 
-
-
-
-    public function prevStep($vars)
+    public function loginForm()
     {
-        $currentStepPage = $this->stepModel->prevStep($vars);
+        session_start();
+        if (isset($_COOKIE["userId"])) {
+            $_SESSION["userId"] = $_COOKIE["userId"];
+        }
+
+        if (isset($_SESSION["userId"])) {
+            header("Location: /private/home");
+            exit;
+        }
+
         echo $this->renderer->render("Layout.php", [
-            "content" => $this->renderer->render("/pages/user/subscription/Registration/$currentStepPage", [
-                "registrationData" => $this->registrationData
-            ]),
-            "currentStepId" => $_COOKIE["currentStepId"] ?? 0
-        ]);
-    }
-
-    public function nextStep($vars)
-    {
-        $currentStepPage = $this->stepModel->nextStep($vars, $_POST);
-        echo $this->renderer->render("Layout.php", [
-            "content" => $this->renderer->render("/pages/user/subscription/Registration/$currentStepPage", [
-                "registrationData" => $this->registrationData,
-                "isVerificationFail" => $_GET["isVerificationFail"] ?? null
+            "content" => $this->renderer->render("/pages/user/subscription/Login_Form.php", [
+                "isRegSuccess" => $_GET["isRegSuccess"] ?? null
             ]),
             "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0
         ]);
     }
+
+
+    public function userVerification()
+    {
+        $this->userModel->verification($_POST);
+    }
+
+    public function loginVerificationForm($vars)
+    {
+        echo $this->renderer->render("Layout.php", [
+            "content" => $this->renderer->render("/pages/user/subscription/Login_Verification.php", [
+                "userId" => $vars["id"]
+            ]),
+            "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0
+        ]);
+    }
+
+    public function userLogin($vars)
+    {
+        $id = $vars["id"];
+        $this->userModel->login($_POST, $id);
+    }
+
+    public function logoutUser()
+    {
+        $this->userModel->logout();
+    }
+
 }

@@ -1,9 +1,9 @@
 
 
-<div class="row  rounded mt-2  user-registration-tab d-flex align-items-center justify-content-center">
+<div class="row  rounded mt-2  user-subscription-tab d-flex align-items-center justify-content-center">
     <div class="col">
         <form method="POST" action="/user/registration/<?= (int)substr($_SERVER["REQUEST_URI"], -1) + 1 ?>" enctype="multipart/form-data">
-            <div class="user-registration-content row mb-5">
+            <div class="user-subscription-content row mb-5">
                 <div class="col-lg-6 d-flex align-items-center justify-content-center">
                     <h1 class="text-center mt-5 display-6">Tegyük egyedivé a személyes fiókodat!</h1>
 

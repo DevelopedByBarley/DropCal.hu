@@ -49,7 +49,7 @@ class FileSaver
     $rand = uniqid(rand(), true);
     $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
     $originalFileName = $rand . '.' . $ext;
-    $directoryPath = "./public/images/$path/";
+    $directoryPath = "./public/assets/$path/";
 
     $destination = $directoryPath . $originalFileName;
     move_uploaded_file($file["tmp_name"], $destination);
@@ -62,11 +62,11 @@ class FileSaver
       if (is_array($prevImages)) {
         foreach ($prevImages as $images) {
           var_dump($images);
-          unlink("./public/images/$path/" . $images);
+          unlink("./public/assets/$path/" . $images);
         }
         exit;
       } else {
-        unlink("./public/images/$path/" . $prevImages);
+        unlink("./public/assets/$path/" . $prevImages);
       }
     };
   }

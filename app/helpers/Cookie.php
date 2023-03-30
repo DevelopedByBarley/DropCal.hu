@@ -1,5 +1,5 @@
 <?php
-class Coookie
+class Cookie
 {
 
   public function setCookie($cookieName, $cookieValue, $expires, $path, $domain = null, $secure = false, $httponly = true): void

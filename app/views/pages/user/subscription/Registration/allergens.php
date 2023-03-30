@@ -1,7 +1,7 @@
-<div class="row  rounded mt-2  user-registration-tab">
+<div class="row  rounded mt-2  user-subscription-tab">
     <div class="col mt-5">
         <form method="POST" action="/user/registration/<?= (int)substr($_SERVER["REQUEST_URI"], -1) + 1 ?>">
-            <div class="user-registration-content mb-5">
+            <div class="user-subscription-content mb-5">
                 <h1 class="display-6 text-center mb-4">
                     Válaszd ki ha van valamilyen allergiád!
                 </h1>
