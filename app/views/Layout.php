@@ -32,6 +32,7 @@
     <script src="public/js/preLoader.js"></script>
     <script src="public/js/cookieModalHandle.js"></script>
     <script src="public/js/emailVerification.js"></script>
+    <script src="public/js/headerNavigation.js"></script>
 </body>
 
 </html>

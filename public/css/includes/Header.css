@@ -1,0 +1,51 @@
+@media(min-width: 768px) {
+    #profile-icon-dropdown {
+        position: relative;
+        right: 100px;
+    }
+}
+
+.profile-toggle-container {
+    width: 100%;
+}
+
+.profile-toggle {
+    cursor: pointer;
+}
+
+#profile-navigation {
+    height: 100vh;
+    position: fixed;
+    top: 63px;
+    right: -150%;
+    width: 100%;
+    transition: all .4s ease-in-out;
+    border-left: 1px solid;
+}
+
+
+
+.profile-nav-listItem {
+    transition: all .8s ease-in-out;
+    cursor: pointer;
+}
+
+.profile-nav-listItem:hover {
+    transform: translateX(2px);
+    right: 2px;
+}
+
+
+@media(min-width: 768px) {
+    #profile-navigation {
+        width: 400px;
+    }
+
+    .close-toggle {
+        display: none;
+    }
+}
+
+#profile-navigation.active {
+    right: 0;
+}

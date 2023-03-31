@@ -1,4 +1,5 @@
 @import 'layout/Layout.css';
+@import 'includes/Header.css';
 @import 'user/registration/user_subscription.css';
 @import 'components/preLoader.css';
 @import 'components/cookieModal.css';
