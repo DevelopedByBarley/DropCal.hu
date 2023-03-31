@@ -123,6 +123,20 @@ class UserModel
     }
 
 
+    public function getUserData() {
+        $userId = $_SESSION["userId"] ?? '';
+
+        if($userId) {
+            $stmt = $this->pdo->prepare("SELECT * FROM `users` WHERE userId = :userId");
+            $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
+            $stmt->execute();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $user;
+        }
+    }
+
+
 
     public function login($body, $id)
     {
@@ -154,6 +168,12 @@ class UserModel
         $cookieParams = session_get_cookie_params();
         setcookie(session_name(), "", 0, $cookieParams["path"], $cookieParams["domain"], $cookieParams["secure"], isset($cookieParams["httponly"]));
         header('Location: /');
+    }
+
+    public function change() {
+        $expires = time() - 3600;
+        $this->cookie->setCookie("userId", '', $expires, "/");
+        $this->logout();
     }
 }
 

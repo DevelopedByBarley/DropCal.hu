@@ -16,7 +16,7 @@
 }
 /*--------> allergens section*/
 
-.btn-group-allergens label {
+.btn-group-inputs label {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
@@ -29,24 +29,24 @@
   transition: all 0.4s ease-in-out;
 }
 
-.btn-group-allergens label:hover {
+.btn-group-inputs label:hover {
   border-bottom: 1px solid black;
 }
-.btn-group-allergens input[type="radio"],
-.btn-group-allergens input[type="checkbox"] {
+.btn-group-inputs input[type="radio"],
+.btn-group-inputs input[type="checkbox"] {
   display: none;
 }
 
-.btn-group-allergens label:focus,
-.btn-group-allergens label:active {
+.btn-group-inputs label:focus,
+.btn-group-inputs label:active {
   border: 2px solid black;
 }
 
-.btn-group-allergens input:checked + label {
+.btn-group-inputs input:checked + label {
   border: 2px solid black;
 }
 
-.btn-group-allergens span {
+.btn-group-inputs span {
   margin-top: 5px;
   font-size: 12px;
   text-align: center;

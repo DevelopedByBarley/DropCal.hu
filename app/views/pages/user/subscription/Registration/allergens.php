@@ -5,7 +5,7 @@
                 <h1 class="display-6 text-center mb-4">
                     Válaszd ki ha van valamilyen allergiád!
                 </h1>
-                <div class="btn-group-allergens row mt-5">
+                <div class="btn-group-inputs row mt-5">
                     <div class="col-4 col-lg-2 d-flex align-items-center justify-content-center">
                         <input type="checkbox" name="allergens[]" id="gluten" value="glutén">
                         <label for="gluten" class="mb-2">

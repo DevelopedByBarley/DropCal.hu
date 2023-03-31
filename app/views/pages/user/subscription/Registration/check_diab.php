@@ -12,7 +12,7 @@
                     </p>
                     <p><b>Cukorbetegséged megjelöléséhez klikk az ikonra!</b></p>
                     <hr>
-                    <div class="btn-group-allergens">
+                    <div class="btn-group-inputs">
                         <div class="col-12 d-flex align-items-center justify-content-center">
                             <input type="checkbox" name="isHaveDiabetes" id="isHaveDiabetes" value="on">
                             <label for="isHaveDiabetes" class="mb-2">
