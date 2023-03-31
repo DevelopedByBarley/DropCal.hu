@@ -1,16 +1,20 @@
 <?php
-
+require_once 'app/helpers/User_Authentication.php';
+require_once 'app/helpers/Email_Verification.php';
 class UserController
 {
     protected $renderer;
     protected $userModel;
-
     protected $registrationData;
+    private $authentication;
+    private $emailVerification;
     public function __construct()
     {
 
         $this->renderer = new Renderer();
         $this->userModel = new UserModel();
+        $this->authentication = new Authentication();
+        $this->emailVerification = new EmailVerification();
         $this->registrationData = isset($_COOKIE["registrationData"]) ? json_decode($_COOKIE["registrationData"], true) : "";
     }
 
@@ -20,16 +24,16 @@ class UserController
         $this->userModel->register($_FILES);
     }
 
-    public function sendEmailVerification($vars)
+    public function sendVerificationEmail($vars)
     {
         $email = $vars["email"];
-        $this->userModel->verificationEmail($email);
+        $this->emailVerification->verificationEmail($email);
     }
 
     public function emailVerification($vars)
     {
         $verificationCode = (int)$vars["verificationCode"];
-        $this->userModel->sendVerification($verificationCode);
+        $this->emailVerification->sendVerification($verificationCode);
     }
 
     public function loginForm()
@@ -40,7 +44,7 @@ class UserController
         }
 
         if (isset($_SESSION["userId"])) {
-            header("Location: /private/home");
+            header("Location: /");
             exit;
         }
 
@@ -53,15 +57,15 @@ class UserController
     }
 
 
-    public function userVerification()
+    public function userAuthentication()
     {
-        $this->userModel->verification($_POST);
+        $this->authentication->authentication($_POST);
     }
 
-    public function loginVerificationForm($vars)
+    public function authenticationForm($vars)
     {
         echo $this->renderer->render("Layout.php", [
-            "content" => $this->renderer->render("/pages/user/subscription/Login_Verification.php", [
+            "content" => $this->renderer->render("/pages/user/subscription/User_Authentication.php", [
                 "userId" => $vars["id"]
             ]),
             "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0

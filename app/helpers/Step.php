@@ -1,7 +1,7 @@
 <?php
-require 'app/models/User_Model.php';
+require 'app/controllers/User_Controller.php';
 
-class StepModel extends UserModel
+class Step extends UserController
 {
     private  $registrationTabs = [
         "greetings.php",
@@ -12,18 +12,42 @@ class StepModel extends UserModel
         "check_diab.php",
         "profile_image.php",
     ];
-
     private  $minStep = 0;
     private  $maxStep;
+    private $cookie;
 
     public function __construct()
     {
         parent::__construct();
         $this->maxStep = count($this->registrationTabs) - 1;
+        $this->cookie = new Cookie();
+    }
+
+    public function prevStep($vars)
+    {
+        $currentStepPage = $this->setPrevStep($vars);
+        echo $this->renderer->render("Layout.php", [
+            "content" => $this->renderer->render("/pages/user/subscription/Registration/$currentStepPage", [
+                "registrationData" => $this->registrationData
+            ]),
+            "currentStepId" => $_COOKIE["currentStepId"] ?? 0
+        ]);
+    }
+
+    public function nextStep($vars)
+    {
+        $currentStepPage = $this->setNextStep($vars, $_POST);
+        echo $this->renderer->render("Layout.php", [
+            "content" => $this->renderer->render("/pages/user/subscription/Registration/$currentStepPage", [
+                "registrationData" => $this->registrationData,
+                "isVerificationFail" => $_GET["isVerificationFail"] ?? null
+            ]),
+            "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0
+        ]);
     }
 
 
-    public function prevStep($vars)
+    private function setPrevStep($vars)
     {
         $currentPageId = $vars["id"];
 
@@ -36,19 +60,19 @@ class StepModel extends UserModel
         $this->cookie->setCookie('currentStepId', $currentPageId, $expires, '/');
         return $this->registrationTabs[$currentPageId];
     }
-    public function nextStep($vars, $body)
+    private function setNextStep($vars, $body)
     {
 
         session_start();
         $currentPageId = $vars["id"];
-        
+
         if (($currentPageId > $this->maxStep) || ($currentPageId > 2 && !isset($_COOKIE["registrationData"]))) {
             $this->cookie->setCookie('currentStepId', '', time() - 3600, '/');
             header("Location: /user/registration/" . $this->maxStep);
             exit;
         }
-        
-        if((int)$currentPageId >= 2 && !isset($_SESSION["isEmailVerified"])) {
+
+        if ((int)$currentPageId >= 2 && !isset($_SESSION["isEmailVerified"])) {
             header("Location: /user/registration/1?isVerificationFail=1");
             exit;
         }
@@ -59,7 +83,7 @@ class StepModel extends UserModel
         return $this->registrationTabs[$currentPageId];
     }
 
-    public function setRegCookies($body): void
+    private function setRegCookies($body): void
     {
         $expires = time() + (30 * 24 * 60 * 60);
         $data = isset($_COOKIE["registrationData"]) ? json_decode($_COOKIE["registrationData"], true) : [];

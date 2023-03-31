@@ -5,7 +5,7 @@
 <?php endif ?>
 <div class="row rounded mt-2  user-subscription-tab d-flex align-items-center justify-content-center">
     <div class="col">
-        <form  action="/user/verification" method="POST">
+        <form  action="/user/authentication" method="POST">
             <div class="user-subscription-content row">
                 <div class="col-xs-12  d-flex align-items-center justify-content-center">
                     <h1 class="text-center mt-5 display-6">Bejelentkezés</h1>

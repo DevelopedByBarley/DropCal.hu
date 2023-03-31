@@ -5,7 +5,7 @@ class UserModel
     protected $pdo;
     protected $calculators;
     protected $cookie;
-    private $mailer;
+    protected $mailer;
     private $fileSaver;
 
     public function __construct()
@@ -18,54 +18,6 @@ class UserModel
         $this->mailer = new Mailer();
         $this->fileSaver = new FileSaver();
     }
-
-
-    public function verificationEmail($email)
-    {
-
-        session_start();
-        $verificationCode = rand(1000, 9999);
-        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = :email");
-        $stmt->bindParam(':email', $email);
-        $stmt->execute();
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        $emailBody = "";
-
-        $_SESSION["emailVerificationCode"] = $verificationCode;
-
-        if (!$user) {
-            $emailBody .= "
-            <h1>A te email hitelesítő kódód:</h1>
-            <h3>$verificationCode</h3> 
-        ";
-        } else {
-            $emailBody .= "
-            <h1>Ezen az email címen már egyszer regisztráltál , vagy valaki megpróbált a te adataiddal regisztrálni!</h1>
-            <p>Kérlek ezen a linken <a href=\"#\">link</a> próbálj meg belépni!</p> 
-        ";
-        }
-
-        $this->mailer->send($email, $emailBody);
-    }
-
-    public function sendVerification($verificationCode)
-    {
-        session_start();
-        $isVerified = $verificationCode === (int)$_SESSION["emailVerificationCode"];
-        if (!$isVerified) {
-            echo json_encode(
-                ["state" => false]
-            );
-            return;
-        };
-
-        $_SESSION["isEmailVerified"] = true;
-
-        echo json_encode(
-            ["state" => true]
-        );
-    }
-
 
     public function register($files)
     {
@@ -171,44 +123,6 @@ class UserModel
     }
 
 
-    public function verification($body)
-    {
-        session_start();
-        $email = filter_var($body["email"] ?? '', FILTER_SANITIZE_EMAIL);
-        $password = filter_var($body["password"] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-        $verificationCode = rand(1000, 9999);
-        $emailBody = "     
-        <h1>A te Belépés hitelesítő kódód:</h1>
-            <h3>$verificationCode
-            </h3> ";
-
-        $stmt = $this->pdo->prepare("SELECT * FROM `users` WHERE email = :email");
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->execute();
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$user) {
-            header("Location: /user/login");
-            return;
-        }
-        $hash = $user["password"];
-
-        $isVerified = password_verify($password, $hash);
-
-        if (!$isVerified) {
-            header("Location: /user/login");
-            return;
-        }
-        $_SESSION["verificationCode"] = $verificationCode;
-        if ($body["remember_me"] === "on") {
-            $_SESSION["isRemember"] = true;
-        }
-
-        $this->mailer->send($email, $emailBody);
-
-        header("Location: /user/login/verification/" . $user["userId"]);
-    }
-
 
     public function login($body, $id)
     {
@@ -229,7 +143,7 @@ class UserModel
         echo "<pre>";
 
 
-        header("Location: /private/home");
+        header("Location: /");
     }
 
     public function logout()
@@ -241,24 +155,6 @@ class UserModel
         setcookie(session_name(), "", 0, $cookieParams["path"], $cookieParams["domain"], $cookieParams["secure"], isset($cookieParams["httponly"]));
         header('Location: /');
     }
-
-    private function isLoggedIn()
-    {
-        if (!isset($_COOKIE[session_name()])) return false;
-        if (session_id() == '') {
-            session_start();
-        }
-        if (!isset($_SESSION["userId"])) return false;
-        return true;
-    }
-
-
-    public function checkUserIsLoggedInOrRedirect()
-    {
-        if ($this->isLoggedIn()) {
-            return;
-        };
-        header("Location: /");
-        exit;
-    }
 }
+
+
