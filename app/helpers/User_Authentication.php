@@ -15,6 +15,7 @@
         $email = filter_var($body["email"] ?? '', FILTER_SANITIZE_EMAIL);
         $password = filter_var($body["password"] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
         $verificationCode = rand(1000, 9999);
+        $subject = "Belépés hitelesítése!";
         $emailBody = "     
         <h1>A te Belépés hitelesítő kódód:</h1>
             <h3>$verificationCode
@@ -42,7 +43,7 @@
             $_SESSION["isRemember"] = true;
         }
 
-        $this->mailer->send($email, $emailBody);
+        $this->mailer->send($email, $emailBody, $subject);
 
         header("Location: /user/login/authentication/" . $user["userId"]);
     }

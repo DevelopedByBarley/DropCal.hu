@@ -3,7 +3,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class Mailer
 {
-    public function send($address, $body)
+    public function send($address, $body, $subject)
     {
 
         try {
@@ -31,7 +31,7 @@ class Mailer
             $mail->SMTPSecure = 'tls';            //Content
             $mail->isHTML(true); //Set email format to HTML
 
-            $mail->Subject = 'Regisztráció megerősítése!';
+            $mail->Subject = $subject;
             $mail->Body = $body;
             $mail->AltBody = strip_tags($body);
             $mail->Port = 587;

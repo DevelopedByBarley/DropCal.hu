@@ -83,9 +83,10 @@ class UserController
         $this->userModel->logout();
     }
 
-    public function changeProfile() {
+    public function changeProfile()
+    {
 
         $this->userModel->change();
     }
-
 }
+

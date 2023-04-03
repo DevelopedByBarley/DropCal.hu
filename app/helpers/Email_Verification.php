@@ -16,6 +16,7 @@
         $stmt->bindParam(':email', $email);
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $subject = "Email cím megerősítése!";
         $emailBody = "";
 
         $_SESSION["emailVerificationCode"] = $verificationCode;
@@ -32,7 +33,7 @@
         ";
         }
 
-        $this->mailer->send($email, $emailBody);
+        $this->mailer->send($email, $emailBody, $subject);
     }
 
     public function sendVerification($verificationCode)

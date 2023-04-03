@@ -6,6 +6,7 @@
      $r->addRoute('GET', '/user/logout', [UserController::class, 'logoutUser']);
      $r->addRoute('GET', '/user/change_profile', [UserController::class, 'changeProfile']);
      $r->addRoute('GET', '/user/login/authentication/{id}', [UserController::class, 'authenticationForm']);
+     
      //EMAIL VERIFICATION
      $r->addRoute('GET', '/user/verification/email/send/{email}', [UserController::class, 'sendVerificationEmail']);
      $r->addRoute('GET', '/user/verification/email/{verificationCode}', [UserController::class, 'emailVerification']);
@@ -14,3 +15,4 @@
      $r->addRoute('POST', '/user/registration', [UserController::class, 'registration']);
      $r->addRoute('POST', '/user/authentication', [UserController::class, 'userAuthentication']);
      $r->addRoute('POST', '/user/login/{id}', [UserController::class, 'userLogin']);
+     

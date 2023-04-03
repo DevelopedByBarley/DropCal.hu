@@ -1,5 +1,9 @@
-2023.03.31
+04.03
 
-Kliens belép, 
-A weboldal a preferenciák szerint összeszállítja a weboldalt
-Kezdő oldalon való megjelenitéés
+Elfelejtett jelszora kattintva
+Beirja emailt
+Ha a rendszer megtalálja az emailt generálunk tokent
+tokent bele dobjuk cookie-ba 10 perc lejárattal
+És el küldjük a linket a tokennel együtt
+A 
+
