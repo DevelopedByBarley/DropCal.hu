@@ -1,11 +1,13 @@
 <?php
 require_once 'app/helpers/User_Authentication.php';
 require_once 'app/helpers/Email_Verification.php';
+require_once 'app/helpers/LoginChecker.php';
 class UserController
 {
     protected $renderer;
     protected $userModel;
     protected $registrationData;
+    protected $loginChecker;
     private $authentication;
     private $emailVerification;
     public function __construct()
@@ -15,6 +17,7 @@ class UserController
         $this->userModel = new UserModel();
         $this->authentication = new Authentication();
         $this->emailVerification = new EmailVerification();
+        $this->loginChecker = new LoginChecker();
         $this->registrationData = isset($_COOKIE["registrationData"]) ? json_decode($_COOKIE["registrationData"], true) : "";
     }
 

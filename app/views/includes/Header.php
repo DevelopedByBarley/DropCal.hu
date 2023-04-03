@@ -60,8 +60,8 @@
                     </div>
                     <div class="row mt-5">
                         <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                            <a href="user/logout" type="button" class="btn btn-outline-danger m-1">Kiejelentkezés</a>
-                            <a href="user/change_profile" type="button" class="btn btn-outline-dark m-1">Felhasználó váltás</a>
+                            <a href="/user/logout" type="button" class="btn btn-outline-danger m-1">Kiejelentkezés</a>
+                            <a href="/user/change_profile" type="button" class="btn btn-outline-dark m-1">Felhasználó váltás</a>
                         </div>
                     </div>
                     <div class="row mt-5 close-toggle">

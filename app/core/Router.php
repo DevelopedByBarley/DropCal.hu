@@ -6,6 +6,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     require 'app/routes/user_routes.php';
     require 'app/routes/steps_routes.php';
     require 'app/routes/reset_password_routes.php';
+    require 'app/routes/diary_routes.php';
 });
 
 // Fetch method and URI from somewhere
