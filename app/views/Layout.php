@@ -19,7 +19,7 @@
     <div id="layout">
         <?php include 'includes/Header.php' ?>
         <?php include 'components/Preloader.php' ?>
-        <div class="container" id="root" style="margin-bottom: 100px;">
+        <div class="container-fluid" id="root" style="margin-bottom: 100px;">
             <div class="row">
                 <div class="col" style="min-height: 79vh">
                     <?= $params["content"] ?? "" ?>
