@@ -1,5 +1,9 @@
+@import 'config/config.css';
 @import 'layout/Layout.css';
+@import 'pages/Home.css';
 @import 'includes/Header.css';
+@import 'includes/Ingredients_Toggle.css';
+@import 'user/ingredients/new_ingredients.css';
 @import 'user/registration/user_subscription.css';
 @import 'components/preLoader.css';
 @import 'components/cookieModal.css';

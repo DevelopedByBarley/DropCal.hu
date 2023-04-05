@@ -42,19 +42,21 @@
                                 <i class="bi bi-person-fill-gear" style="font-size: 2rem"></i>
 
                             <?php else : ?>
-                               
-                                    <img src="public/assets/profile_images/<?= $params["profileImage"] ?>" style="height: 100px; width: 100px; border-radius: 50%" />
+
+                                <img src="public/assets/profile_images/<?= $params["profileImage"] ?>" style="height: 100px; width: 100px; border-radius: 50%" />
                             <?php endif ?>
                         </div>
                     </div>
                     <div class="row mt-5">
                         <div class="col-xs-12">
                             <ul class="list-group">
-                                <li class="list-group-item profile-nav-listItem">Profil</li>
-                                <li class="list-group-item profile-nav-listItem">Napló</li>
-                                <li class="list-group-item profile-nav-listItem">Étel hozzáadása</li>
-                                <li class="list-group-item profile-nav-listItem">Recept hozzáadása</li>
-                                <li class="list-group-item profile-nav-listItem">And a fifth one</li>
+                                <li class="list-group-item profile-nav-listItem disabled bg-danger">Profil</li>
+                                <li class="list-group-item profile-nav-listItem disabled bg-danger">Napló</li>
+                                <a href="/ingredients" class="link no-underline">
+                                    <li class="list-group-item profile-nav-listItem">Ételeim</li>
+                                </a>
+                                <li class="list-group-item profile-nav-listItem disabled bg-danger">Recept hozzáadása</li>
+                                <li class="list-group-item profile-nav-listItem disabled bg-danger">And a fifth one</li>
                             </ul>
                         </div>
                     </div>
@@ -77,4 +79,3 @@
         </div>
     </div>
 </nav>
-

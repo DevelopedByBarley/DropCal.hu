@@ -1,15 +1,16 @@
-<?php 
-    require_once 'app/models/User_Model.php';
-    
-    class Authentication extends UserModel{
+<?php
+require_once 'app/models/User_Model.php';
 
-        public function __construct()
-        {
-            parent::__construct();
-        }
-        
+class Authentication extends UserModel
+{
 
-        public function authentication($body)
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+
+    public function authentication($body)
     {
         session_start();
         $email = filter_var($body["email"] ?? '', FILTER_SANITIZE_EMAIL);
@@ -44,7 +45,6 @@
         }
 
         $this->mailer->send($email, $emailBody, $subject);
-
         header("Location: /user/login/authentication/" . $user["userId"]);
     }
-    }
+}

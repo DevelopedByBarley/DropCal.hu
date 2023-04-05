@@ -1,0 +1,20 @@
+.add-ingredient-container {
+    position: absolute;
+    top: -200%;
+    left: 0;
+    width: 100%;
+    min-height: 100vh;
+    transition: all .4s ease-in-out;
+}
+
+.add-ingredient-container.active {
+    top: 0;
+}
+
+.add-ingredient-container-cancel {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+    z-index: 102
+}

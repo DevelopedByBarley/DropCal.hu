@@ -35,6 +35,8 @@
     <script src="public/js/cookieModalHandle.js"></script>
     <script src="public/js/emailVerification.js"></script>
     <script src="public/js/headerNavigation.js"></script>
+    <script src="public/js/ingredient_toggle.js"></script>
+    <script src="public/js/new_ingredient.js"></script>
 </body>
 
 </html>

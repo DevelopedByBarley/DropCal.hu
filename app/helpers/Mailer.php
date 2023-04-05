@@ -1,4 +1,5 @@
 <?php
+
 use PHPMailer\PHPMailer\PHPMailer;
 
 class Mailer
@@ -7,40 +8,32 @@ class Mailer
     {
 
         try {
-            $mail = new PHPMailer;
-
-            $mail->SMTPOptions = array(
-                'ssl' => array(
+            $mail = new PHPMailer();
+            $mail->isSMTP();
+            $mail->SMTPDebug = 3;
+            $mail->setFrom("underdev@bybarley.hu", "dropcal.hu");
+            $mail->addAddress($address);
+            $mail->Username = "underdev@bybarley.hu";
+            $mail->Password = "Csak1enter";
+            $mail->Host = "smtp.rackhost.hu";
+            $mail->CharSet = 'UTF-8';
+            $mail->Subject = $subject;
+            $mail->Body = $body;
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port = 465;
+            $mail->SMTPOptions = [
+                'ssl' => [
                     'verify_peer' => false,
                     'verify_peer_name' => false,
                     'allow_self_signed' => true
-                )
-            );
-            $mail->CharSet = 'UTF-8';
-            //$mail->SMTPDebug  = 3;
-            $mail->IsSMTP(); // SMTP-n keresztüli küldés
-            $mail->SMTPAuth = true;
-
-            $mail->Host = "smtp.gmail.com";
-            $mail->Username = "BarleyMailer@gmail.com";
-            $mail->Password = "pdfnnhcofadkgglw";
-
-            $mail->addAddress($address, $address);     //Add a recipient
-            $mail->addReplyTo("BarleyMailer@gmail.com", "BarleyMailer@gmail.com");
-            $mail->setFrom("BarleyMailer@gmail.com", "DropCalories.hu");
-            $mail->SMTPSecure = 'tls';            //Content
-            $mail->isHTML(true); //Set email format to HTML
-
-            $mail->Subject = $subject;
-            $mail->Body = $body;
-            $mail->AltBody = strip_tags($body);
-            $mail->Port = 587;
-
-            $mail->Send();
+                ]
+            ];
+            $mail->isHTML(true);
+            return $mail->send();
         } catch (Exception $e) {
             var_dump($e);
             return false;
         }
     }
 }
-

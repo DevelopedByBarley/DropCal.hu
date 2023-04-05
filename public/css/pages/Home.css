@@ -1,0 +1,57 @@
+.date-picker {
+    position: relative;
+    display: inline-block;
+    width: 200px;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.date-picker input[type="date"] {
+    font-size: 16px;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.date-picker .icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+    color: #aaa;
+}
+
+.fa-calendar {
+    font-size: 20px;
+}
+
+#diary-ingredients-toggle {
+    cursor: pointer;
+}
+
+#ingredients-toggle {
+    height: 200vh;
+    width: 100%;
+    top: -500%;
+    position: absolute;
+    left: 0;
+    transition: all .4s ease-in-out;
+}
+
+
+#cancel-ingredients {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 20px;
+    z-index: 99;
+}
+
+#ingredients-toggle.active {
+    top: 0;
+}
+
+.progress {
+    background-color: hsla(108, 100%, 0%, 0.30);
+}
