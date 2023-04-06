@@ -29,14 +29,11 @@ class HomeController
 
     private function renderPublicPage()
     {
-   
-        $temporary_diary_data = $this->diaryModel->getTemporaryDiaryData();
      
         
         echo $this->renderer->render("Layout.php", [
-            "content" => $this->renderer->render("/pages/Home.php", [
+            "content" => $this->renderer->render("/pages/public/Home.php", [
                 "user" => null,
-                "t_diaryData" => $temporary_diary_data
             ]),
             "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0,
         ]);
@@ -50,7 +47,7 @@ class HomeController
         $diary_data = $this->diaryModel->getDiaryData($user["userId"], isset($_POST) ? $_POST : null);
         $profileImage = $user["profileImage"];
         echo $this->renderer->render("Layout.php", [
-            "content" => $this->renderer->render("/pages/Home.php", [
+            "content" => $this->renderer->render("/pages/private/Home.php", [
                 "user" => $user,
                 "diaryData" => $diary_data
             ]),

@@ -9,10 +9,11 @@ $summaries = $diaryData["summaries"];
 ?>
 
 
-<div class="p-4 shadow-4 rounded-3">
+<div class="mt-5 shadow-4 rounded-3">
     <div class="row">
         <div class="col-xs-12"></div>
-        <h1 class="text-center display-6">Üdvözöllek <?= $user["userName"] ?? '' ?></h1>
+        <h1 class="text-center display-6">Szia <?= $user["userName"] ?? '' ?>!</h1>
+        <p class="text-center">Csináljunk egy sikeres napot közösen!</p>
     </div>
 </div>
 

@@ -8,6 +8,7 @@ class UserController
     protected $registrationData;
     private $authentication;
     private $emailVerification;
+    private $loginChecker;
     public function __construct()
     {
 
@@ -15,6 +16,7 @@ class UserController
         $this->userModel = new UserModel();
         $this->authentication = new Authentication();
         $this->emailVerification = new EmailVerification();
+        $this->loginChecker = new LoginChecker();
         $this->registrationData = isset($_COOKIE["registrationData"]) ? json_decode($_COOKIE["registrationData"], true) : "";
     }
 
@@ -88,5 +90,16 @@ class UserController
 
         $this->userModel->change();
     }
-}
 
+    public function renderWelcomePage()
+    {
+        $this->loginChecker->checkUserIsLoggedInOrRedirect(); 
+        $user = $this->userModel->getUserData();
+        $userName = $user["userName"];
+        echo $this->renderer->render("Layout.php", [
+            "content" => $this->renderer->render("/pages/private/Welcome.php", [
+                "userName" => $userName
+            ])
+        ]);
+    }
+}

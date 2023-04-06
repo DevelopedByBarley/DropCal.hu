@@ -21,12 +21,13 @@ class IngredientController extends DiaryController
         $profileImage = $user["profileImage"];
         $ingredients = $this->ingredientModel->getIngredients($_POST, $userId);
         $ingredientCategories = ["Fagylalt", "Jégkrém", "Gomba", "Gabona", "Gyümölcs", "Hal", "Húskészítmény", "Ital", "Készétel", "Köret", "Leves", "Olaj", "Pékáru", "Édesség", "Sütemény", "Rágcsa", "Tészta", "Tejtermék"];
-       
-
+        $units = ["100g", "100ml", "bögre", "csésze", "csomag", "darab", "doboz", "egész", "üveg", "tubus", "pohár", "szelet", "gerezd"];
         echo $this->renderer->render("Layout.php", [
             "content" => $this->renderer->render("/pages/user/ingredients/Ingredient_List.php", [
                 "ingredients" => $ingredients,
                 "ingredientCategories" => $ingredientCategories,
+                "units" => $units,
+                "isSuccess" => $_GET["isSuccess"] ?? null
             ]),
             "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0,
             "userId" => $userId,
@@ -34,9 +35,21 @@ class IngredientController extends DiaryController
         ]);
     }
 
-    public function addIngredient() {
-        echo "<pre>";
-        var_dump($_POST);
-        var_dump(json_decode($_POST["allergens"], true));
+    public function addIngredient()
+    {
+        $this->loginChecker->checkUserIsLoggedInOrRedirect();
+        $_POST = json_decode(file_get_contents('php://input'), true);
+        $isSuccess  = $this->ingredientModel->addIngredient($_POST);
+
+        if(!$isSuccess) {
+            echo json_encode([
+                "state" => false,
+            ]);
+            return;
+        }
+
+        echo json_encode([
+            "state" => true,
+        ]);
     }
 }
