@@ -6,6 +6,33 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <?php if (isset($params["userId"])) : ?>
+                    <li class="nav-item dropdown profile-dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Profil
+                        </a>
+                        <ul class="dropdown-menu text-center" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/ingredients">Éltelek</a></li>
+                            <li><a class="dropdown-item" href="#">Receptek</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <?php if (!isset($params["userId"])) : ?>
+                                <li class="text-center">
+                                    <?php if (strpos($_SERVER["REQUEST_URI"], '/user/registration') === false) : ?>
+                                        <a class="btn btn-outline-dark" href="/user/registration/<?= $params["currentStepId"] ?>">Regisztráció</a>
+                                    <?php endif ?>
+                                    <a class="btn btn-outline-dark" href="/user/login">Bejelentkezés</a>
+                                </li>
+                            <?php else : ?>
+                                <li class="text-center">
+                                    <a href="/user/logout" type="button" class="btn btn-outline-danger m-1">Kiejelentkezés</a>
+                                    <a href="/user/change_profile" type="button" class="btn btn-outline-dark m-1">Felhasználó váltás</a>
+                                </li>
+                            <?php endif ?>
+                        </ul>
+                    </li>
+                <?php endif ?>
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/">Kezdőlap</a>
                 </li>
@@ -17,8 +44,10 @@
                 </li>
             </ul>
             <?php if (!isset($params["userId"])) : ?>
-                <div class="d-flex">
-                    <a class="btn btn-outline-dark" href="/user/registration/<?= $params["currentStepId"] ?>">Regisztráció</a>
+                <div class="d-flex align-items-center justify-content-center">
+                    <?php if (strpos($_SERVER["REQUEST_URI"], '/user/registration') === false) : ?>
+                        <a class="btn btn-outline-dark" href="/user/registration/<?= $params["currentStepId"] ?>">Regisztráció</a>
+                    <?php endif ?>
                     <a class="btn btn-outline-dark" href="/user/login">Bejelentkezés</a>
                 </div>
 

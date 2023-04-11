@@ -7,56 +7,56 @@
                         Válaszd ki ha van valamilyen allergiád!
                     </h1>
                     <div class="btn-group-inputs row mt-5">
-                        <div class="col-4 col-lg-2 d-flex align-items-center justify-content-center">
+                        <div class="col-6 col-sm-4 col-lg-2 d-flex align-items-center justify-content-center">
                             <input type="checkbox" name="allergens[]" id="gluten" value="glutén">
                             <label for="gluten" class="mb-2">
                                 <img src="/public/assets/icons/gluten.png" style="height: 50px; width: 50px;" />
                                 <span>Glutén</span>
                             </label>
                         </div>
-                        <div class="col-4 col-lg-2 d-flex align-items-center justify-content-center">
+                        <div class="col-6 col-sm-4 col-lg-2 d-flex align-items-center justify-content-center">
                             <input type="checkbox" name="allergens[]" id="milk" value="tej">
                             <label for="milk" class="mb-2">
                                 <img src="/public/assets/icons/milk.png" style="height: 50px; width: 50px;" />
                                 <span>Tej</span>
                             </label>
                         </div>
-                        <div class="col-4 col-lg-2 d-flex align-items-center justify-content-center">
+                        <div class="col-6 col-sm-4 col-lg-2 d-flex align-items-center justify-content-center">
                             <input type="checkbox" name="allergens[]" id="celery" value="zeller">
                             <label for="celery" class="mb-2">
                                 <img src="/public/assets/icons/celery.png" style="height: 50px; width: 50px;" />
                                 <span>Zeller</span>
                             </label>
                         </div>
-                        <div class="col-4 col-lg-2 d-flex align-items-center justify-content-center">
+                        <div class="col-6 col-sm-4 col-lg-2 d-flex align-items-center justify-content-center">
                             <input type="checkbox" name="allergens[]" id="peanut" value="mogyoró">
                             <label for="peanut" class="mb-2">
                                 <img src="/public/assets/icons/peanut.png" style="height: 50px; width: 50px;" />
                                 <span>Mogyoró</span>
                             </label>
                         </div>
-                        <div class="col-4 col-lg-2 d-flex align-items-center justify-content-center">
+                        <div class="col-6 col-sm-4 col-lg-2 d-flex align-items-center justify-content-center">
                             <input type="checkbox" name="allergens[]" id="crustaceans" value="rákfélék">
                             <label for="crustaceans" class="mb-2">
                                 <img src="/public/assets/icons/crustaceans.png" style="height: 50px; width: 50px;" />
                                 <span>Rákfélék</span>
                             </label>
                         </div>
-                        <div class="col-4 col-lg-2 d-flex align-items-center justify-content-center">
+                        <div class="col-6 col-sm-4 col-lg-2 d-flex align-items-center justify-content-center">
                             <input type="checkbox" name="allergens[]" id="mushroom" value="gombafélék">
                             <label for="mushroom" class="mb-2">
                                 <img src="/public/assets/icons/mushroom.png" style="height: 50px; width: 50px;" />
                                 <span>Gombafélék</span>
                             </label>
                         </div>
-                        <div class="col-4 col-lg-2 d-flex align-items-center justify-content-center">
+                        <div class="col-6 col-sm-4 col-lg-2 d-flex align-items-center justify-content-center">
                             <input type="checkbox" name="allergens[]" id="mustard" value="mustár">
                             <label for="mustard" class="mb-2">
                                 <img src="/public/assets/icons/mustard.png" style="height: 50px; width: 50px;" />
                                 <span>Mustár</span>
                             </label>
                         </div>
-                        <div class="col-4 col-lg-2 d-flex align-items-center justify-content-center">
+                        <div class="col-6 col-sm-4 col-lg-2 d-flex align-items-center justify-content-center">
                             <input type="checkbox" name="allergens[]" id="soybean" value="szójabab">
                             <label for="soybean" class="mb-2">
                                 <img src="/public/assets/icons/soybean.png" style="height: 50px; width: 50px;" />

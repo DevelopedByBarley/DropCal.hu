@@ -2,6 +2,9 @@ const addIngredientFormNav = document.getElementById("add-ingredient-form-nav");
 const addIngredientCon = document.querySelector(".add-ingredient-container");
 const noAllergen = document.getElementById("no-allergen");
 const allergensCon = document.querySelector(".allergen-container");
+const ingredientConCancel = document.querySelector(
+  ".add-ingredient-container-cancel"
+);
 let isNoAllergenBtnActive = false;
 const allergens = [
   {
@@ -82,15 +85,17 @@ window.onload = () => {
   renderAllergenButtons();
 };
 
-addIngredientFormNav.addEventListener("click", (event) => {
-  addIngredientCon.classList.add("active");
-});
+if (addIngredientFormNav) {
+  addIngredientFormNav.addEventListener("click", (event) => {
+    addIngredientCon.classList.add("active");
+  });
+}
 
-document
-  .querySelector(".add-ingredient-container-cancel")
-  .addEventListener("click", (event) => {
+if (ingredientConCancel) {
+  ingredientConCancel.addEventListener("click", (event) => {
     addIngredientCon.classList.remove("active");
   });
+}
 
 function renderAllergenButtons() {
   let template = ``;
@@ -104,7 +109,10 @@ function renderAllergenButtons() {
     `;
   });
 
-  document.querySelector(".allergen-container").innerHTML = template;
+  if(allergensCon) {
+    allergensCon.innerHTML = template;
+
+  }
   const allergenBtn = document.querySelectorAll(".allergen-button");
 
   allergenBtn.forEach((btn) => {
@@ -140,30 +148,32 @@ function renderAllergenButtons() {
   });
 }
 
-noAllergen.addEventListener("click", function (event) {
-  event.preventDefault();
-  isNoAllergenBtnActive = !isNoAllergenBtnActive;
-  event.target.classList.toggle("btn-warning");
-  event.target.classList.toggle("text-light");
+if (noAllergen) {
+  noAllergen.addEventListener("click", function (event) {
+    event.preventDefault();
+    isNoAllergenBtnActive = !isNoAllergenBtnActive;
+    event.target.classList.toggle("btn-warning");
+    event.target.classList.toggle("text-light");
 
-  allergensCon.classList.toggle("inactive");
+    allergensCon.classList.toggle("inactive");
 
-  if (isNoAllergenBtnActive) {
-    let noAllergen = [
-      {
-        allergenName: "Nincs Allergén",
-        allergenId: 0,
-      },
-    ];
-    localStorage.removeItem("allergens");
-    localStorage.setItem("allergens", JSON.stringify(noAllergen));
+    if (isNoAllergenBtnActive) {
+      let noAllergen = [
+        {
+          allergenName: "Nincs Allergén",
+          allergenId: 0,
+        },
+      ];
+      localStorage.removeItem("allergens");
+      localStorage.setItem("allergens", JSON.stringify(noAllergen));
 
-    document.getElementById("allergen-input").value =
-      localStorage.getItem("allergens");
-  } else {
-    localStorage.setItem("allergens", JSON.stringify(selectedAllergens));
-  }
-});
+      document.getElementById("allergen-input").value =
+        localStorage.getItem("allergens");
+    } else {
+      localStorage.setItem("allergens", JSON.stringify(selectedAllergens));
+    }
+  });
+}
 
 function sendIngredient(event) {
   event.preventDefault();
@@ -182,8 +192,6 @@ function sendIngredient(event) {
     calorie: event.target.elements.calorie.value,
     protein: event.target.elements.protein.value,
     carb: event.target.elements.carb.value,
-    c_unit: event.target.elements.c_unit.value,
-    c_unit_weight: event.target.elements.c_unit_weight.value,
     fat: event.target.elements.fat.value,
     glychemicIndex: glychemicIndex.value,
     allergens: allergens.value,

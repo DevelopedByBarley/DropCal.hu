@@ -1,12 +1,14 @@
 /* User registration pages style*/
 .user-subscription-tab {
-  min-height: 80vh;
+  min-height: 70vh;
   position: relative;
-  box-shadow: 2px 5px 59px -10px rgba(0, 0, 0, 0.10);
+  box-shadow: 2px 5px 59px -10px rgba(0, 0, 0, 0.1);
 }
-.user-navigation-buttons {
-  position: absolute;
-  bottom: 0;
+@media (min-width: 768px) {
+  .user-navigation-buttons {
+    position: absolute;
+    bottom: 0;
+  }
 }
 
 .user-subscription-content {

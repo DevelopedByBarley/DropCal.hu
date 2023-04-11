@@ -75,23 +75,6 @@
                                     <input required type="text" min="1" value="<?= $params["registrationData"]["height"] ?? "" ?>" id="form1Example1" class="form-control" placeholder="Zsír" style="background: none; border: none; border-bottom: 1px solid " name="fat" />
                                 </div>
                             </div>
-                            <div class="col-12 col-sm-5 mb-2">
-                                <div class="form-outline mb-4 w-100">
-                                    <label class="form-label" for="form1Example2">Leggyakoribb egység súlyának megadása</label>
-                                    <select class="form-select" aria-label="Default select example" name="c_unit">
-                                        <option value="" disabled selected>Egység</option>
-                                        <?php foreach ($params["units"] as $unit) : ?>
-                                            <option value="<?= $unit ?>"> <?= $unit ?></option>
-                                        <?php endforeach ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-5  mb-2">
-                                <div class="form-outline mb-4 w-100">
-                                    <label class="form-label" for="form1Example1">Egység súlya(g)</label>
-                                    <input required type="number" value="<?= $params["registrationData"]["currentWeight"] ?? "" ?>" id="form1Example1" class="form-control" placeholder="Egység súlya" style="background: none; border: none; border-bottom: 1px solid " name="c_unit_weight" />
-                                </div>
-                            </div>
                             <div class="col-12 col-sm-5  mb-2">
                                 <div class="form-outline mb-4 w-100">
                                     <label class="form-label" for="form1Example1">Glikémiás index</label>

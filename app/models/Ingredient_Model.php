@@ -31,8 +31,6 @@ class IngredientModel extends DiaryModel
         $ingredientName = $body["ingredientName"];
         $ingredientCategorie =  $body["ingredientCategorie"];
         $unit = $body["unit"];
-        $c_unit = $body["c_unit"];
-        $c_unit_weight = (int)$body["c_unit_weight"];
         $calorie = (int)$body["calorie"];
         $protein = (int)$body["protein"];
         $carb = (int)$body["carb"];
@@ -47,8 +45,6 @@ class IngredientModel extends DiaryModel
             :ingredientName, 
             :ingredientCategorie, 
             :unit, 
-            :c_unit, 
-            :c_unit_weight, 
             :calorie, 
             :protein, 
             :carb, 
@@ -62,8 +58,6 @@ class IngredientModel extends DiaryModel
         $stmt->bindParam(':ingredientName', $ingredientName, PDO::PARAM_STR);
         $stmt->bindParam(':ingredientCategorie', $ingredientCategorie, PDO::PARAM_STR);
         $stmt->bindParam(':unit', $unit, PDO::PARAM_STR);
-        $stmt->bindParam(':c_unit', $c_unit, PDO::PARAM_STR);
-        $stmt->bindParam(':c_unit_weight', $c_unit_weight, PDO::PARAM_INT);
         $stmt->bindParam(':calorie', $calorie, PDO::PARAM_INT);
         $stmt->bindParam(':protein', $protein, PDO::PARAM_INT);
         $stmt->bindParam(':carb', $carb, PDO::PARAM_INT);

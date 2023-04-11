@@ -73,7 +73,9 @@ class Step extends UserController
         }
 
         if ((int)$currentPageId >= 2 && !isset($_SESSION["isEmailVerified"])) {
-            header("Location: /user/registration/1?isVerificationFail=1");
+            $expires = time() + (30 * 24 * 60 * 60);
+            $this->cookie->setCookie('registrationData', json_encode($_POST), $expires, '/');
+            header("Location: /user/registration/1");
             exit;
         }
 

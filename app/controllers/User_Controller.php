@@ -17,7 +17,7 @@ class UserController
         $this->authentication = new Authentication();
         $this->emailVerification = new EmailVerification();
         $this->loginChecker = new LoginChecker();
-        $this->registrationData = isset($_COOKIE["registrationData"]) ? json_decode($_COOKIE["registrationData"], true) : "";
+        $this->registrationData = isset($_COOKIE["registrationData"]) ? json_decode($_COOKIE["registrationData"], true) : $_POST;
     }
 
 

@@ -3,9 +3,14 @@
         <div class="col">
             <form method="POST" action="/user/registration/<?= (int)substr($_SERVER["REQUEST_URI"], -1) + 1 ?>">
                 <div class="user-subscription-content row">
-                    <div class="col-md-6  d-flex align-items-center justify-content-center">
-                        <h1 class="text-center mt-5 display-6">Vegyük fel először a bejelentkezési adatokat!</h1>
-
+                    <div class="col-md-6  d-flex align-items-center justify-content-center flex-column">
+                        <h1 class="text-center display-6">Vegyük fel először a bejelentkezési adatokat!</h1>
+                        <div class="alert bg-dark text-light mt-3 text-center" role="alert">
+                            <h4 class="alert-heading display-6">Figyelem!</h4>
+                            <p>Email hitelesítése kötelező! </p>
+                            <hr>
+                            <p class="mb-0">"Email hitelesítése" gombra való kattintás után ki küldünk egy hitelesítési azonosítót a megadott email címre!</p>
+                        </div>
                     </div>
                     <div class="col-md-5 d-flex align-items-center justify-content-center flex-column p-3">
 
@@ -17,7 +22,6 @@
                         <div class="form-outline mb-4 w-100">
                             <label class="form-label" for="form1Example1">Email</label>
                             <input type="email" id="form1Example1" class="form-control " style="background: none; border: none; border-bottom: 1px solid " name="email" required value="<?= $params["registrationData"]["email"] ?? "" ?>" />
-                            <?= isset($_GET["isVerificationFail"]) ? "<p class=\"text-danger\">Email cím hitelesítése kötelező</p" : "" ?>
                             <p class="verification_state"></p>
                             <button id="verification_toggle" class="mt-2 btn btn-outline-dark">Email hitelesítése</button>
                             <span class="email_verification_container">

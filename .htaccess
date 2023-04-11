@@ -3,7 +3,7 @@
 
 
   SetEnv DB_HOST localhost
-  SetEnv DB_NAME test
+  SetEnv DB_NAME drop_calories
   SetEnv DB_USER Barley
   SetEnv DB_PASSWORD Csak1enter
   

@@ -31,11 +31,11 @@ $summaries = $diaryData["summaries"];
         <?php endif ?>
     </div>
 </div>
-<div class="container bg-dark text-light rounded text-center" id="diary-ingredients-toggle">
+<div class="container bg-light rounded text-center" id="diary-ingredients-toggle">
     <div class="row ">
     </div>
     <div class="row d-flex align-items-center justify-content-center">
-        <div class="col-9 col-sm-6  rounded p-5 d-flex align-items-center justify-content-center flex-column" style="box-shadow: 1px -5px 70px -52px rgba(255,255,255,1);">
+        <div class="col-xs-12 col-sm-6  rounded mt-4  p-5 d-flex align-items-center justify-content-center flex-column" style="box-shadow: 1px -5px 70px -52px rgba(0,0,0,1);">
             <h1 class="display-6"><?= $userFinalBMR ?> / <?= $summaries["sumOfCalorie"] ?? 0 ?></h1>
             <p>Még<b> <?= $userFinalBMR - ($summaries["sumOfCalorie"] ?? 0) ?></b> kalóriát ehetsz ma</p>
             <div class="progress" style="width: 100%; height: 2px;" role="progressbar" aria-label="Example 1px high" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
@@ -65,5 +65,3 @@ $summaries = $diaryData["summaries"];
     </div>
 </div>
 <?php include 'app/views/includes/Ingredients_Toggle.php' ?>
-
-

@@ -1,51 +1,59 @@
-@media(min-width: 768px) {
-    #profile-icon-dropdown {
-        position: relative;
-        right: 100px;
-    }
+@media (min-width: 768px) {
+  #profile-icon-dropdown {
+    position: relative;
+    right: 100px;
+  }
+
+  .profile-dropdown {
+    display: none;
+  }
 }
 
 .profile-toggle-container {
-    width: 100%;
+  width: 100%;
 }
 
 .profile-toggle {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 #profile-navigation {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  #profile-navigation {
+    display: block;
     height: 100vh;
     position: fixed;
     top: 63px;
     right: -150%;
     width: 100%;
-    transition: all .4s ease-in-out;
+    transition: all 0.4s ease-in-out;
     border-left: 1px solid;
+  }
 }
 
-
-
 .profile-nav-listItem {
-    transition: all .8s ease-in-out;
-    cursor: pointer;
+  transition: all 0.8s ease-in-out;
+  cursor: pointer;
 }
 
 .profile-nav-listItem:hover {
-    transform: translateX(2px);
-    right: 2px;
+  transform: translateX(2px);
+  right: 2px;
 }
 
+@media (min-width: 768px) {
+  #profile-navigation {
+    width: 400px;
+  }
 
-@media(min-width: 768px) {
-    #profile-navigation {
-        width: 400px;
-    }
-
-    .close-toggle {
-        display: none;
-    }
+  .close-toggle {
+    display: none;
+  }
 }
 
 #profile-navigation.active {
-    right: 0;
+  right: 0;
 }
