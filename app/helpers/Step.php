@@ -27,7 +27,7 @@ class Step extends UserController
     {
         $currentStepPage = $this->setPrevStep($vars);
         echo $this->renderer->render("Layout.php", [
-            "content" => $this->renderer->render("/pages/user/subscription/Registration/$currentStepPage", [
+            "content" => $this->renderer->render("/pages/public/user/subscription/Registration/$currentStepPage", [
                 "registrationData" => $this->registrationData
             ]),
             "currentStepId" => $_COOKIE["currentStepId"] ?? 0
@@ -38,7 +38,7 @@ class Step extends UserController
     {
         $currentStepPage = $this->setNextStep($vars, $_POST);
         echo $this->renderer->render("Layout.php", [
-            "content" => $this->renderer->render("/pages/user/subscription/Registration/$currentStepPage", [
+            "content" => $this->renderer->render("/pages/public/user/subscription/Registration/$currentStepPage", [
                 "registrationData" => $this->registrationData,
                 "isVerificationFail" => $_GET["isVerificationFail"] ?? null
             ]),

@@ -12,7 +12,7 @@ class DiaryModel extends UserModel
     public function getDiaryData($userId, $body)
     {
 
-        $date = isset($body["currentDate"]) ? strtotime($body["currentDate"]) : strtotime("today");
+        $date = !empty($body) ? strtotime($body) : strtotime("today");
         $userDiary = $this->getUserDiary($userId, $date) ?? null;
 
         if (!$userDiary) {
@@ -26,7 +26,7 @@ class DiaryModel extends UserModel
                 "summaries" => $summaries ?? 0,
             ];
         }
-        
+
         $diaryIngredients = $this->getDiaryIngredients($userDiary["diaryId"]) ?? [];
         $summaries = $this->getSummaries($diaryIngredients);
         return [
@@ -34,6 +34,11 @@ class DiaryModel extends UserModel
             "diary_ingredients" => $diaryIngredients,
             "summaries" => $summaries ?? 0,
         ];
+    }
+
+
+    private function getUserDiaryByDate($date)
+    {
     }
 
 

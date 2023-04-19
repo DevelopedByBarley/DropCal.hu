@@ -51,7 +51,7 @@ class UserController
         }
 
         echo $this->renderer->render("Layout.php", [
-            "content" => $this->renderer->render("/pages/user/subscription/Login_Form.php", [
+            "content" => $this->renderer->render("/pages/public/user/subscription/Login_Form.php", [
                 "isRegSuccess" => $_GET["isRegSuccess"] ?? null
             ]),
             "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0
@@ -67,7 +67,7 @@ class UserController
     public function authenticationForm($vars)
     {
         echo $this->renderer->render("Layout.php", [
-            "content" => $this->renderer->render("/pages/user/subscription/User_Authentication.php", [
+            "content" => $this->renderer->render("/pages/public/user/subscription/User_Authentication.php", [
                 "userId" => $vars["id"]
             ]),
             "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0

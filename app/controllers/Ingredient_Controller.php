@@ -5,12 +5,15 @@ class IngredientController extends DiaryController
 {
     private $ingredientModel;
     private $loginChecker;
-
+    private $userModel;
+    private $renderer;
     public function __construct()
     {
         parent::__construct();
         $this->ingredientModel = new IngredientModel();
         $this->loginChecker = new LoginChecker();
+        $this->userModel = new UserModel();
+        $this->renderer = new Renderer();
     }
 
     public function getIngredientsByUser()
@@ -23,7 +26,7 @@ class IngredientController extends DiaryController
         $ingredientCategories = ["Fagylalt", "Jégkrém", "Gomba", "Gabona", "Gyümölcs", "Hal", "Húskészítmény", "Ital", "Készétel", "Köret", "Leves", "Olaj", "Pékáru", "Édesség", "Sütemény", "Rágcsa", "Tészta", "Tejtermék"];
         $units = ["100g", "100ml", "bögre", "csésze", "csomag", "darab", "doboz", "egész", "üveg", "tubus", "pohár", "szelet", "gerezd"];
         echo $this->renderer->render("Layout.php", [
-            "content" => $this->renderer->render("/pages/user/ingredients/Ingredient_List.php", [
+            "content" => $this->renderer->render("/pages/private/user/ingredients/Ingredient_List.php", [
                 "ingredients" => $ingredients,
                 "ingredientCategories" => $ingredientCategories,
                 "units" => $units,

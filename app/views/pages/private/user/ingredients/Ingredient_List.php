@@ -60,4 +60,4 @@
 </div>
 
 
-<?php include 'app/views/pages/user/ingredients/New_Ingredient.php' ?>
+<?php include 'app/views/pages/private/user/ingredients/New_Ingredient.php' ?>

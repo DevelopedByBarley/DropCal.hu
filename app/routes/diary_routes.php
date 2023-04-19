@@ -1,3 +1,6 @@
 <?php
-         $r->addRoute('POST', '/diary/currentDiary', [HomeController::class, 'renderPrivatePage']);
+    require 'app/controllers/Diary_Controller.php';
+
+    $r->addRoute('GET', '/diary/currentDiary', [DiaryController::class, 'getDiaryByDate']);
+
 ?>
