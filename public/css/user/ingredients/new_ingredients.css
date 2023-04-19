@@ -1,15 +1,14 @@
 .add-ingredient-container {
     position: absolute;
-    top: -500%;
+    top: 50px;
     left: 0;
     width: 100%;
     min-height: 100vh;
-    transition: all .4s ease-in-out;
+    animation: fadeInIngredientForm;
+    animation-duration: .8s;
+    animation-fill-mode: forwards;
 }
 
-.add-ingredient-container.active {
-    top: 0;
-}
 
 .add-ingredient-container-cancel {
     position: absolute;
@@ -21,4 +20,12 @@
 
 .allergen-container.inactive {
     display: none;
+}
+
+@keyframes fadeInIngredientForm {
+    from {
+        top: -500%;
+    } to {
+        top: 55px;
+    }
 }

@@ -1,9 +1,4 @@
 <div class="container-fluid add-ingredient-container bg-light d-flex align-items-center justify-content-center">
-    <div class="add-ingredient-container-cancel">
-        <h5>
-            <i class="bi bi-x-square"></i>
-        </h5>
-    </div>
     <div class="row rounded mt-2 d-flex align-items-center justify-content-center">
         <div class="col">
             <form onsubmit="sendIngredient(event)">

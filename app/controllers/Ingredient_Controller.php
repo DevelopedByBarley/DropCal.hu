@@ -23,13 +23,9 @@ class IngredientController extends DiaryController
         $user =  $this->userModel->getUserData();
         $profileImage = $user["profileImage"];
         $ingredients = $this->ingredientModel->getIngredients($_POST, $userId);
-        $ingredientCategories = ["Fagylalt", "Jégkrém", "Gomba", "Gabona", "Gyümölcs", "Hal", "Húskészítmény", "Ital", "Készétel", "Köret", "Leves", "Olaj", "Pékáru", "Édesség", "Sütemény", "Rágcsa", "Tészta", "Tejtermék"];
-        $units = ["100g", "100ml", "bögre", "csésze", "csomag", "darab", "doboz", "egész", "üveg", "tubus", "pohár", "szelet", "gerezd"];
         echo $this->renderer->render("Layout.php", [
             "content" => $this->renderer->render("/pages/private/user/ingredients/Ingredient_List.php", [
                 "ingredients" => $ingredients,
-                "ingredientCategories" => $ingredientCategories,
-                "units" => $units,
                 "isSuccess" => $_GET["isSuccess"] ?? null
             ]),
             "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0,
@@ -44,7 +40,7 @@ class IngredientController extends DiaryController
         $_POST = json_decode(file_get_contents('php://input'), true);
         $isSuccess  = $this->ingredientModel->addIngredient($_POST);
 
-        if(!$isSuccess) {
+        if (!$isSuccess) {
             echo json_encode([
                 "state" => false,
             ]);
@@ -53,6 +49,26 @@ class IngredientController extends DiaryController
 
         echo json_encode([
             "state" => true,
+        ]);
+    }
+
+    public function getIngredientForm()
+    {
+        $this->loginChecker->checkUserIsLoggedInOrRedirect();
+        $userId = $_SESSION["userId"] ?? null;
+        $user =  $this->userModel->getUserData();
+        $profileImage = $user["profileImage"];
+        $ingredientCategories = ["Fagylalt", "Jégkrém", "Gomba", "Gabona", "Gyümölcs", "Hal", "Húskészítmény", "Ital", "Készétel", "Köret", "Leves", "Olaj", "Pékáru", "Édesség", "Sütemény", "Rágcsa", "Tészta", "Tejtermék"];
+        $units = ["100g", "100ml"];
+        $this->loginChecker->checkUserIsLoggedInOrRedirect();
+        echo $this->renderer->render("Layout.php", [
+            "content" => $this->renderer->render("/pages/private/user/ingredients/Ingredient_Form.php", [
+                "ingredientCategories" => $ingredientCategories,
+                "units" => $units
+            ]),
+            "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0,
+            "userId" => $userId,
+            "profileImage" => $profileImage
         ]);
     }
 }

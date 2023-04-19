@@ -54,10 +54,7 @@
     </div>
     <div class="row mt-5 text-center">
         <div class="col-12">
-            <button class="btn btn-outline-dark" id="add-ingredient-form-nav">Hozzáadás</button>
+            <a href="/ingredient" class="btn btn-outline-dark">Hozzáadás</a>
         </div>
     </div>
 </div>
-
-
-<?php include 'app/views/pages/private/user/ingredients/New_Ingredient.php' ?>

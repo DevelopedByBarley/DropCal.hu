@@ -1,4 +1,3 @@
-const addIngredientFormNav = document.getElementById("add-ingredient-form-nav");
 const addIngredientCon = document.querySelector(".add-ingredient-container");
 const noAllergen = document.getElementById("no-allergen");
 const allergensCon = document.querySelector(".allergen-container");
@@ -85,17 +84,7 @@ window.onload = () => {
   renderAllergenButtons();
 };
 
-if (addIngredientFormNav) {
-  addIngredientFormNav.addEventListener("click", (event) => {
-    addIngredientCon.classList.add("active");
-  });
-}
 
-if (ingredientConCancel) {
-  ingredientConCancel.addEventListener("click", (event) => {
-    addIngredientCon.classList.remove("active");
-  });
-}
 
 function renderAllergenButtons() {
   let template = ``;
