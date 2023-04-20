@@ -96,4 +96,40 @@ class IngredientModel extends DiaryModel
 
         return $this->pdo->lastInsertId() ? true : false;
     }
+
+    public function delete($id)
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM `ingredients` WHERE `ingredientId` = :id");
+        $stmt->bindParam(":id", $id);
+        $isSuccess = $stmt->execute();
+
+        if ($isSuccess) {
+            header("Location: /ingredients");
+        }
+    }
+
+    public function getIngredientById($id)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM `ingredients` WHERE `ingredientId` = :id");
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+        $ingredient = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $allergens = $this->getAllergensByIngredientId($ingredient["ingredientId"]);
+
+        if($allergens) {
+            $ingredient["allergens"] = $allergens;
+        }
+
+        return $ingredient;
+    }
+
+    private function getAllergensByIngredientId($ingredientId) {
+        $stmt = $this->pdo->prepare("SELECT * FROM `ingredient_allergens` WHERE `ingredientRefId` = :ingredientId");
+        $stmt->bindParam(":ingredientId", $ingredientId);;
+        $stmt->execute();
+        $allergens = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $allergens;
+    }
 }

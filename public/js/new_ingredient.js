@@ -1,10 +1,12 @@
 const addIngredientCon = document.querySelector(".add-ingredient-container");
 const noAllergen = document.getElementById("no-allergen");
 const allergensCon = document.querySelector(".allergen-container");
-const ingredientConCancel = document.querySelector(
-  ".add-ingredient-container-cancel"
-);
+const allergenValueForUpdate = document.querySelectorAll(".allergen_update_value");
+
 let isNoAllergenBtnActive = false;
+
+
+const ingredientConCancel = document.querySelector(".add-ingredient-container-cancel");
 const allergens = [
   {
     allergenName: "Glutén",
@@ -179,6 +181,8 @@ function sendIngredient(event) {
     ingredientCategorie: event.target.elements.ingredientCategorie.value,
     unit: event.target.elements.unit.value,
     calorie: event.target.elements.calorie.value,
+    common_unit: event.target.elements.common_unit.value,
+    common_unit_quantity: event.target.elements.common_unit_quantity.value,
     protein: event.target.elements.protein.value,
     carb: event.target.elements.carb.value,
     fat: event.target.elements.fat.value,

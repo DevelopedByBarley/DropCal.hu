@@ -32,7 +32,7 @@
                                 <th scope="row"><?= $ingredient["ingredientId"] ?></th>
                                 <td><?= $ingredient["ingredientName"] ?></td>
                                 <td><?= $ingredient["ingredientCategorie"] ?></td>
-                                <td><?= $ingredient["unit"] ?></td>
+                                <td><?= $ingredient["unit_quantity"] . "" . $ingredient["unit"] ?></td>
                                 <td><?= $ingredient["calorie"] ?>Kcal</td>
                                 <td><?= $ingredient["protein"] ?>g</td>
                                 <td><?= $ingredient["carb"] ?>g</td>
@@ -45,6 +45,8 @@
                                 </td>
                                 <td><?= (int)$ingredient["isRecommended"] === 0 ? "<i class=\"bi bi-x-circle-fill text-danger\"></i>" : "<i class=\"bi bi-check-circle-fill text-success\"></i>" ?></td>
                                 <td><?= (int)$ingredient["isAccepted"] === 0 ? "<i class=\"bi bi-x-circle-fill text-danger\"></i>" :  "<i class=\"bi bi-check-circle-fill text-success\"></i>" ?></td>
+                                <td><a href="/ingredient/delete/<?= $ingredient["ingredientId"] ?>" class="btn btn-danger">Törlés</a></td>
+                                <td><a href="/ingredient/update?id=<?= $ingredient["ingredientId"] ?>" class="btn btn-warning">Szerkesztés</a></td>
                             </tr>
                         <?php endforeach ?>
                     </tbody>

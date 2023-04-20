@@ -55,20 +55,40 @@ class IngredientController extends DiaryController
     public function getIngredientForm()
     {
         $this->loginChecker->checkUserIsLoggedInOrRedirect();
+        $ingredientCategories = ["Fagylalt", "Jégkrém", "Gomba", "Gabona", "Gyümölcs", "Hal", "Húskészítmény", "Ital", "Készétel", "Köret", "Leves", "Olaj", "Pékáru", "Édesség", "Sütemény", "Rágcsa", "Tészta", "Tejtermék"];
+        $units = ["100g", "100ml"];
+        $common_units = ["Darab", "Bögre"];
+
         $userId = $_SESSION["userId"] ?? null;
         $user =  $this->userModel->getUserData();
         $profileImage = $user["profileImage"];
-        $ingredientCategories = ["Fagylalt", "Jégkrém", "Gomba", "Gabona", "Gyümölcs", "Hal", "Húskészítmény", "Ital", "Készétel", "Köret", "Leves", "Olaj", "Pékáru", "Édesség", "Sütemény", "Rágcsa", "Tészta", "Tejtermék"];
-        $units = ["100g", "100ml"];
-        $this->loginChecker->checkUserIsLoggedInOrRedirect();
+
+        $ingredientId = $_GET["id"] ?? null;
+        if($ingredientId) {
+           $ingredient =  $this->ingredientModel->getIngredientById($ingredientId);
+        }
+
         echo $this->renderer->render("Layout.php", [
             "content" => $this->renderer->render("/pages/private/user/ingredients/Ingredient_Form.php", [
                 "ingredientCategories" => $ingredientCategories,
-                "units" => $units
+                "units" => $units,
+                "common_units" => $common_units,
+                "ingredientId" => $ingredientId,
+                "ingredient" => $ingredient ?? null
             ]),
             "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0,
             "userId" => $userId,
             "profileImage" => $profileImage
         ]);
     }
+
+
+    public function deleteIngredient($vars) {
+        $this->loginChecker->checkUserIsLoggedInOrRedirect();
+        $id = $vars["id"];
+
+        $this->ingredientModel->delete($id);
+
+    }
+
 }
