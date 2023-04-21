@@ -29,6 +29,7 @@ class IngredientModel extends DiaryModel
     {
 
 
+
         $allergens = json_decode($body["allergens"], true);
         $ingredientName = $body["ingredientName"];
         $ingredientCategorie =  $body["ingredientCategorie"];
@@ -42,7 +43,7 @@ class IngredientModel extends DiaryModel
         $carb = (int)$body["carb"];
         $fat = (int)$body["fat"];
         $glycemicIndex = (int)$body["glychemicIndex"];
-        $isRecommended = $body["isRecommended"] === 'on' ? 1 : 0;
+        $isRecommended = isset($body["isRecommended"]) ? 1 : 0;
         $isAccepted = $isRecommended === 0 ? null : 0;
         $userRefId = $_SESSION["userId"] ?? null;
 
@@ -94,7 +95,9 @@ class IngredientModel extends DiaryModel
             }
         }
 
-        return $this->pdo->lastInsertId() ? true : false;
+        if ($this->pdo->lastInsertId()) {
+            header("Location: /ingredients");
+        }
     }
 
     public function delete($id)
@@ -117,14 +120,102 @@ class IngredientModel extends DiaryModel
 
         $allergens = $this->getAllergensByIngredientId($ingredient["ingredientId"]);
 
-        if($allergens) {
+        if ($allergens) {
             $ingredient["allergens"] = $allergens;
         }
 
         return $ingredient;
     }
 
-    private function getAllergensByIngredientId($ingredientId) {
+    public function updateIngredient($ingredientId, $body)
+    {
+        $allergens = json_decode($body["allergens"], true);
+        $ingredientName = $body["ingredientName"];
+        $ingredientCategorie =  $body["ingredientCategorie"];
+        $unit = $body["unit"] === '100g' ? substr($body["unit"], -1) : substr($body["unit"], -2); // Az utolsó karakter (a "g") eltávolítása
+        $unit_quantity = substr($body["unit"], 0, -1); // Az utolsó karakter (a "g") kivágása
+        $calorie = (int)$body["calorie"];
+        $common_unit =  isset($body["common_unit"]) ?  $body["common_unit"] : "";
+        $common_unit_quantity = isset($body["common_unit_quantity"]) ? (int)$body["common_unit_quantity"] : 0;
+        $calorie = (int)$body["calorie"];
+        $protein = (int)$body["protein"];
+        $carb = (int)$body["carb"];
+        $fat = (int)$body["fat"];
+        $glycemicIndex = (int)$body["glychemicIndex"];
+        $isRecommended = isset($body["isRecommended"]) ? 1 : 0;
+        $isAccepted = $isRecommended === 0 ? null : 0;
+
+
+        $stmt = $this->pdo->prepare("UPDATE `ingredients` SET 
+        `ingredientName` = :ingredientName, 
+        `ingredientCategorie` = :ingredientCategorie, 
+        `unit` = :unit, 
+        `unit_quantity` = :unit_quantity, 
+        `calorie` = :calorie, 
+        `common_unit` = :common_unit, 
+        `common_unit_quantity` = :common_unit_quantity, 
+        `protein` = :protein, 
+        `carb` = :carb, 
+        `fat` = :fat, 
+        `glycemicIndex` = :glycemicIndex, 
+        `isRecommended` = :isRecommended, 
+        `isAccepted` = :isAccepted 
+        WHERE 
+        `ingredients`.`ingredientId` = :ingredientId;");
+
+        $stmt->bindParam(':ingredientName', $ingredientName, PDO::PARAM_STR);
+        $stmt->bindParam(':ingredientCategorie', $ingredientCategorie, PDO::PARAM_STR);
+        $stmt->bindParam(':unit', $unit, PDO::PARAM_STR);
+        $stmt->bindParam(':unit_quantity', $unit_quantity, PDO::PARAM_INT);
+        $stmt->bindParam(':calorie', $calorie, PDO::PARAM_INT);
+        $stmt->bindParam(':common_unit', $common_unit, PDO::PARAM_STR);
+        $stmt->bindParam(':common_unit_quantity', $common_unit_quantity, PDO::PARAM_INT);
+        $stmt->bindParam(':protein', $protein, PDO::PARAM_INT);
+        $stmt->bindParam(':carb', $carb, PDO::PARAM_INT);
+        $stmt->bindParam(':fat', $fat, PDO::PARAM_INT);
+        $stmt->bindParam(':glycemicIndex', $glycemicIndex, PDO::PARAM_INT);
+        $stmt->bindParam(':isRecommended', $isRecommended, PDO::PARAM_INT);
+        $stmt->bindParam(':isAccepted', $isAccepted, PDO::PARAM_INT);
+        $stmt->bindParam(':ingredientId', $ingredientId, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        if (empty($allergens)) {
+            $this->deleteAllergens($ingredientId);
+            header("Location: /ingredients");
+            return;
+        }
+
+        if ($allergens) {
+
+            $isSuccess = $this->deleteAllergens($ingredientId);
+            foreach ($allergens as $allergen) {
+                if ($isSuccess) {
+                    $stmt = $this->pdo->prepare("INSERT INTO `ingredient_allergens` VALUES (NULL, :allergenNumber, :allergenName, :ingredientRefId);");
+                    $stmt->bindParam(":allergenNumber", $allergen["allergenId"]);
+                    $stmt->bindParam(":allergenName", $allergen["allergenName"]);
+                    $stmt->bindParam(":ingredientRefId", $ingredientId);
+                    $stmt->execute();
+                }
+            }
+        }
+
+
+        header("Location: /ingredients");
+    }
+
+    private function deleteAllergens($ingredientId)
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM `ingredient_allergens` WHERE `ingredientRefId` = :ingredientId");
+        $stmt->bindParam(":ingredientId", $ingredientId);
+        $isSuccess = $stmt->execute();
+
+        return $isSuccess;
+    }
+
+
+    private function getAllergensByIngredientId($ingredientId)
+    {
         $stmt = $this->pdo->prepare("SELECT * FROM `ingredient_allergens` WHERE `ingredientRefId` = :ingredientId");
         $stmt->bindParam(":ingredientId", $ingredientId);;
         $stmt->execute();

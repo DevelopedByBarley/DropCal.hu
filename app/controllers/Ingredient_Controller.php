@@ -37,19 +37,7 @@ class IngredientController extends DiaryController
     public function addIngredient()
     {
         $this->loginChecker->checkUserIsLoggedInOrRedirect();
-        $_POST = json_decode(file_get_contents('php://input'), true);
-        $isSuccess  = $this->ingredientModel->addIngredient($_POST);
-
-        if (!$isSuccess) {
-            echo json_encode([
-                "state" => false,
-            ]);
-            return;
-        }
-
-        echo json_encode([
-            "state" => true,
-        ]);
+        $this->ingredientModel->addIngredient($_POST);
     }
 
     public function getIngredientForm()
@@ -64,8 +52,8 @@ class IngredientController extends DiaryController
         $profileImage = $user["profileImage"];
 
         $ingredientId = $_GET["id"] ?? null;
-        if($ingredientId) {
-           $ingredient =  $this->ingredientModel->getIngredientById($ingredientId);
+        if ($ingredientId) {
+            $ingredient =  $this->ingredientModel->getIngredientById($ingredientId);
         }
 
         echo $this->renderer->render("Layout.php", [
@@ -83,12 +71,18 @@ class IngredientController extends DiaryController
     }
 
 
-    public function deleteIngredient($vars) {
+    public function deleteIngredient($vars)
+    {
         $this->loginChecker->checkUserIsLoggedInOrRedirect();
         $id = $vars["id"];
 
         $this->ingredientModel->delete($id);
-
     }
 
+    public function updateIngredient($vars)
+    {
+        $this->loginChecker->checkUserIsLoggedInOrRedirect();
+        $ingredientId = $vars["id"];
+        $this->ingredientModel->updateIngredient($ingredientId, $_POST);
+    }
 }
