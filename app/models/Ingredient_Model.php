@@ -38,6 +38,7 @@ class IngredientModel extends DiaryModel
         $calorie = (int)$body["calorie"];
         $common_unit =  isset($body["common_unit"]) ?  $body["common_unit"] : "";
         $common_unit_quantity = isset($body["common_unit_quantity"]) ? (int)$body["common_unit_quantity"] : 0;
+        $common_unit_ex = isset($common_unit) ? $unit : '';
         $calorie = (int)$body["calorie"];
         $protein = (int)$body["protein"];
         $carb = (int)$body["carb"];
@@ -56,6 +57,7 @@ class IngredientModel extends DiaryModel
             :calorie, 
             :common_unit,
             :common_unit_quantity,
+            :common_unit_ex,
             :protein, 
             :carb, 
             :fat,
@@ -72,6 +74,7 @@ class IngredientModel extends DiaryModel
         $stmt->bindParam(':calorie', $calorie, PDO::PARAM_INT);
         $stmt->bindParam(':common_unit', $common_unit, PDO::PARAM_STR);
         $stmt->bindParam(':common_unit_quantity', $common_unit_quantity, PDO::PARAM_INT);
+        $stmt->bindParam(':common_unit_ex', $common_unit_ex, PDO::PARAM_STR);
         $stmt->bindParam(':protein', $protein, PDO::PARAM_INT);
         $stmt->bindParam(':carb', $carb, PDO::PARAM_INT);
         $stmt->bindParam(':fat', $fat, PDO::PARAM_INT);
@@ -137,6 +140,7 @@ class IngredientModel extends DiaryModel
         $calorie = (int)$body["calorie"];
         $common_unit =  isset($body["common_unit"]) ?  $body["common_unit"] : "";
         $common_unit_quantity = isset($body["common_unit_quantity"]) ? (int)$body["common_unit_quantity"] : 0;
+        $common_unit_ex = isset($common_unit) ? $unit : '';
         $calorie = (int)$body["calorie"];
         $protein = (int)$body["protein"];
         $carb = (int)$body["carb"];
@@ -153,7 +157,8 @@ class IngredientModel extends DiaryModel
         `unit_quantity` = :unit_quantity, 
         `calorie` = :calorie, 
         `common_unit` = :common_unit, 
-        `common_unit_quantity` = :common_unit_quantity, 
+        `common_unit_quantity` = :common_unit_quantity,
+        `common_unit_ex` = :common_unit_ex,
         `protein` = :protein, 
         `carb` = :carb, 
         `fat` = :fat, 
@@ -170,6 +175,7 @@ class IngredientModel extends DiaryModel
         $stmt->bindParam(':calorie', $calorie, PDO::PARAM_INT);
         $stmt->bindParam(':common_unit', $common_unit, PDO::PARAM_STR);
         $stmt->bindParam(':common_unit_quantity', $common_unit_quantity, PDO::PARAM_INT);
+        $stmt->bindParam(':common_unit_ex', $common_unit_ex, PDO::PARAM_STR);
         $stmt->bindParam(':protein', $protein, PDO::PARAM_INT);
         $stmt->bindParam(':carb', $carb, PDO::PARAM_INT);
         $stmt->bindParam(':fat', $fat, PDO::PARAM_INT);

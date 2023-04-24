@@ -37,13 +37,6 @@ class DiaryModel extends UserModel
     }
 
 
-    private function getUserDiaryByDate($date)
-    {
-    }
-
-
-
-
 
     // Lekérjük a diary-t user és dátum alapján
     private function getUserDiary($userId, $date)
