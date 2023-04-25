@@ -8,6 +8,7 @@ $userCarb = $user["carbohydrate"] ?? round(($userFinalBMR * 0.53) / 4.1, 0);
 $userFat = $user["fat"] ?? round(($userFinalBMR * 0.22) / 9.3, 0);
 $summaries = $diaryData["summaries"];
 
+
 ?>
 
 <div class="diary">
@@ -61,7 +62,7 @@ $summaries = $diaryData["summaries"];
         </div>
       </div>
       <div class="row  d-flex align-items-center justify-content-center flex-column">
-        <div class="col-12 col-sm-3 ">
+        <div class="col-12 col-sm-6 ">
           <div class="search-box">
             <div class="input-group rounded">
               <input type="search" oninput="searchIngredients(event)" class="form-control rounded border" placeholder="Keresés" aria-label="Search" aria-describedby="search-addon" />
@@ -71,7 +72,7 @@ $summaries = $diaryData["summaries"];
             </div>
           </div>
         </div>
-        <div class="col-12 col-sm-5" id="search-result-container"></div>
+        <ul class="col-12 col-sm-7 col-lg-6 list-group bg-dark" id="search-result-container"></ul>
       </div>
     </div>
     <div class="row d-flex align-items-center justify-content-center flex-column">
@@ -95,6 +96,5 @@ $summaries = $diaryData["summaries"];
       </div>
     </div>
   </div>
-
-  <div class="col-12 col-sm-3 bg-dark d-flex flex-column align-items-center justify-content-center container-fluid text-light p-5" id="single-ingredient-form" data-date="<?= $_GET["date"] ?>" data-diaryid="<?= $diaryData["userDiary"]["diaryId"] ?>"></div>
+  <div class="col-12 col-sm-3 bg-dark  container-fluid text-light p-1" id="single-ingredient-form" data-date="<?= $_GET["date"] ?>" data-diaryid="<?= $diaryData["userDiary"]["diaryId"] ?>"></div>
 </div>

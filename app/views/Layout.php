@@ -29,14 +29,16 @@
 
         <?php include 'includes/Footer.php' ?>
     </div>
-        <?php include 'components/CookieModal.php' ?>
-    <script src="public/js/fileReader.js"></script>
-    <script src="public/js/preLoader.js"></script>
-    <script src="public/js/cookieModalHandle.js"></script>
-    <script src="public/js/emailVerification.js"></script>
-    <script src="public/js/headerNavigation.js"></script>
-    <script src="public/js/add_diary_ingredient.js"></script>
-    <script src="public/js/new_ingredient.js"></script>
+    <?php include 'components/CookieModal.php' ?>
+    <script src="public/js/registration/fileReader.js"></script>
+    <script src="public/js/registration/emailVerification.js"></script>
+    <script src="public/js/includes/preLoader.js"></script>
+    <script src="public/js/includes/headerNavigation.js"></script>
+    <script src="public/js/cookie/cookieModalHandle.js"></script>
+    <script src="public/js/ingredient/ingredient_form.js"></script>
+    <script src="public/js/diary/add_diary_ingredient.js"></script>
+
+
 </body>
 
 </html>

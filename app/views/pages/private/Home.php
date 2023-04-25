@@ -53,5 +53,4 @@ $summaries = $diaryData["summaries"];
         </div>
 
     </a>
-    <?php include 'app/views/includes/Ingredients_Toggle.php' ?>
 </div>
