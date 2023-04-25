@@ -77,31 +77,6 @@ function clearContainer(name) {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //--------------------------------------------------------------------------------------------------------------------->
 
 // Diary Ingredient section ------------------------------------------------------------------------------------------------------------------------->
@@ -109,7 +84,7 @@ function getIngredientById(ingredientItems) {
   // Végig lépdelünk az ingredient itemeken amiket a search resultba vissza kaptunk
   ingredientItems.forEach((ingredientItem) => {
     ingredientItem.addEventListener("click", (event) => {
-      // Kiürítjük clickre a containert 
+      // Kiürítjük clickre a containert
       event.target.parentElement.innerHTML = "";
 
       // Id alapján lekérjük az ingredientet
@@ -126,46 +101,97 @@ function getIngredientById(ingredientItems) {
             // Majd a diaryIngredientForm  megkapja az aktív class-t
 
             diaryIngredientForm.classList.add("active");
-            // Amiben a kirajzolt tartalomért a renderDiaryIngredientForm() felel 
-            renderDiaryIngredientForm(state);
+            // Amiben a kirajzolt tartalomért a renderDiaryIngredientForm() felel
+            renderDiaryIngredientForm();
           }
         });
     });
   });
 }
 
-
 // A napló hozzáadásához való form kirajzolása
-function renderDiaryIngredientForm(state) {
-
-
+function renderDiaryIngredientForm() {
   let template = generateDiaryFormTemplate();
   diaryIngredientForm.innerHTML = template;
 
-  const diaryIngredientContainer = document.getElementById(
+  const DiaryIngredientContainer = document.getElementById(
     "diary-ingredient-container"
-    );
+  );
+  const DiaryBtn = document.getElementById("diary-btn");
+  const DataBtn = document.getElementById("data-btn");
+  const Units = document.querySelectorAll(".units");
 
-  const diaryBtn = document.getElementById("diary-btn");
+  Units.forEach((unitBtn) => {
+    unitBtn.onclick = (event) => setUnitButton(event);
+  });
 
-  const dataBtn = document.getElementById("data-btn");
-
-  if (diaryBtn) {
-    diaryBtn.onclick = () => renderDiaryIngredientForm(state);
+  if (DiaryBtn) {
+    DiaryBtn.onclick = () => renderDiaryIngredientForm();
   }
-  if (dataBtn) {
-    dataBtn.onclick = () => renderData(diaryIngredientContainer, state);
+  if (DataBtn) {
+    DataBtn.onclick = () => renderData(DiaryIngredientContainer);
   }
 }
 
+// -------------------UNIT SECTION------------------------------------------------------------------------------------------------->
+
+// Aktív class beállítása gombnyomásra
+function setUnitButton(event) {
+  const Units = state.hasOwnProperty("ingredientForUpdate")
+    ? state.ingredientForUpdate.ingredientUnits
+    : state.ingredient.ingredientUnits;
+  let index = event.target.dataset.index;
+  let selectedIndex = Units.findIndex(
+    (unit) => parseInt(unit.index) === parseInt(index)
+  );
+
+  for (i = 0; i < Units.length; i++) {
+    if (selectedIndex === i) {
+      Units[i].isSelected = true;
+    } else {
+      Units[i].isSelected = false;
+    }
+  }
+  renderDiaryIngredientForm();
+}
+
+
+
+
+
+
+
+
+
+
+
+
 // -----------------TEMPLATE SECTION--------------------------------------------------------------------->
 
+// UnitButtons kigenerálása
+const generateUnitTemplate = (Units) => {
+  let unitTemplate = "";
 
-//  template kigenerálása 
+  Units.forEach((unit) => {
+    unitTemplate += `<button data-index="${unit.index
+      }" class="units btn btn-outline-warning text-light btn-md m-1 ${unit.isSelected ? "active" : ""
+      }">${unit.unitName}</button>`;
+  });
+
+  return unitTemplate;
+};
+
+//  template kigenerálása
 function generateDiaryFormTemplate() {
+  const Units = state.hasOwnProperty("ingredientForUpdate")
+    ? state.ingredientForUpdate.ingredientUnits
+    : state.ingredient.ingredientUnits;
   let isIngredientForUpdate = state.hasOwnProperty("ingredientForUpdate"); // Megnézzük hogy a state feltöltése updatelni való ingredientből vagy nem
-  let ingredient = state.hasOwnProperty("ingredientForUpdate") ? state.ingredientForUpdate : state.ingredient; // Ennek függvényében töltjük fel az ingredient értékét
+  let ingredient = state.hasOwnProperty("ingredientForUpdate")
+    ? state.ingredientForUpdate
+    : state.ingredient; // Ennek függvényében töltjük fel az ingredient értékét
   let template = "";
+  let unitTemplate = generateUnitTemplate(Units);
 
   template += `
     <div class="row mt-2 diary-form">
@@ -176,28 +202,38 @@ function generateDiaryFormTemplate() {
           <button type="button" class="btn btn-warning text-light m-3" id="data-btn">Adatok</button>
          </div>
         <hr>
-        <div id="diary-ingredient-container"> 
-          ${isIngredientForUpdate ? `<button class="btn btn-warning text-light">Frissít</button>` : `<button class="btn btn-primary text-light">Hozzáad</button>`}
         </div>
-    </div>
+        <div class="row" id="diary-ingredient-container"> 
+          <div class="col-12">
+            <input type="number" id="quantity" name="quantity"/>
+          </div>
+          <div class="col-12">
+            ${unitTemplate}
+          </div>  
+
+          <div class="col-12">
+            ${isIngredientForUpdate
+      ? `<button class="btn btn-warning text-light">Frissít</button>`
+      : `<button class="btn btn-primary text-light">Hozzáad</button>`
+    }
+          </div>
+        </div>
   `;
-// Templateben lévő diary-ingredient-containerben generáljuk ki a napló vagy adatok gombra kattintva a kívánt tartalmat
+  // Templateben lévő diary-ingredient-containerben generáljuk ki a napló vagy adatok gombra kattintva a kívánt tartalmat
   return template;
 }
 
-
-
-
 // Ha az "Adatok" gombra kattintunk generáljuk ki ezt a tartalmat
-function renderData(diaryIngredientContainer, state) {
-  let ingredient = state.hasOwnProperty("ingredientForUpdate") ? state.ingredientForUpdate : state.ingredient;
+function renderData(diaryIngredientContainer) {
+  let ingredient = state.hasOwnProperty("ingredientForUpdate")
+    ? state.ingredientForUpdate
+    : state.ingredient;
   let allergensTemplate = "";
   ingredient.allergens.forEach((allergen) => {
     allergensTemplate += `
       <div class="btn btn-outline-warning w-100">${allergen.i_allergenName}</div>
     `;
   });
-
 
   let diaryDataTemplate = `
     <div class="row mt-2">

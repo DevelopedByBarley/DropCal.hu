@@ -51,6 +51,5 @@ $summaries = $diaryData["summaries"];
                 </div>
             </div>
         </div>
-
     </a>
 </div>
