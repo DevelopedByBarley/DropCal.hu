@@ -29,18 +29,19 @@ class APIModel
 
         $ingredient = $this->organizeIngredientUnits($ingredientData);
 
-        if($ingredient) {
-           $allergens = $this->getAllergensByIngredientId($ingredient["ingredientId"]);
-           if($allergens && !empty($allergens)) {
-            $ingredient["allergens"] = $allergens;
-           }
+        if ($ingredient) {
+            $allergens = $this->getAllergensByIngredientId($ingredient["ingredientId"]);
+            if ($allergens && !empty($allergens)) {
+                $ingredient["allergens"] = $allergens;
+            }
         }
 
         return $ingredient;
     }
 
 
-    private function getAllergensByIngredientId($ingredientId) {
+    private function getAllergensByIngredientId($ingredientId)
+    {
         $stmt = $this->pdo->prepare("SELECT * FROM `ingredient_allergens` WHERE `ingredientRefId` = :ingredientId");
         $stmt->bindParam(":ingredientId", $ingredientId);;
         $stmt->execute();
@@ -52,7 +53,7 @@ class APIModel
 
     private function organizeIngredientUnits($ingredient)
     {
-    
+
         if ($ingredient["unit"] === 'g') {
             $ingredient["ingredientUnits"] = [
                 [
@@ -98,7 +99,7 @@ class APIModel
         }
 
 
-        if(isset($ingredient["common_unit"])) {
+        if (isset($ingredient["common_unit"])) {
             $ingredient["ingredientUnits"][] = [
                 "index" => 3,
                 "unitName" => $ingredient["common_unit"],
@@ -107,7 +108,64 @@ class APIModel
                 "isSelected" => false
             ];
         }
-        
+
         return $ingredient;
+    }
+
+
+
+    public function addIngredient($body)
+    {
+
+        var_dump($body);
+        exit;
+
+        $name = $body["name"];
+
+
+
+
+        $stmt =  $this->pdo->prepare(
+            "INSERT INTO 
+        `diary_ingredients` 
+        (`d_ingredientId`, 
+        `name`, 
+        `partOfTheDay`, 
+        `unit`, 
+        `unit_quantity`, 
+        `calorie`, 
+        `common_unit`, 
+        `common_unit_quantity`, 
+        `common_unit_ex`, 
+        `selected_unit`, 
+        `protein`, `carb`, 
+        `fat`, 
+        `glychemicIndex`, 
+        `diaryRefId`
+        ) VALUES 
+        (NULL, 
+        'dsa', 
+        '2', 
+        'g', 
+        '100', 
+        '100', 
+        'darab', 
+        '200', 
+        'g', 
+        'adsadasdas', 
+        '23', 
+        '200', 
+        '20', 
+        '2', 
+        '164')
+        "
+        );
+
+        $stmt->execute();
+        if ($this->pdo->lastInsertId()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

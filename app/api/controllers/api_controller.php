@@ -31,4 +31,9 @@ class APIController
 		
 		echo json_encode($ingredient);
 	}
+
+	public function addDiaryIngredient() {
+		$body = json_decode(file_get_contents('php://input'), true);
+		$this->APIModel->addIngredient($body);
+	}
 }

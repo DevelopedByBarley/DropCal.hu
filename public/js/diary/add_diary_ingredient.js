@@ -109,7 +109,7 @@ function getIngredientById(ingredientItems) {
   });
 }
 
-// A napló hozzáadásához való form kirajzolása
+// A napló hozzáadásához való form kirajzolása, 
 function renderDiaryIngredientForm() {
   let template = generateDiaryFormTemplate();
   diaryIngredientForm.innerHTML = template;
@@ -117,10 +117,44 @@ function renderDiaryIngredientForm() {
   const DiaryIngredientContainer = document.getElementById(
     "diary-ingredient-container"
   );
+
+
+  // Kirajzold formból kikérjük az elemeket
   const DiaryBtn = document.getElementById("diary-btn");
   const DataBtn = document.getElementById("data-btn");
   const Units = document.querySelectorAll(".units");
+  const Quantity = document.getElementById("quantity");
+  const ResultOfCalorie = document.getElementById("result-of-calorie");
+  const ResultOfProtein = document.getElementById("result-of-protein");
+  const ResultOfCarb = document.getElementById("result-of-carb");
+  const ResultOfFat = document.getElementById("result-of-fat");
+  const sendBtn = document.getElementById("send");
 
+  console.log(sendBtn)
+
+
+  // Kalkulátorokkal kirajzoljuk a kikért elemek értékeit
+  ResultOfCalorie.innerHTML = calculateCalorie(Quantity.value)
+  ResultOfProtein.innerHTML = calculateMacros(Quantity.value).protein;
+  ResultOfCarb.innerHTML = calculateMacros(Quantity.value).carb;
+  ResultOfFat.innerHTML = calculateMacros(Quantity.value).fat
+
+
+
+ // Input mező input eseményére reagálva szintén kalkulátorokkal kalkulálunk és kirajzoljuk azokat!
+  Quantity.oninput = (event) => {
+    let quantity = parseInt(event.target.value);
+    if (isNaN(quantity)) quantity = 0;
+    localStorage.setItem("quantity", quantity);
+
+
+    ResultOfCalorie.innerHTML = calculateCalorie(quantity);
+    ResultOfProtein.innerHTML = calculateMacros(quantity).protein;
+    ResultOfCarb.innerHTML = calculateMacros(quantity).carb;
+    ResultOfFat.innerHTML = calculateMacros(quantity).fat
+  }
+
+ // Unit buttonokra való reagálás, active classt megkapják és a kiválasztott unit multiplier alapján rajzolódnak ki az értékek
   Units.forEach((unitBtn) => {
     unitBtn.onclick = (event) => setUnitButton(event);
   });
@@ -131,7 +165,123 @@ function renderDiaryIngredientForm() {
   if (DataBtn) {
     DataBtn.onclick = () => renderData(DiaryIngredientContainer);
   }
+
+  // Küldés a backendnek új ingredient hozzáadása esetén
+  sendBtn.addEventListener('click', (event) => {
+    event.preventDefault();
+    const Ingredient = state.ingredient;
+
+  
+    
+
+    let newIngredient = {
+      name: Ingredient.ingredientName,
+      unit: Ingredient.unit,
+      unitQuantity: parseInt(Ingredient.unit_quantity),
+      commonUnit: Ingredient.common_unit,
+      common_unit_quantity: parseInt(Ingredient.common_unit_quantity),
+      common_unit_ex: Ingredient.common_unit_ex,
+      partOfTheDay: 1,
+      selectedUnit: Ingredient.ingredientUnits.find(ingredient => ingredient.isSelected === true),
+      calorie: parseInt(event.target.parentElement.parentElement.querySelector("#result-of-calorie").innerHTML),
+      protein: parseInt(event.target.parentElement.parentElement.querySelector("#result-of-protein").innerHTML),
+      carb: parseInt(event.target.parentElement.parentElement.querySelector("#result-of-carb").innerHTML),
+      fat: parseInt(event.target.parentElement.parentElement.querySelector("#result-of-fat").innerHTML),
+      diaryRefId: parseInt( event.target.parentElement.parentElement.parentElement.dataset.diaryid),
+      date: event.target.parentElement.parentElement.parentElement.dataset.date
+    }
+
+    fetch("/api/ingredient-new", {
+      method: "POST",
+      body: JSON.stringify(newIngredient)
+    })
+      .then(res => res.json())
+      .then(state => console.log(state));
+  })
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ---------------->Calculate Section;------------------------------------>
+
+// Kalória kalkulálása
+function calculateCalorie(quantity) {
+  const Units = state.hasOwnProperty("ingredientForUpdate")
+    ? state.ingredientForUpdate.ingredientUnits
+    : state.ingredient.ingredientUnits;
+  let ingredient = state.hasOwnProperty("ingredientForUpdate")
+    ? state.ingredientForUpdate
+    : state.ingredient;
+  let unit = Units.find(unit => unit.isSelected === true);
+  let multiplier = parseInt(unit.multiplier);
+  let kCal = parseInt(ingredient.calorie);
+  let calculated = ((parseInt(quantity) * multiplier) / 100) * kCal;
+
+  return Math.round(calculated);
+}
+
+
+// Makrók kalulálása
+function calculateMacros(quantity) {
+  const Units = state.hasOwnProperty("ingredientForUpdate")
+    ? state.ingredientForUpdate.ingredientUnits
+    : state.ingredient.ingredientUnits;
+  let ingredient = state.hasOwnProperty("ingredientForUpdate")
+    ? state.ingredientForUpdate
+    : state.ingredient;
+  let unit = Units.find(unit => unit.isSelected === true);
+  let multiplier = parseInt(unit.multiplier);
+  let protein = Math.round(((parseInt(quantity) * multiplier) / 100) * parseInt(ingredient.protein));
+  let carb = Math.round(((parseInt(quantity) * multiplier) / 100) * parseInt(ingredient.carb));
+  let fat = Math.round(((parseInt(quantity) * multiplier) / 100) * parseInt(ingredient.fat));
+
+  return {
+    protein: protein,
+    carb: carb,
+    fat: fat
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // -------------------UNIT SECTION------------------------------------------------------------------------------------------------->
 
@@ -154,17 +304,6 @@ function setUnitButton(event) {
   }
   renderDiaryIngredientForm();
 }
-
-
-
-
-
-
-
-
-
-
-
 
 // -----------------TEMPLATE SECTION--------------------------------------------------------------------->
 
@@ -192,10 +331,13 @@ function generateDiaryFormTemplate() {
     : state.ingredient; // Ennek függvényében töltjük fel az ingredient értékét
   let template = "";
   let unitTemplate = generateUnitTemplate(Units);
+  let quantity = localStorage.getItem("quantity") !== null ? localStorage.getItem("quantity") : 100;
+
+  console.log(quantity);
 
   template += `
     <div class="row mt-2 diary-form">
-        <h1 class="display-5 mt-2 mb-2">${ingredient.ingredientName}</h1>
+        <h1 class="display-5 mt-2 mb-2" id="name">${ingredient.ingredientName}</h1>
      
         <div class="btn-group d-flex align-items-center justify-content-center" role="group" aria-label="Basic mixed styles example">
           <button type="button" class="btn btn-info text-light m-3" id="diary-btn">Napló</button>
@@ -205,16 +347,39 @@ function generateDiaryFormTemplate() {
         </div>
         <div class="row" id="diary-ingredient-container"> 
           <div class="col-12">
-            <input type="number" id="quantity" name="quantity"/>
+            <input type="number" id="quantity" name="quantity" value="${quantity}"/>
           </div>
+
           <div class="col-12">
             ${unitTemplate}
-          </div>  
+          </div>
+          
+          <div class="col-12 calorie">
+            <span id="result-of-calorie"></span> Kcal
+          </div>
+
+          <div class="col-4 macros" >
+            <span id="result-of-protein"></span>
+          </div>
+          <div class="col-4 macros" >
+            <span id="result-of-carb"></span>
+          </div>
+          <div class="col-4 macros" >
+            <span id="result-of-fat"></span>
+          </div>
+          
+
+
+
+
+
+
+
 
           <div class="col-12">
             ${isIngredientForUpdate
-      ? `<button class="btn btn-warning text-light">Frissít</button>`
-      : `<button class="btn btn-primary text-light">Hozzáad</button>`
+      ? `<button class="btn btn-warning text-light" id="update">Frissít</button>`
+      : `<button class="btn btn-primary text-light" id="send">Hozzáad</button>`
     }
           </div>
         </div>
