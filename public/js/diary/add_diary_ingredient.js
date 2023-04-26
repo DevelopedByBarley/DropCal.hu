@@ -130,7 +130,6 @@ function renderDiaryIngredientForm() {
   const ResultOfFat = document.getElementById("result-of-fat");
   const sendBtn = document.getElementById("send");
 
-  console.log(sendBtn)
 
 
   // Kalkulátorokkal kirajzoljuk a kikért elemek értékeit
@@ -141,7 +140,7 @@ function renderDiaryIngredientForm() {
 
 
 
- // Input mező input eseményére reagálva szintén kalkulátorokkal kalkulálunk és kirajzoljuk azokat!
+  // Input mező input eseményére reagálva szintén kalkulátorokkal kalkulálunk és kirajzoljuk azokat!
   Quantity.oninput = (event) => {
     let quantity = parseInt(event.target.value);
     if (isNaN(quantity)) quantity = 0;
@@ -154,7 +153,7 @@ function renderDiaryIngredientForm() {
     ResultOfFat.innerHTML = calculateMacros(quantity).fat
   }
 
- // Unit buttonokra való reagálás, active classt megkapják és a kiválasztott unit multiplier alapján rajzolódnak ki az értékek
+  // Unit buttonokra való reagálás, active classt megkapják és a kiválasztott unit multiplier alapján rajzolódnak ki az értékek
   Units.forEach((unitBtn) => {
     unitBtn.onclick = (event) => setUnitButton(event);
   });
@@ -170,9 +169,9 @@ function renderDiaryIngredientForm() {
   sendBtn.addEventListener('click', (event) => {
     event.preventDefault();
     const Ingredient = state.ingredient;
+    let date = event.target.parentElement.parentElement.parentElement.dataset.date
 
-  
-    
+
 
     let newIngredient = {
       name: Ingredient.ingredientName,
@@ -187,8 +186,8 @@ function renderDiaryIngredientForm() {
       protein: parseInt(event.target.parentElement.parentElement.querySelector("#result-of-protein").innerHTML),
       carb: parseInt(event.target.parentElement.parentElement.querySelector("#result-of-carb").innerHTML),
       fat: parseInt(event.target.parentElement.parentElement.querySelector("#result-of-fat").innerHTML),
-      diaryRefId: parseInt( event.target.parentElement.parentElement.parentElement.dataset.diaryid),
-      date: event.target.parentElement.parentElement.parentElement.dataset.date
+      glychemicIndex: Ingredient.glycemicIndex,
+      diaryRefId: parseInt(event.target.parentElement.parentElement.parentElement.dataset.diaryid),
     }
 
     fetch("/api/ingredient-new", {
@@ -196,7 +195,12 @@ function renderDiaryIngredientForm() {
       body: JSON.stringify(newIngredient)
     })
       .then(res => res.json())
-      .then(state => console.log(state));
+      .then(data => {
+        let state = data.state;
+        if(state) {
+          window.location.href = `/diary/currentDiary?date=${date}`
+        }
+      });
   })
 }
 
@@ -231,8 +235,8 @@ function calculateCalorie(quantity) {
   let unit = Units.find(unit => unit.isSelected === true);
   let multiplier = parseInt(unit.multiplier);
   let kCal = parseInt(ingredient.calorie);
-  let calculated = ((parseInt(quantity) * multiplier) / 100) * kCal;
-
+  console.log(multiplier);
+  let calculated = ((parseInt(quantity) * multiplier) / 100)  * kCal;
   return Math.round(calculated);
 }
 
@@ -333,7 +337,6 @@ function generateDiaryFormTemplate() {
   let unitTemplate = generateUnitTemplate(Units);
   let quantity = localStorage.getItem("quantity") !== null ? localStorage.getItem("quantity") : 100;
 
-  console.log(quantity);
 
   template += `
     <div class="row mt-2 diary-form">

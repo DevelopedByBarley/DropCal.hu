@@ -82,12 +82,15 @@ $summaries = $diaryData["summaries"];
             <?php foreach ($diaryData["diary_ingredients"] as $ingredient) : ?>
               <div class="ingredient-item">
                 <?php if ((int)$ingredient["partOfTheDay"] === 1) : ?>
-                  <li class="list-group-item bg-info text-light m-1"><?= $ingredient["name"] ?> <?= $ingredient["calorie"]?></li>
+                  <li class="list-group-item bg-info text-light m-1 d-flex align-items-center justify-content-between w-100">
+                    <div class="name"><?= $ingredient["name"] ?></div>
+                    <div class="calorie"><?= $ingredient["calorie"] ?>Kcal</div>
+                  </li>
 
                 <?php elseif ((int)$ingredient["partOfTheDay"] === 2) : ?>
-                  <li class="list-group-item bg-success text-light m-1"><?= $ingredient["name"] ?></li>
+                  <li class="list-group-item bg-success text-light m-1"><?= $ingredient["name"]  ?></li>
                 <?php else : ?>
-                  <li class="list-group-item bg-warning text-light m-1"><?= $ingredient["name"] ?>  <?= $ingredient["calorie"]?>Kcal</li>
+                  <li class="list-group-item bg-warning text-light m-1"><?= $ingredient["name"] ?> <?= $ingredient["calorie"] ?>Kcal</li>
                 <?php endif ?>
               </div>
             <?php endforeach ?>
