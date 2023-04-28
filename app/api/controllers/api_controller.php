@@ -36,4 +36,12 @@ class APIController
 		$body = json_decode(file_get_contents('php://input'), true);
 		$this->APIModel->addIngredient($body);
 	}
+
+	public function getDiaryIngredient($vars) {
+		$this->APIModel->getDiaryIngredientById($vars["id"]);
+	}
+
+	public function updateDiaryIngredient($vars) {
+		$this->APIModel->updateIngredientForDiary($vars["id"]);
+	}
 }

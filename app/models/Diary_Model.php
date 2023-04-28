@@ -75,10 +75,10 @@ class DiaryModel extends UserModel
         $sumOfFat = 0;
 
         foreach ($ingredients as $ingredient) {
-            $sumOfCalorie += (int)$ingredient["calorie"];
-            $sumOfProtein += (int)$ingredient["protein"];
-            $sumOfCarb += (int)$ingredient["carb"];
-            $sumOfFat += (int)$ingredient["fat"];
+            $sumOfCalorie += (int)$ingredient["current_calorie"];
+            $sumOfProtein += (int)$ingredient["current_protein"];
+            $sumOfCarb += (int)$ingredient["current_carb"];
+            $sumOfFat += (int)$ingredient["current_fat"];
         }
 
         return [

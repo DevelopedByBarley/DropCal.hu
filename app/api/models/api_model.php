@@ -53,6 +53,8 @@ class APIModel
 
     private function organizeIngredientUnits($ingredient)
     {
+        $selected_unit = isset($ingredient["selected_unit"]) ? json_decode(html_entity_decode($ingredient["selected_unit"]), true) : null;
+
 
         if ($ingredient["unit"] === 'g') {
             $ingredient["ingredientUnits"] = [
@@ -109,6 +111,18 @@ class APIModel
             ];
         }
 
+        if ($selected_unit) {
+            for ($i = 0; $i < count($ingredient["ingredientUnits"]); $i++) {
+                $unit = $ingredient["ingredientUnits"][$i];
+                if($unit["index"] === $selected_unit["index"]) {
+                    $ingredient["ingredientUnits"][$i]["isSelected"] = true;
+                } else {
+                    $ingredient["ingredientUnits"][$i]["isSelected"] = false;
+
+                }
+            }
+        }
+
         return $ingredient;
     }
 
@@ -117,9 +131,7 @@ class APIModel
     public function addIngredient($body)
     {
 
-
-
-        $name = isset($body['name']) ? filter_var($body['name'], FILTER_SANITIZE_SPECIAL_CHARS) : '';
+        $ingredientName = isset($body['name']) ? filter_var($body['name'], FILTER_SANITIZE_SPECIAL_CHARS) : '';
         $unit = isset($body['unit']) ? filter_var($body['unit'], FILTER_SANITIZE_SPECIAL_CHARS) : '';
         $unit_quantity = $body['unitQuantity'] !== "" ? filter_var($body['unitQuantity'], FILTER_VALIDATE_INT) : 0;
         $common_unit = isset($body['commonUnit']) ? filter_var($body['commonUnit'], FILTER_SANITIZE_SPECIAL_CHARS) : '';
@@ -132,11 +144,17 @@ class APIModel
         $carb = $body['carb'] !== "" ? filter_var($body['carb'], FILTER_VALIDATE_INT) : 0;
         $fat = $body['fat'] !== "" ? filter_var($body['fat'], FILTER_VALIDATE_INT) : 0;
         $glychemicIndex = isset($body['g']) ? filter_var($body['glychemicIndex'], FILTER_SANITIZE_SPECIAL_CHARS) : '';
+        $currentCalorie = $body['currentCalorie'] !== "" ? filter_var($body['currentCalorie'], FILTER_VALIDATE_INT) : 0;;
+        $currentProtein = $body['currentProtein'] !== "" ? filter_var($body['currentProtein'], FILTER_VALIDATE_INT) : 0;;
+        $currentCarb = $body['currentCarb'] !== "" ? filter_var($body['currentCarb'], FILTER_VALIDATE_INT) : 0;;
+        $currentFat = $body['currentFat'] !== "" ? filter_var($body['currentFat'], FILTER_VALIDATE_INT) : 0;;
         $diaryRefId = $body['diaryRefId'] !== "" ? filter_var($body['diaryRefId'], FILTER_VALIDATE_INT) : 0;
+
+
         $stmt = $this->pdo->prepare("
             INSERT INTO `diary_ingredients` (
                 `d_ingredientId`, 
-                `name`, 
+                `ingredientName`, 
                 `partOfTheDay`, 
                 `unit`, 
                 `unit_quantity`, 
@@ -148,11 +166,15 @@ class APIModel
                 `protein`, 
                 `carb`, 
                 `fat`, 
-                `glychemicIndex`, 
+                `glychemicIndex`,
+                `current_calorie`,
+                `current_protein`,
+                `current_carb`,
+                `current_fat`, 
                 `diaryRefId`
             ) VALUES (
                 NULL, 
-                :name, 
+                :ingredientName, 
                 :partOfTheDay, 
                 :unit, 
                 :unit_quantity, 
@@ -164,12 +186,16 @@ class APIModel
                 :protein, 
                 :carb, 
                 :fat, 
-                :glychemicIndex, 
+                :glychemicIndex,
+                :current_calorie,
+                :current_protein,
+                :current_carb,
+                :current_fat, 
                 :diaryRefId
             )
         ");
 
-        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':ingredientName', $ingredientName);
         $stmt->bindParam(':partOfTheDay', $partOfTheDay);
         $stmt->bindParam(':unit', $unit);
         $stmt->bindParam(':unit_quantity', $unit_quantity);
@@ -182,6 +208,10 @@ class APIModel
         $stmt->bindParam(':carb', $carb);
         $stmt->bindParam(':fat', $fat);
         $stmt->bindParam(':glychemicIndex', $glychemicIndex);
+        $stmt->bindParam(':current_calorie', $currentCalorie);
+        $stmt->bindParam(':current_protein', $currentProtein);
+        $stmt->bindParam(':current_carb', $currentCarb);
+        $stmt->bindParam(':current_fat', $currentFat);
         $stmt->bindParam(':diaryRefId', $diaryRefId);
 
         $stmt->execute();
@@ -194,5 +224,30 @@ class APIModel
                 "state" => false
             ]);
         }
+    }
+
+    public function getDiaryIngredientById($id)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM `diary_ingredients` WHERE `d_ingredientId` = :id");
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+
+        $ingredientData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $ingredient = $this->organizeIngredientUnits($ingredientData);
+
+        if ($ingredient) {
+            $allergens = $this->getAllergensByIngredientId($ingredient["ingredientId"]);
+            if ($allergens && !empty($allergens)) {
+                $ingredient["allergens"] = $allergens;
+            }
+        }
+
+        echo json_encode($ingredient);
+    }
+
+    public function updateIngredientForDiary($id)
+    {
+        var_dump($id);
     }
 }
