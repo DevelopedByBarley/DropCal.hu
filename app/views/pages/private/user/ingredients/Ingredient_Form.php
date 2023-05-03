@@ -6,7 +6,7 @@ $ingredient = $params["ingredient"];
 <div class="container-fluid add-ingredient-container bg-light d-flex align-items-center justify-content-center">
     <div class="row rounded mt-2 d-flex align-items-center justify-content-center">
         <div class="col">
-            <form action="<?= isset($ingredient) ? "/ingredient/update/$ingredient[ingredientId]" : "/ingredient/new" ?>" method="POST" data-id="<?= $ingredient["ingredientId"] ?>">
+            <form onsubmit="sendIngredient(event)" data-exist="<?= isset($ingredient) ? $ingredient : false ?>" data-id="<?= isset($ingredient) ? $ingredient["ingredientId"] : null ?>">
                 <div class="user-subscription-content row mb-5">
                     <div class="col-lg-6 d-flex align-items-center justify-content-center flex-column">
                         <h1 class="text-center mt-5 display-6"><?= isset($ingredient) ? "Étel frissitése" : "Étel hozzáadása" ?></h1>

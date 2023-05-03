@@ -37,7 +37,10 @@ class IngredientController extends DiaryController
     public function addIngredient()
     {
         $this->loginChecker->checkUserIsLoggedInOrRedirect();
-        $this->ingredientModel->addIngredient($_POST);
+        $body = json_decode(file_get_contents('php://input'), true);
+        $state = $this->ingredientModel->addIngredient($body);
+
+        echo json_encode($state);
     }
 
     public function getIngredientForm()
@@ -82,7 +85,12 @@ class IngredientController extends DiaryController
     public function updateIngredient($vars)
     {
         $this->loginChecker->checkUserIsLoggedInOrRedirect();
+        $body = json_decode(file_get_contents('php://input'), true);
         $ingredientId = $vars["id"];
-        $this->ingredientModel->updateIngredient($ingredientId, $_POST);
+
+        $isSuccess = $this->ingredientModel->updateIngredient($ingredientId, $body);
+
+        echo json_encode($isSuccess);
+
     }
 }

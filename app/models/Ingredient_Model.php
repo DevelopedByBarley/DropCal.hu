@@ -99,7 +99,10 @@ class IngredientModel extends DiaryModel
         }
 
         if ($this->pdo->lastInsertId()) {
-            header("Location: /ingredients");
+            return ([
+                "state" => true
+            ]
+            );
         }
     }
 
@@ -188,8 +191,9 @@ class IngredientModel extends DiaryModel
 
         if (empty($allergens)) {
             $this->deleteAllergens($ingredientId);
-            header("Location: /ingredients");
-            return;
+            return ([
+                "state" => true
+            ]);
         }
 
         if ($allergens) {
@@ -207,7 +211,9 @@ class IngredientModel extends DiaryModel
         }
 
 
-        header("Location: /ingredients");
+        return ([
+            "state" => true
+        ]);
     }
 
     private function deleteAllergens($ingredientId)

@@ -173,6 +173,7 @@ if (noAllergen) {
   });
 }
 
+// "/ingredient/update/$ingredient[ingredientId]" : "/ingredient/new"
 
 // Új étel küldése
 function sendIngredient(event) {
@@ -183,6 +184,11 @@ function sendIngredient(event) {
   let allergenInput = document.getElementById("allergen-input");
   let glycemicAlert = document.getElementById("glycemic-alert");
   let allergensAlert = document.getElementById("allergens-alert");
+  let isIngredientForUpdate = event.target.dataset.exist;
+  let ingredientId = event.target.dataset.id;
+
+
+
 
   let newIngredient = {
     ingredientName: event.target.elements.ingredientName.value,
@@ -200,6 +206,7 @@ function sendIngredient(event) {
   };
 
   // Az a szekció, hogy ha be van kapcsolva az isRecommended és a glikémiás index vagy az allergének valamelyike nincs bepipálva, ne engedje elküldeni a formot
+
   if (
     (isRecommended && allergenInput.value === "") ||
     allergenInput.value === "[]" ||
@@ -223,14 +230,23 @@ function sendIngredient(event) {
 
 
   // Form elküldése
-  fetch("/ingredient/new", {
+  if (!isIngredientForUpdate) {
+    fetchIngredientData("/ingredient/new", newIngredient);
+    return;
+  }
+
+  fetchIngredientData(`/ingredient/update/${ingredientId}`, newIngredient)
+}
+
+function fetchIngredientData(url, body) {
+  fetch(url, {
     method: "POST",
-    body: JSON.stringify(newIngredient),
+    body: JSON.stringify(body),
   })
     .then((res) => res.json())
     .then((data) => {
       if (data.state) {
-        window.location.href = "/ingredients?isSuccess=1";
+        window.location.href = "/ingredients";
       }
     });
 }
