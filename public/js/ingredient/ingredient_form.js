@@ -205,6 +205,8 @@ function sendIngredient(event) {
     isRecommended: isRecommended ? "on" : "",
   };
 
+  console.log(newIngredient)
+
   // Az a szekció, hogy ha be van kapcsolva az isRecommended és a glikémiás index vagy az allergének valamelyike nincs bepipálva, ne engedje elküldeni a formot
 
   if (

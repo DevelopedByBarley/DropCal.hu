@@ -28,7 +28,7 @@ class IngredientModel extends DiaryModel
     public function addIngredient($body)
     {
 
-
+     
 
         $allergens = json_decode($body["allergens"], true);
         $ingredientName = $body["ingredientName"];
@@ -43,11 +43,12 @@ class IngredientModel extends DiaryModel
         $protein = (int)$body["protein"];
         $carb = (int)$body["carb"];
         $fat = (int)$body["fat"];
-        $glycemicIndex = (int)$body["glychemicIndex"];
-        $isRecommended = isset($body["isRecommended"]) ? 1 : 0;
+        $glycemicIndex = $body["glychemicIndex"] !== '' ? (int)$body["glychemicIndex"] : null;
+        $isRecommended = isset($body["isRecommended"]) && $body["isRecommended"] !== "" ? 1 : 0;
         $isAccepted = $isRecommended === 0 ? null : 0;
         $userRefId = $_SESSION["userId"] ?? null;
-
+        
+   
         $stmt = $this->pdo->prepare("INSERT INTO `ingredients` VALUES 
             (NULL, 
             :ingredientName, 
@@ -135,6 +136,9 @@ class IngredientModel extends DiaryModel
 
     public function updateIngredient($ingredientId, $body)
     {
+
+        
+
         $allergens = json_decode($body["allergens"], true);
         $ingredientName = $body["ingredientName"];
         $ingredientCategorie =  $body["ingredientCategorie"];
@@ -149,8 +153,9 @@ class IngredientModel extends DiaryModel
         $carb = (int)$body["carb"];
         $fat = (int)$body["fat"];
         $glycemicIndex = (int)$body["glychemicIndex"];
-        $isRecommended = isset($body["isRecommended"]) ? 1 : 0;
+        $isRecommended = isset($body["isRecommended"]) && $body["isRecommended"] !== "" ? 1 : 0;
         $isAccepted = $isRecommended === 0 ? null : 0;
+
 
 
         $stmt = $this->pdo->prepare("UPDATE `ingredients` SET 

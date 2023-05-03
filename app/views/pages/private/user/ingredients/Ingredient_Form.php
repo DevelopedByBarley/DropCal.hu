@@ -1,6 +1,7 @@
 <?php
 $ingredient = $params["ingredient"];
 
+var_dump($ingredient);
 ?>
 
 <div class="container-fluid add-ingredient-container bg-light d-flex align-items-center justify-content-center">
@@ -135,7 +136,7 @@ $ingredient = $params["ingredient"];
                             <div class="col-12 d-flex flex-column justify-content-center mt-4">
                                 <!-- Checkbox -->
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" <?= (isset($ingredient) && $ingredient["isRecommended"] === 1) ? "checked" : "" ?> value="<?= $ingredient["isRecommended"] === 1 ? 1 : "" ?>" id="isRecommended" name="isRecommended" />
+                                    <input class="form-check-input" type="checkbox" <?= (isset($ingredient) && (int)$ingredient["isRecommended"] === 1) ? "checked" : "" ?> value="<?= $ingredient["isRecommended"] === 1 ? 1 : "" ?>" id="isRecommended" name="isRecommended" />
                                     <label class="form-check-label" for="form1Example3"> Ajánlás a publikus csoportba </label>
                                 </div>
                             </div>
