@@ -1,12 +1,15 @@
 //Home.php
 const diaryToggle = document.getElementById("diary-ingredients-toggle");
 const cancelIngredients = document.getElementById("cancel-ingredients");
+const Search = document.getElementById("search");
 const searchBtn = document.getElementById("search-ingredient");
 const searchResultContainer = document.getElementById(
   "search-result-container"
 );
 const diaryIngredientForm = document.getElementById("single-ingredient-form");
 let ingredientItems = document.querySelectorAll('.ingredient-item');
+let numberOfPage;
+let pageCounter = localStorage.getItem("page-counter") ? localStorage.getItem("page-counter") : 1;
 let searchResult = [];
 let state = [];
 
@@ -23,26 +26,21 @@ ingredientItems.forEach((item) => {
 
 //------------->Search section
 
-function searchIngredients(event) {
+function searchIngredients() {
   //I. Input mezőbe írunk valamit lekérjük az adatbázist és feltöltjük a state-t
-  let name = event.target.value;
+  let name = Search.value;
   if (name.length >= 2) {
     fetch(`/api/search/${name}`)
       .then((res) => res.json())
-      .then((data) => (searchResult = data));
-
-    // II. A feltöltött stat-el kirajzoljuk a listát
-    renderSearchResult();
+      .then((data) => {
+        searchResult = data["ingredients"]
+        numberOfPage = (data["number_of_page"] - 1);
+        renderSearchResult();
+      });
 
     // III. A listaelemeket bekérjük és átadjuk a getIngredientByName()-nak amelyel
-    let ingredientItems = document.querySelectorAll(".ingredient-item");
-    ingredientItems.forEach((ingredientItem) => {
-      ingredientItem.addEventListener("click", (event) => {
-        let id = event.currentTarget.dataset.id;
-        getDiaryIngredientById(`/api/ingredient-single/${id}`, false);;
-      })
-    })
   }
+
 
   // IV. Kitisztítjuk a Container-t ha az input value length 0
   clearContainer(name);
@@ -78,13 +76,84 @@ if (cancelIngredients) {
 // Render search result a container-be
 function renderSearchResult() {
   let searchResultTemplate = ``;
+  const PaginationTemplate = `
+  <nav aria-label="Page navigation example">
+    <ul class="pagination mt-3 mb-3">
+      <li class="page-item">
+        <a class="page-link ${pageCounter <= 1 ? 'disabled' : ''}" aria-label="Previous" style="cursor: pointer" id="prev">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item"><a class="page-link">${pageCounter}</a></li>
+      <li class="page-item">
+        <a class="page-link ${pageCounter >= numberOfPage ? 'disabled' : ''}" aria-label="Next" style="cursor: pointer" id="next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
 
+  `;
+
+  if (searchResult.length > 0) {
+    searchResultTemplate += PaginationTemplate;
+  }
   searchResult.forEach((ingredient) => {
     searchResultTemplate += `
     <li class="list-group-item ingredient-item w-100" data-id="${ingredient.ingredientId}" style="cursor:pointer;">${ingredient.ingredientName}</li>
       `;
   });
   searchResultContainer.innerHTML = searchResultTemplate;
+
+  const Prev = document.getElementById('prev');
+  const Next = document.getElementById('next');
+
+  Prev.addEventListener('click', (event) => prev(event))
+
+  Next.addEventListener('click', (event) => next(event))
+
+  let ingredientItems = document.querySelectorAll(".ingredient-item");
+  console.log(ingredientItems);
+  ingredientItems.forEach((ingredientItem) => {
+    ingredientItem.addEventListener("click", (event) => {
+      let id = event.currentTarget.dataset.id;
+      getDiaryIngredientById(`/api/ingredient-single/${id}`, false);;
+    })
+  })
+
+}
+
+function prev(event) {
+  event.preventDefault();
+  let name = Search.value
+  if (pageCounter > 1) {
+    pageCounter--;
+    localStorage.setItem("page-counter", pageCounter)
+  }
+
+  fetch(`/api/search/${name}?page=${pageCounter}`)
+    .then((res) => res.json())
+    .then((data) => {
+      searchResult = data["ingredients"]
+      numberOfPage = (data["number_of_page"] - 1);
+      renderSearchResult();
+    });
+}
+
+function next(event) {
+  event.preventDefault();
+  let name = Search.value;
+  if (pageCounter <= numberOfPage) {
+    pageCounter++;
+    localStorage.setItem("page-counter", pageCounter)
+  }
+  fetch(`/api/search/${name}?page=${pageCounter}`)
+    .then((res) => res.json())
+    .then((data) => {
+      searchResult = data["ingredients"]
+      numberOfPage = (data["number_of_page"] - 1);
+      renderSearchResult();
+    });
 }
 
 function clearContainer(name) {
@@ -105,6 +174,7 @@ function getDiaryIngredientById(url, isIngredientForUpdate) {
   fetch(url)
     .then((res) => res.json())
     .then((data) => {
+      console.log(data);
       if (data) {
 
         isIngredientForUpdate ? state = {
@@ -138,6 +208,7 @@ function renderDiaryIngredientForm() {
   const DataBtn = document.getElementById("data-btn");
   const Units = document.querySelectorAll(".units");
   const Quantity = document.getElementById("quantity");
+  const DeleteBtn = document.getElementById("delete");
 
   const ResultOfCalorie = document.getElementById("result-of-calorie");
   const ResultOfProtein = document.getElementById("result-of-protein");
@@ -219,6 +290,24 @@ function renderDiaryIngredientForm() {
     }
     fetchIngredient("/api/ingredient-new", newIngredient, date);
   })
+
+
+  if (DeleteBtn) {
+    DeleteBtn.addEventListener('click', (event) => {
+      let id = event.currentTarget.dataset.id;
+
+      let date = event.target.parentElement.parentElement.parentElement.dataset.date;
+      fetch(`/api/ingredient-delete/${id}`)
+        .then(res => res.json())
+        .then(data => {
+          let state = data.state;
+          if (state) {
+            window.location.href = `/diary/currentDiary?date=${date}`
+          }
+        });
+
+    })
+  }
 }
 
 
@@ -375,6 +464,8 @@ function generateDiaryFormTemplate() {
   let quantity = localStorage.getItem("quantity") ? localStorage.getItem("quantity") : ingredient.unit_quantity;
 
 
+
+  console.log(ingredient);
   template += `
     <div class="row mt-2 diary-form">
         <h1 class="display-5 mt-2 mb-2" id="name">${ingredient.ingredientName}</h1>
@@ -412,6 +503,7 @@ function generateDiaryFormTemplate() {
           </div>
           <div class="col-12 mt-4">
             <button class="btn ${isIngredientForUpdate ? 'btn-warning' : 'btn-primary'} text-light" id="send">${isIngredientForUpdate ? 'Frissit' : 'Hozzáad  '}</button>
+            ${isIngredientForUpdate ? ` <button class='btn btn-danger text-light' data-id="${ingredient.d_ingredientId}" id='delete'>Törlés</button>` : ""}
           </div>
         </div>
   `;

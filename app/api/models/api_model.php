@@ -11,13 +11,38 @@ class APIModel
 
     public function searchIngredient($userId, $name)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM `ingredients` WHERE ingredientName LIKE :name AND (userRefId = :userId OR userRefId IS NULL) OR isAccepted = 1");
+        $limit = 7;
+        $page = isset($_GET["page"]) ? $_GET["page"] : 1;
+        $offset = ($page - 1) * $limit;
+
+        $stmt = $this->pdo->prepare("SELECT * FROM `ingredients` WHERE ingredientName LIKE :name AND (userRefId = :userId OR userRefId IS NULL) OR isAccepted = 1 LIMIT :limit OFFSET :offset");
         $stmt->bindValue(':name', '%' . $name . '%', PDO::PARAM_STR);
         $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
         $ingredients = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        return $ingredients;
+        // GET all page counter
+
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) as count FROM `ingredients` WHERE ingredientName LIKE :name AND (userRefId = :userId OR userRefId IS NULL) OR isAccepted = 1");
+        $stmt->bindValue(':name', '%' . $name . '%', PDO::PARAM_STR);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
+        $stmt->execute();
+        $ingredientCounterData = $stmt->fetch(PDO::FETCH_ASSOC);
+        $ingredientCount = (int)$ingredientCounterData["count"];
+
+        $counter = 0;
+
+        for ($i = 0; $i < $ingredientCount; $i += $limit) {
+            $counter++;
+        }
+
+
+        return [
+            "ingredients" => $ingredients,
+            "number_of_page" => $counter
+        ];
     }
 
     public function getIngredient($id)
@@ -114,11 +139,10 @@ class APIModel
         if ($selected_unit) {
             for ($i = 0; $i < count($ingredient["ingredientUnits"]); $i++) {
                 $unit = $ingredient["ingredientUnits"][$i];
-                if($unit["index"] === $selected_unit["index"]) {
+                if ($unit["index"] === $selected_unit["index"]) {
                     $ingredient["ingredientUnits"][$i]["isSelected"] = true;
                 } else {
                     $ingredient["ingredientUnits"][$i]["isSelected"] = false;
-
                 }
             }
         }
@@ -130,7 +154,6 @@ class APIModel
 
     public function addIngredient($body)
     {
-
         $ingredientName = isset($body['name']) ? filter_var($body['name'], FILTER_SANITIZE_SPECIAL_CHARS) : '';
         $unit = isset($body['unit']) ? filter_var($body['unit'], FILTER_SANITIZE_SPECIAL_CHARS) : '';
         $unit_quantity = $body['unitQuantity'] !== "" ? filter_var($body['unitQuantity'], FILTER_VALIDATE_INT) : 0;
@@ -246,8 +269,78 @@ class APIModel
         echo json_encode($ingredient);
     }
 
-    public function updateIngredientForDiary($id)
+    public function updateIngredientForDiary($id, $body)
     {
-        var_dump($id);
+
+        $ingredientName = isset($body['name']) ? filter_var($body['name'], FILTER_SANITIZE_SPECIAL_CHARS) : '';
+        $unit = isset($body['unit']) ? filter_var($body['unit'], FILTER_SANITIZE_SPECIAL_CHARS) : '';
+        $unit_quantity = $body['unitQuantity'] !== "" ? filter_var($body['unitQuantity'], FILTER_VALIDATE_INT) : 0;
+        $common_unit = isset($body['commonUnit']) ? filter_var($body['commonUnit'], FILTER_SANITIZE_SPECIAL_CHARS) : '';
+        $common_unit_quantity = $body['common_unit_quantity'] !== "" ? filter_var($body['common_unit_quantity'], FILTER_VALIDATE_INT) : 0;
+        $common_unit_ex = isset($body['common_unit_ex']) ? filter_var($body['common_unit_ex'], FILTER_SANITIZE_SPECIAL_CHARS) : '';
+        $partOfTheDay = $body['partOfTheDay'] !== "" ? filter_var($body['partOfTheDay'], FILTER_VALIDATE_INT) : 0;
+        $selected_unit = isset($body['selectedUnit']) ? filter_var(json_encode($body['selectedUnit']), FILTER_SANITIZE_SPECIAL_CHARS) : '';
+        $calorie = $body['calorie'] !== "" ? filter_var($body['calorie'], FILTER_VALIDATE_INT) : 0;
+        $protein = $body['protein'] !== "" ? filter_var($body['protein'], FILTER_VALIDATE_INT) : 0;
+        $carb = $body['carb'] !== "" ? filter_var($body['carb'], FILTER_VALIDATE_INT) : 0;
+        $fat = $body['fat'] !== "" ? filter_var($body['fat'], FILTER_VALIDATE_INT) : 0;
+        $glychemicIndex = isset($body['g']) ? filter_var($body['glychemicIndex'], FILTER_SANITIZE_SPECIAL_CHARS) : '';
+        $currentCalorie = $body['currentCalorie'] !== "" ? filter_var($body['currentCalorie'], FILTER_VALIDATE_INT) : 0;;
+        $currentProtein = $body['currentProtein'] !== "" ? filter_var($body['currentProtein'], FILTER_VALIDATE_INT) : 0;;
+        $currentCarb = $body['currentCarb'] !== "" ? filter_var($body['currentCarb'], FILTER_VALIDATE_INT) : 0;;
+        $currentFat = $body['currentFat'] !== "" ? filter_var($body['currentFat'], FILTER_VALIDATE_INT) : 0;;
+        //$diaryRefId = $body['diaryRefId'] !== "" ? filter_var($body['diaryRefId'], FILTER_VALIDATE_INT) : 0;
+
+        $stmt = $this->pdo->prepare("UPDATE `diary_ingredients` SET 
+        `ingredientName` = :ingredientName, 
+        `partOfTheDay` = :partOfTheDay, 
+        `unit` = :unit, 
+        `unit_quantity` = :unit_quantity, 
+        `calorie` = :calorie,
+        `common_unit` = :common_unit, 
+        `common_unit_quantity` = :common_unit_quantity, 
+        `common_unit_ex` = :common_unit_ex, 
+        `selected_unit` = :selected_unit,
+        `protein` = :protein, 
+        `carb` = :carb, 
+        `fat` = :fat, 
+        `glychemicIndex` = :glychemicIndex, 
+        `current_calorie` = :current_calorie,
+        `current_protein` = :current_protein, 
+        `current_carb` = :current_carb, 
+        `current_fat` = :current_fat
+        WHERE `diary_ingredients`.`d_ingredientId` = :d_ingredientId;");
+
+
+
+        $stmt->bindParam(':ingredientName', $ingredientName);
+        $stmt->bindParam(':partOfTheDay', $partOfTheDay);
+        $stmt->bindParam(':unit', $unit);
+        $stmt->bindParam(':unit_quantity', $unit_quantity);
+        $stmt->bindParam(':calorie', $calorie);
+        $stmt->bindParam(':common_unit', $common_unit);
+        $stmt->bindParam(':common_unit_quantity', $common_unit_quantity);
+        $stmt->bindParam(':common_unit_ex', $common_unit_ex);
+        $stmt->bindParam(':selected_unit', $selected_unit);
+        $stmt->bindParam(':protein', $protein);
+        $stmt->bindParam(':carb', $carb);
+        $stmt->bindParam(':fat', $fat);
+        $stmt->bindParam(':glychemicIndex', $glychemicIndex);
+        $stmt->bindParam(':current_calorie', $currentCalorie);
+        $stmt->bindParam(':current_protein', $currentProtein);
+        $stmt->bindParam(':current_carb', $currentCarb);
+        $stmt->bindParam(':current_fat', $currentFat);
+        $stmt->bindParam(':d_ingredientId', $id);
+
+        $isSuccess = $stmt->execute();
+     
+        return $isSuccess;
+    }
+
+    public function deleteIngredientForDiary($id)
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM `diary_ingredients` WHERE `d_ingredientId` = :id");
+        $stmt->bindParam(":id", $id);
+        return $stmt->execute();
     }
 }
