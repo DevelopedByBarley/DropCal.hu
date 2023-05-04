@@ -84,6 +84,7 @@ window.onload = () => {
   localStorage.clear();
   getValuesOfAllergensForUpdate();
   render();
+  checkNoAllergenIsActive();
 }
 
 
@@ -145,8 +146,20 @@ function render() {
 }
 
 
+function checkNoAllergenIsActive() {
+  let allergens = JSON.parse(localStorage.getItem("allergens"));
+  if (allergens) {
+    let isNoAllergen = allergens.find(allergen => allergen.allergenId === 0);
+    if (isNoAllergen) {
+      allergensCon.classList.add("inactive");
+      isNoAllergenBtnActive = true;
+    } 
+  }
+}
+
 // Az a funkcionalitás , hogy rá kattintottunk-e a "Nincs Allergén gombra vagy sem"
 if (noAllergen) {
+  checkNoAllergenIsActive();
   noAllergen.addEventListener("click", function (event) {
     event.preventDefault();
     isNoAllergenBtnActive = !isNoAllergenBtnActive;
@@ -154,6 +167,9 @@ if (noAllergen) {
     event.target.classList.toggle("text-light");
 
     allergensCon.classList.toggle("inactive");
+
+    console.log(isNoAllergenBtnActive);
+
 
     if (isNoAllergenBtnActive) {
       let noAllergen = [
@@ -168,6 +184,9 @@ if (noAllergen) {
       document.getElementById("allergen-input").value =
         localStorage.getItem("allergens");
     } else {
+      let index = selectedAllergens.findIndex(allergen => allergen.allergenId === 0);
+      selectedAllergens.splice(index, 1);
+      console.log(selectedAllergens);
       localStorage.setItem("allergens", JSON.stringify(selectedAllergens));
     }
   });
@@ -187,6 +206,7 @@ function sendIngredient(event) {
   let isIngredientForUpdate = event.target.dataset.exist;
   let ingredientId = event.target.dataset.id;
 
+  console.log(isRecommended);
 
 
 
@@ -205,15 +225,10 @@ function sendIngredient(event) {
     isRecommended: isRecommended ? "on" : "",
   };
 
-  console.log(newIngredient)
 
   // Az a szekció, hogy ha be van kapcsolva az isRecommended és a glikémiás index vagy az allergének valamelyike nincs bepipálva, ne engedje elküldeni a formot
 
-  if (
-    (isRecommended && allergenInput.value === "") ||
-    allergenInput.value === "[]" ||
-    (isRecommended && glychemicIndex.value === "")
-  ) {
+  if ((isRecommended && allergenInput.value === "") || (isRecommended && glychemicIndex.value === "")) {
     if (glychemicIndex.value === "") {
       glycemicAlert.innerHTML =
         "Közösségbe való ajánlás esetén kitöltése kötelező!";

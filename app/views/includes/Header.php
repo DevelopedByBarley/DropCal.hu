@@ -12,8 +12,10 @@
                             Profil
                         </a>
                         <ul class="dropdown-menu text-center" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/ingredients">Éltelek</a></li>
-                            <li><a class="dropdown-item" href="#">Receptek</a></li>
+                            <li><a class="dropdown-item" href="/profile">Profil</a></li>
+                            <li><a class="dropdown-item" href="/profile">Napló</a></li>
+                            <li><a class="dropdown-item" href="/ingredients">Ételeim</a></li>
+                            <li><a class="dropdown-item" href="/recipes">Receptjeim</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
@@ -37,7 +39,7 @@
                     <a class="nav-link active" aria-current="page" href="/">Kezdőlap</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Receptek</a>
+                    <a class="nav-link" href="/recipes">Receptek</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Hírek</a>

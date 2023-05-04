@@ -28,7 +28,7 @@ class IngredientModel extends DiaryModel
     public function addIngredient($body)
     {
 
-     
+        
 
         $allergens = json_decode($body["allergens"], true);
         $ingredientName = $body["ingredientName"];
@@ -152,7 +152,7 @@ class IngredientModel extends DiaryModel
         $protein = (int)$body["protein"];
         $carb = (int)$body["carb"];
         $fat = (int)$body["fat"];
-        $glycemicIndex = (int)$body["glychemicIndex"];
+        $glycemicIndex = $body["glychemicIndex"] !== '' ? (int)$body["glychemicIndex"] : null;
         $isRecommended = isset($body["isRecommended"]) && $body["isRecommended"] !== "" ? 1 : 0;
         $isAccepted = $isRecommended === 0 ? null : 0;
 
@@ -195,7 +195,7 @@ class IngredientModel extends DiaryModel
         $stmt->execute();
 
         if (empty($allergens)) {
-            $this->deleteAllergens($ingredientId);
+            $this->deleteAllergens($ingredientId);  
             return ([
                 "state" => true
             ]);

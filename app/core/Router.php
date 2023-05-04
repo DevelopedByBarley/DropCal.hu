@@ -9,6 +9,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     require 'app/routes/diary_routes.php';
     require 'app/api/routes/diary_ingredients_api_routes.php';
     require 'app/routes/ingredient_routes.php';
+    require 'app/routes/recipe_routes.php';
 });
 
 // Fetch method and URI from somewhere

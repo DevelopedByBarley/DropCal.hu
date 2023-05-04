@@ -116,7 +116,7 @@ var_dump($ingredient);
                             </div>
                             <div class="col-12 allergens">
                                 <p>Allergének:</p>
-                                <button class="btn btn-outline-dark" id="no-allergen">Nincs Allergén!</button>
+                                <button type="button" class="btn btn-outline-dark" id="no-allergen">Nincs Allergén!</button>
                                 <div class="allergen-container">
                                 </div>
                                 <p class="text-danger" id="allergens-alert"></p>
