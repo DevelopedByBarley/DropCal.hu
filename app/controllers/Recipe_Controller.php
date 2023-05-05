@@ -62,6 +62,11 @@ class RecipeController
         ]);
     }
 
+    public function addNewRecipe() {
+        var_dump($_POST);
+        exit;
+    }
+
 
     
 

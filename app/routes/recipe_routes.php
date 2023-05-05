@@ -8,6 +8,7 @@ $r->addRoute('GET', '/user/recipe/new', [RecipeController::class, 'recipeForm'])
 $r->addRoute('GET', '/user/recipe/delete/{id}', [RecipeController::class, 'deleteRecipe']);
 
 
+$r->addRoute('POST', '/user/recipe/new', [RecipeController::class, 'addNewRecipe']);
 
 
 // Public

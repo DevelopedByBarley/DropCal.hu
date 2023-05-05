@@ -4,12 +4,12 @@
 			<h1 class="display-4">Recept hozzáadása</h1>
 		</div>
 		<div class="col-12">
-			<form>
+			<form action="/user/recipe/new" method="POST" enctype="multipart/form-data">
 				<div class="row mb-4">
 					<div class="col">
 						<div class="form-outline">
 							<label class="form-label" for="form6Example1">Recept neve</label>
-							<input type="text" id="form6Example1" class="form-control" placeholder="Recept neve" />
+							<input type="text" id="form6Example1" class="form-control" placeholder="Recept neve" name="name" required />
 						</div>
 					</div>
 				</div>
@@ -26,8 +26,9 @@
 
 				<div class="row mb-4 ">
 					<label class="form-label" for="form6Example1">Lépések</label>
-					<div class="col-12 border p-5 text-center">
+					<div class="col-12 border p-5 text-center mt-5">
 						<div class="form-outline">
+							<div id="steps-container"></div>
 							<button class="btn btn-primary" id="step"><i class="bi bi-plus"></i> Lépés</button>
 						</div>
 					</div>
@@ -70,7 +71,7 @@
 				<form>
 					<div class="mb-3">
 						<label for="recipient-name" class="col-form-label">Keresés:</label>
-						<input type="text" class="form-control" id="search-ingredient" oninput="searchRecipeIngredient(event)">
+						<input type="text" class="form-control" id="search-recipe-ingredient" oninput="searchRecipeIngredient(event)">
 					</div>
 				</form>
 			</div>
