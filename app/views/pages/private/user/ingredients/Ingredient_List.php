@@ -46,10 +46,14 @@
                                 <td><?= (int)$ingredient["isRecommended"] === 0 ? "<i class=\"bi bi-x-circle-fill text-danger\"></i>" : "<i class=\"bi bi-check-circle-fill text-success\"></i>" ?></td>
                                 <td><?= (int)$ingredient["isAccepted"] === 0 ? "<i class=\"bi bi-x-circle-fill text-danger\"></i>" :  "<i class=\"bi bi-check-circle-fill text-success\"></i>" ?></td>
 
-                                <td><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                <td>
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                         Törlés
-                                    </button></td>
-                                <td><a href="/ingredient/update?id=<?= $ingredient["ingredientId"] ?>" class="btn btn-warning">Szerkesztés</a></td>
+                                    </button>
+                                </td>
+                                <td>
+                                    <a href="/ingredient/update?id=<?= $ingredient["ingredientId"] ?>" class="btn btn-warning">Szerkesztés</a>
+                                </td>
                             </tr>
                         <?php endforeach ?>
                     </tbody>
@@ -75,7 +79,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Biztosan törlöd a <b style="font-size: 1rem" class="text-info"> <?= $ingredient["ingredientName"] ?> </b> nevű ételt? 
+                Biztosan törlöd a <b style="font-size: 1rem" class="text-info"> <?= $ingredient["ingredientName"] ?> </b> nevű ételt?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Mégsem</button>

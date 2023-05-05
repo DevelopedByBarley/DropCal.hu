@@ -15,7 +15,7 @@
                             <li><a class="dropdown-item" href="/profile">Profil</a></li>
                             <li><a class="dropdown-item" href="/profile">Napló</a></li>
                             <li><a class="dropdown-item" href="/ingredients">Ételeim</a></li>
-                            <li><a class="dropdown-item" href="/recipes">Receptjeim</a></li>
+                            <li><a class="dropdown-item" href="/user/recipes-dashboard">Receptjeim</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
@@ -86,7 +86,9 @@
                                 <a href="/ingredients" class="link no-underline">
                                     <li class="list-group-item profile-nav-listItem">Ételeim</li>
                                 </a>
-                                <li class="list-group-item profile-nav-listItem disabled bg-danger">Recept hozzáadása</li>
+                                <a href="/user/recipes-dashboard" class="link no-underline">
+                                    <li class="list-group-item profile-nav-listItem">Receptjeim</li>
+                                </a>
                                 <li class="list-group-item profile-nav-listItem disabled bg-danger">And a fifth one</li>
                             </ul>
                         </div>

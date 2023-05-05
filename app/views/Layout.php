@@ -37,6 +37,7 @@
     <script src="public/js/cookie/cookieModalHandle.js"></script>
     <script src="public/js/ingredient/ingredient_form.js"></script>
     <script src="public/js/diary/add_diary_ingredient.js"></script>
+    <script src="public/js/recipes/recipe.js"></script>
 
 
 </body>

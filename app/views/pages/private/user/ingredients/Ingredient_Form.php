@@ -87,7 +87,7 @@ var_dump($ingredient);
                                 </div>
                             </div>
                             <div class="row mb-4">
-                                <div class="col-4">
+                                <div class="col-6">
                                     <label class="form-label" for="form1Example1">Gyakori egység</label>
                                     <select class="form-select" id="common_unit" aria-label="Default select example" name="common_unit">
                                         <option value="" disabled selected>Választ</option>
@@ -102,7 +102,7 @@ var_dump($ingredient);
                                         <?php endforeach ?>
                                     </select>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-6">
                                     <label class="form-label" for="form1Example1">Gyakor egység súlya (g / ml)</label>
                                     <input required type="number" min="1" id="common_unit_quantity" class="form-control" placeholder="Gyakori egység súlya" style="background: none; border: none; border-bottom: 1px solid" name="common_unit_quantity" value="<?= isset($ingredient) ? $ingredient["common_unit_quantity"] : '' ?>" />
                                 </div>
