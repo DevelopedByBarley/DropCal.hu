@@ -12,8 +12,8 @@
                             Profil
                         </a>
                         <ul class="dropdown-menu text-center" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/profile">Profil</a></li>
-                            <li><a class="dropdown-item" href="/profile">Napló</a></li>
+                            <li><a class="dropdown-item disabled bg-danger text-light" href="/profile">Profil</a></li>
+                            <li><a class="dropdown-item disabled bg-danger text-light" href="/profile">Napló</a></li>
                             <li><a class="dropdown-item" href="/ingredients">Ételeim</a></li>
                             <li><a class="dropdown-item" href="/user/recipes-dashboard">Receptjeim</a></li>
                             <li>
@@ -39,10 +39,10 @@
                     <a class="nav-link active" aria-current="page" href="/">Kezdőlap</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/recipes">Receptek</a>
+                    <a class="nav-link disabled bg-danger text-light" href="/recipes">Receptek</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Hírek</a>
+                    <a class="nav-link disabled bg-danger text-light" href="#">Hírek</a>
                 </li>
             </ul>
             <?php if (!isset($params["userId"])) : ?>
@@ -81,15 +81,14 @@
                     <div class="row mt-5">
                         <div class="col-xs-12">
                             <ul class="list-group">
-                                <li class="list-group-item profile-nav-listItem disabled bg-danger">Profil</li>
-                                <li class="list-group-item profile-nav-listItem disabled bg-danger">Napló</li>
+                                <li class="list-group-item profile-nav-listItem disabled bg-danger text-light">Profil</li>
+                                <li class="list-group-item profile-nav-listItem disabled bg-danger text-light">Napló</li>
                                 <a href="/ingredients" class="link no-underline">
                                     <li class="list-group-item profile-nav-listItem">Ételeim</li>
                                 </a>
                                 <a href="/user/recipes-dashboard" class="link no-underline">
                                     <li class="list-group-item profile-nav-listItem">Receptjeim</li>
                                 </a>
-                                <li class="list-group-item profile-nav-listItem disabled bg-danger">And a fifth one</li>
                             </ul>
                         </div>
                     </div>

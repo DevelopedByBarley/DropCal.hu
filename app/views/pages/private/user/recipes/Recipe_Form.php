@@ -26,7 +26,7 @@
 
 				<div class="row mb-4 ">
 					<label class="form-label" for="form6Example1">Lépések</label>
-					<div class="col-12 border p-5 text-center mt-5">
+					<div class="col-12 border p-3 text-center mt-5">
 						<div class="form-outline">
 							<div id="steps-container"></div>
 							<button class="btn btn-primary" id="step"><i class="bi bi-plus"></i> Lépés</button>
@@ -37,8 +37,7 @@
 					<label class="form-label" for="form6Example1">Fényép</label>
 					<div class="col-12 border p-5 text-center">
 						<div class="form-outline">
-							<input type="file" id="form6Example1" class="form-control" id="file" />
-
+							<input type="file" id="form6Example1" class="form-control" id="file" name="files[]" />
 						</div>
 					</div>
 				</div>
@@ -73,6 +72,7 @@
 						<label for="recipient-name" class="col-form-label">Keresés:</label>
 						<input type="text" class="form-control" id="search-recipe-ingredient" oninput="searchRecipeIngredient(event)">
 					</div>
+					<div id="search-recipe-result-container"></div>
 				</form>
 			</div>
 			<div class="modal-footer">
