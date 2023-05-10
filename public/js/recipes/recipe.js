@@ -1,27 +1,155 @@
+/**
+ *      {
+        ingredientId: '82',
+        ingredientName: 'Paradicsom',
+        ingredientCategorie: 'Jégkrém',
+        unit: 'g',
+        unit_quantity: '100',
+        calorie: '22',
+        carb: '2',
+        fat: '2',
+        protein: '2',
+        glycemicIndex: '2',
+        common_unit: 'Darab',
+        common_unit_ex: 'g',
+        common_unit_quantity: '2',
+        isAccepted: '0',
+        isRecommended: '1',
+        userRefId: '29',
+        ingredientUnits: [
+          { index: 0, unitName: 'g', multiplier: 1, isSelected: false },
+          { index: 1, unitName: 'dkg', multiplier: 10, isSelected: false },
+          { index: 2, unitName: 'kg', multiplier: 1000, isSelected: true },
+          { index: 3, unitName: 'Darab', multiplier: 2, common_unit_ex: 'g', isSelected: false }
+        ],
+        allergens: [
+          { i_allergenId: '123', i_allergenNumber: '2', i_allergenName: 'Rákfélék', ingredientRefId: '82' },
+          { i_allergenId: '124', i_allergenNumber: '1', i_allergenName: 'Glutén', ingredientRefId: '82' }
+        ]
+    }
+ */
 
-const SearchRecipeIngredient = document.getElementById("search-recipe-ingredient");
-const SearchRecipeResultContainer = document.getElementById("search-recipe-result-container");
+// Recipe state a localstorage-nek
+let recipeIngredientState = localStorage.getItem("recipeIngredientState") ? JSON.parse(localStorage.getItem("recipeIngredientState")) : [];
+
+// Oldal betöltődéskor feltöltjük a state-et
+window.onload = () => {
+    localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState))
+}
+
+// Modal kirajzolása és megjelenítése
+function renderModal() {
+    renderModalTemplate({
+        ingredientId: '82',
+        ingredientName: 'Paradicsom',
+        ingredientCategorie: 'Jégkrém',
+        unit: 'g',
+        unit_quantity: '100',
+        calorie: '22',
+        carb: '2',
+        fat: '2',
+        protein: '2',
+        glycemicIndex: '2',
+        common_unit: 'Darab',
+        common_unit_ex: 'g',
+        common_unit_quantity: '2',
+        isAccepted: '0',
+        isRecommended: '1',
+        userRefId: '29',
+        ingredientUnits: [
+          { index: 0, unitName: 'g', multiplier: 1, isSelected: false },
+          { index: 1, unitName: 'dkg', multiplier: 10, isSelected: false },
+          { index: 2, unitName: 'kg', multiplier: 1000, isSelected: true },
+          { index: 3, unitName: 'Darab', multiplier: 2, common_unit_ex: 'g', isSelected: false }
+        ],
+        allergens: [
+          { i_allergenId: '123', i_allergenNumber: '2', i_allergenName: 'Rákfélék', ingredientRefId: '82' },
+          { i_allergenId: '124', i_allergenNumber: '1', i_allergenName: 'Glutén', ingredientRefId: '82' }
+        ]
+    }); // Megjelenik a modal, paraméterként meg kell adni, hogy van-e frissítendő elem
+    const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+    modal.show();
+}
+
+// Modal kirajzolása
+
+function renderModalTemplate(ingredient = null) { // Ha a modalt renderelő functionnek dobunk be értéket és nem null akkor a modalt updateléshez hozzuk létre
+    let isIngredientForUpdate = ingredient ? true : false;
+    let ingredientUnitTemplate = isIngredientForUpdate ? renderIngredientUnits(ingredient.ingredientUnits) : [];
+    let modalTemplate = `
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Összetevő hozzáadása</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Keresés:</label>
+                            <input type="text" class="form-control" id="search-recipe-ingredient" value="${isIngredientForUpdate ? ingredient.ingredientName : ''}" oninput="searchRecipeIngredient(event)">
+                        </div>
+                        <div id="search-recipe-result-container"></div>
+                        <div id="recipe-data-container">
+                            ${isIngredientForUpdate ? `
+                            <div class="mt-5 p-1">
+                                <div class="mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Mennyiség</label>
+                                <input type="number" min='1' class="form-control" id="quantity" value="${ingredient.unit_quantity}" aria-describedby="emailHelp">
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleInputPassword1" class="form-label">Egység</label>
+                                <select class="form-control" id="units"> 
+                                    ${ingredientUnitTemplate}
+                                </select>
+                            </div>
+                            ` : ``}
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="submit-recipe-ingredient" class="btn ${isIngredientForUpdate ? 'btn-warning text-light': 'btn btn-primary'}">${isIngredientForUpdate ? 'Frissít': 'Hozzáad'}</button> 
+                </div>
+            </div>
+        </div>
+    </div>
+    `
+
+    document.getElementById("modal-container").innerHTML = modalTemplate; // Modal beillesztése a helyére
+
+    const SearchRecipeIngredient = document.getElementById("search-recipe-ingredient"); // Kereső mező ki kérése a DOM-ból
+    const SearchRecipeResultContainer = document.getElementById("search-recipe-result-container"); // Illetve a keresésből való visszatéréseknek a konténere
+
+    SearchRecipeIngredient.addEventListener('input', (event) => { // Keresőmező inputjába beírjuk a keresni valót
+        searchRecipeIngredient(event, SearchRecipeResultContainer) // Ami elindítja a kereséső metódust és átadja neki az eventet és a konténert ahova majd bele rakjuk a visszatért elemeket
+    })
+}
 
 
-function searchRecipeIngredient(event) {
+// Kereső metódus elindul minden gombnyomásra
+function searchRecipeIngredient(event, SearchRecipeResultContainer) {
     event.preventDefault();
-    let name = SearchRecipeIngredient.value;
+    let name = event.target.value; // Ki szedjük a kereső értékét
     if (name.length >= 2) {
-        fetch(`/api/search/${name}`)
+        fetch(`/api/search/${name}`) // Meginditjuk a backend felé a kérést
             .then((res) => res.json())
             .then((data) => {
-                searchResult = data["ingredients"]
-                numberOfPage = (data["number_of_page"] - 1);
-                renderSearchRecipeResult();
+                searchResult = data["ingredients"] // Vissza térünk a hozzávalókkal 
+                numberOfPage = (data["number_of_page"] - 1); // És amit a backend kiszámított nekünk lapozó oldal szám értékével
+                renderSearchRecipeResult(name, SearchRecipeResultContainer); // Ekkor elindigjuk a visszatért értékek kirenderelését
             });
     } else {
-        clearRecipeContainer(name);
+        clearRecipeContainer(name, SearchRecipeResultContainer);
     }
 }
 
-function renderSearchRecipeResult() {
-    let searchRecipeResultTemplate = ``;
-    const PaginationTemplate = `
+
+// Keresőből visszatért értékek renderelése
+function renderSearchRecipeResult(name, SearchRecipeResultContainer) {
+    let searchRecipeResultTemplate = ``; //Paginationt hozzá adjuk
+    const PaginationTemplate = ` 
     <nav aria-label="Page navigation example">
       <ul class="pagination mt-3 mb-3">
         <li class="page-item">
@@ -40,23 +168,99 @@ function renderSearchRecipeResult() {
   
     `;
 
+    // Kivége ha a visszatért eredmény kissebb mint 1
     if (searchResult.length > 0) {
         searchRecipeResultTemplate += PaginationTemplate;
     }
 
+    // Majd ki rendereljük a visszatért hozzávalók elemeit is
     searchResult.forEach((ingredient) => {
         searchRecipeResultTemplate += `
       <li class="list-group-item ingredient-item w-100" data-id="${ingredient.ingredientId}" style="cursor:pointer;">${ingredient.ingredientName}</li>
         `;
     });
+
+    // Amellyet beillesztünk a megfelelő helyre
     SearchRecipeResultContainer.innerHTML = searchRecipeResultTemplate;
 
+    // Ki szedjük a lapozó gombjait a dom-ból
     const PrevButton = document.getElementById('prev-button');
     const NextButton = document.getElementById('next-button');
 
-    PrevButton.addEventListener('click', (event) => prevRecipe(event))
+    // Majd ellátjuk a hozzájuk kellő metódusokkal, ezeknek szintén átadjuk a keresőből kiszedett értéket és azt a containert ahova majd beillesztjük azokat 
+    PrevButton.addEventListener('click', () => prevRecipe(name, SearchRecipeResultContainer))
 
-    NextButton.addEventListener('click', (event) => nextRecipe(event))
+    NextButton.addEventListener('click', () => nextRecipe(name, SearchRecipeResultContainer))
+
+
+    // Kiszedjük az összes keresőből visszatért hozzávaló elemet,
+    let ingredients = document.querySelectorAll('.ingredient-item');
+    // És meghivjuk azt a metódust ami majd végig iterál az elemeken és gombnyomásra ki keresi az adott id-ú elemet
+    searchIngredientData(ingredients);
+}
+
+// Elindul a renderelés ami majd ki rendereli a keresésből visszatérő hozzávaló elemeket
+function searchIngredientData(ingredients) {
+    const RecipeDataContainer = document.getElementById("recipe-data-container") // Ki szedjük a containert amibe szeretnénk ezeket az elemeket bele helyezni
+
+    ingredients.forEach((ingredient) => { // Végig iterálunk ezeken az elemeket
+        ingredient.addEventListener('click', async (event) => {
+            let id = event.target.dataset.id; // Ki szedjük az ID-ját
+
+            let ingredient = await getDiaryIngredientById(`/api/ingredient-single/${id}`); // És id alapján backendtől ki kérjük magát a hozzávalót
+            const SearchRecipeIngredient = document.getElementById("search-recipe-ingredient");
+            SearchRecipeIngredient.value = ingredient.ingredientName;
+            if (ingredient) { // És ha ez létezik
+                renderIngredientDataTemplate(RecipeDataContainer, ingredient);  // Akkor ki rendereljük az adatokat módosító formot
+            }
+        })
+    })
+
+}
+
+
+// Ki rendereljük az adatokat módosító formot
+function renderIngredientDataTemplate(RecipeDataContainer, ingredient) {
+    let ingredientUnitTemplate = renderIngredientUnits(ingredient.ingredientUnits);
+    let ingredientDataTemplate = `
+    <div class="mt-5 p-1">
+        <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Mennyiség</label>
+        <input type="number" min='1' class="form-control" id="quantity" value="${ingredient.unit_quantity}" aria-describedby="emailHelp">
+    </div>
+    <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Egység</label>
+        <select class="form-control" id="units"> 
+            ${ingredientUnitTemplate}
+        </select>
+    </div>
+    `
+
+    RecipeDataContainer.innerHTML = ingredientDataTemplate;
+}
+
+
+// Ki rendereljük az egységeket az adatokat módosító formhoz
+function renderIngredientUnits(units) {
+    let unitTemplate = ``;
+
+    units.forEach((unit) => {
+        unitTemplate += `
+            <option ${unit.isSelected ? 'selected' : ''}>${unit.unitName}</option>
+        `
+    })
+
+    return unitTemplate;
+}
+
+
+// Id alapján ki keressük a hozzávalót
+async function getDiaryIngredientById(url) {
+    const response = await fetch(url);
+    const data = await response.json();
+    if (data) {
+        return data;
+    }
 }
 
 
@@ -69,21 +273,21 @@ function renderSearchRecipeResult() {
 
 
 
-function clearRecipeContainer(name) {
+
+
+
+
+
+
+
+function clearRecipeContainer(name, name, SearchRecipeResultContainer) {
     if (name.length < 3) {
         searchResult = [];
         SearchRecipeResultContainer.innerHTML = "";
     }
 }
 
-
-
-
-
-
-function prevRecipe(event) {
-    event.preventDefault();
-    let name = SearchRecipeIngredient.value
+function prevRecipe(name, SearchRecipeResultContainer) {
     if (pageCounter > 1) {
         pageCounter--;
         localStorage.setItem("page-counter", pageCounter)
@@ -94,17 +298,11 @@ function prevRecipe(event) {
         .then((data) => {
             searchResult = data["ingredients"]
             numberOfPage = (data["number_of_page"] - 1);
-            renderSearchRecipeResult();
+            renderSearchRecipeResult(name, SearchRecipeResultContainer);
         });
 }
 
-
-
-
-
-function nextRecipe(event) {
-    event.preventDefault();
-    let name = SearchRecipeIngredient.value;
+function nextRecipe(name, SearchRecipeResultContainer) {
     if (pageCounter <= numberOfPage) {
         pageCounter++;
         localStorage.setItem("page-counter", pageCounter)
@@ -114,7 +312,7 @@ function nextRecipe(event) {
         .then((data) => {
             searchResult = data["ingredients"]
             numberOfPage = (data["number_of_page"] - 1);
-            renderSearchRecipeResult();
+            renderSearchRecipeResult(name, SearchRecipeResultContainer);
         });
 }
 

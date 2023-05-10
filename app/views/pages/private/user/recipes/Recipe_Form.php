@@ -19,7 +19,7 @@
 					<label class="form-label" for="form6Example1">Összetevők</label>
 					<div class="col-12 border p-5 text-center">
 						<div class="form-outline">
-							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Összetevő hozzáadása</button>
+							<button type="button" class="btn btn-primary" onclick="renderModal()">Összetevő hozzáadása</button>
 						</div>
 					</div>
 				</div>
@@ -53,32 +53,4 @@
 
 
 
-
-
-
-
-
-
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Összetevő hozzáadása</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<form>
-					<div class="mb-3">
-						<label for="recipient-name" class="col-form-label">Keresés:</label>
-						<input type="text" class="form-control" id="search-recipe-ingredient" oninput="searchRecipeIngredient(event)">
-					</div>
-					<div id="search-recipe-result-container"></div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary">Hozzáad</button>
-			</div>
-		</div>
-	</div>
-</div>
+<div id="modal-container"></div>
