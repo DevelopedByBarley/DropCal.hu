@@ -1,72 +1,23 @@
-/**
- *      {
-        ingredientId: '82',
-        ingredientName: 'Paradicsom',
-        ingredientCategorie: 'Jégkrém',
-        unit: 'g',
-        unit_quantity: '100',
-        calorie: '22',
-        carb: '2',
-        fat: '2',
-        protein: '2',
-        glycemicIndex: '2',
-        common_unit: 'Darab',
-        common_unit_ex: 'g',
-        common_unit_quantity: '2',
-        isAccepted: '0',
-        isRecommended: '1',
-        userRefId: '29',
-        ingredientUnits: [
-          { index: 0, unitName: 'g', multiplier: 1, isSelected: false },
-          { index: 1, unitName: 'dkg', multiplier: 10, isSelected: false },
-          { index: 2, unitName: 'kg', multiplier: 1000, isSelected: true },
-          { index: 3, unitName: 'Darab', multiplier: 2, common_unit_ex: 'g', isSelected: false }
-        ],
-        allergens: [
-          { i_allergenId: '123', i_allergenNumber: '2', i_allergenName: 'Rákfélék', ingredientRefId: '82' },
-          { i_allergenId: '124', i_allergenNumber: '1', i_allergenName: 'Glutén', ingredientRefId: '82' }
-        ]
-    }
- */
 
-// Recipe state a localstorage-nek
 let recipeIngredientState = localStorage.getItem("recipeIngredientState") ? JSON.parse(localStorage.getItem("recipeIngredientState")) : [];
 
 // Oldal betöltődéskor feltöltjük a state-et
 window.onload = () => {
     localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState))
+    localStorage.removeItem("page-counter")
 }
 
 // Modal kirajzolása és megjelenítése
-function renderModal() {
-    renderModalTemplate({
-        ingredientId: '82',
-        ingredientName: 'Paradicsom',
-        ingredientCategorie: 'Jégkrém',
-        unit: 'g',
-        unit_quantity: '100',
-        calorie: '22',
-        carb: '2',
-        fat: '2',
-        protein: '2',
-        glycemicIndex: '2',
-        common_unit: 'Darab',
-        common_unit_ex: 'g',
-        common_unit_quantity: '2',
-        isAccepted: '0',
-        isRecommended: '1',
-        userRefId: '29',
-        ingredientUnits: [
-          { index: 0, unitName: 'g', multiplier: 1, isSelected: false },
-          { index: 1, unitName: 'dkg', multiplier: 10, isSelected: false },
-          { index: 2, unitName: 'kg', multiplier: 1000, isSelected: true },
-          { index: 3, unitName: 'Darab', multiplier: 2, common_unit_ex: 'g', isSelected: false }
-        ],
-        allergens: [
-          { i_allergenId: '123', i_allergenNumber: '2', i_allergenName: 'Rákfélék', ingredientRefId: '82' },
-          { i_allergenId: '124', i_allergenNumber: '1', i_allergenName: 'Glutén', ingredientRefId: '82' }
-        ]
-    }); // Megjelenik a modal, paraméterként meg kell adni, hogy van-e frissítendő elem
+function renderModal(idForUpdate = null) {
+    if(idForUpdate) {
+        let ingredient = recipeIngredientState.find(ingredient => ingredient.id === idForUpdate);
+        console.log(ingredient);
+        renderModalTemplate(ingredient); // Megjelenik a modal, paraméterként meg kell adni, hogy van-e frissítendő elem
+        const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+        modal.show();
+        return;
+    }
+    renderModalTemplate(); // Megjelenik a modal, paraméterként meg kell adni, hogy van-e frissítendő elem
     const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
     modal.show();
 }
@@ -76,6 +27,7 @@ function renderModal() {
 function renderModalTemplate(ingredient = null) { // Ha a modalt renderelő functionnek dobunk be értéket és nem null akkor a modalt updateléshez hozzuk létre
     let isIngredientForUpdate = ingredient ? true : false;
     let ingredientUnitTemplate = isIngredientForUpdate ? renderIngredientUnits(ingredient.ingredientUnits) : [];
+    isIngredientForUpdate ? localStorage.setItem("ingredientForUpdateId", JSON.stringify(ingredient.id)) : '';
     let modalTemplate = `
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -92,25 +44,13 @@ function renderModalTemplate(ingredient = null) { // Ha a modalt renderelő func
                         </div>
                         <div id="search-recipe-result-container"></div>
                         <div id="recipe-data-container">
-                            ${isIngredientForUpdate ? `
-                            <div class="mt-5 p-1">
-                                <div class="mb-3">
-                                <label for="exampleInputEmail1" class="form-label">Mennyiség</label>
-                                <input type="number" min='1' class="form-control" id="quantity" value="${ingredient.unit_quantity}" aria-describedby="emailHelp">
-                            </div>
-                            <div class="mb-3">
-                                <label for="exampleInputPassword1" class="form-label">Egység</label>
-                                <select class="form-control" id="units"> 
-                                    ${ingredientUnitTemplate}
-                                </select>
-                            </div>
-                            ` : ``}
+                           
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" id="submit-recipe-ingredient" class="btn ${isIngredientForUpdate ? 'btn-warning text-light': 'btn btn-primary'}">${isIngredientForUpdate ? 'Frissít': 'Hozzáad'}</button> 
+                    <button type="button" id="close" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="submit-recipe-ingredient" data-bs-dismiss="modal" class="btn ${isIngredientForUpdate ? 'btn-warning text-light' : 'btn btn-primary'}">${isIngredientForUpdate ? 'Frissít' : 'Hozzáad'}</button> 
                 </div>
             </div>
         </div>
@@ -121,15 +61,35 @@ function renderModalTemplate(ingredient = null) { // Ha a modalt renderelő func
 
     const SearchRecipeIngredient = document.getElementById("search-recipe-ingredient"); // Kereső mező ki kérése a DOM-ból
     const SearchRecipeResultContainer = document.getElementById("search-recipe-result-container"); // Illetve a keresésből való visszatéréseknek a konténere
+    const RecipeDataContainer = document.getElementById("recipe-data-container")
+    const SubmitRecipeIngredient = document.getElementById("submit-recipe-ingredient")
+    const Close = document.getElementById("close");
+
+    Close.addEventListener('click', () => {
+        localStorage.removeItem("ingredientForUpdateId");
+    })
 
     SearchRecipeIngredient.addEventListener('input', (event) => { // Keresőmező inputjába beírjuk a keresni valót
-        searchRecipeIngredient(event, SearchRecipeResultContainer) // Ami elindítja a kereséső metódust és átadja neki az eventet és a konténert ahova majd bele rakjuk a visszatért elemeket
+        searchRecipeIngredient(event, SearchRecipeResultContainer, isIngredientForUpdate) // Ami elindítja a kereséső metódust és átadja neki az eventet és a konténert ahova majd bele rakjuk a visszatért elemeket
     })
+
+
+    if (isIngredientForUpdate) {
+        renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredientForUpdate)
+    } else {
+        SubmitRecipeIngredient.disabled = true;
+    }
+
+    SubmitRecipeIngredient.addEventListener('click', () => {
+        let modal = new bootstrap.Modal(document.getElementById('exampleModal'))
+        modal.hide();
+    })
+
 }
 
 
 // Kereső metódus elindul minden gombnyomásra
-function searchRecipeIngredient(event, SearchRecipeResultContainer) {
+function searchRecipeIngredient(event, SearchRecipeResultContainer, isIngredientForUpdate) {
     event.preventDefault();
     let name = event.target.value; // Ki szedjük a kereső értékét
     if (name.length >= 2) {
@@ -138,7 +98,7 @@ function searchRecipeIngredient(event, SearchRecipeResultContainer) {
             .then((data) => {
                 searchResult = data["ingredients"] // Vissza térünk a hozzávalókkal 
                 numberOfPage = (data["number_of_page"] - 1); // És amit a backend kiszámított nekünk lapozó oldal szám értékével
-                renderSearchRecipeResult(name, SearchRecipeResultContainer); // Ekkor elindigjuk a visszatért értékek kirenderelését
+                renderSearchRecipeResult(name, SearchRecipeResultContainer, isIngredientForUpdate); // Ekkor elindigjuk a visszatért értékek kirenderelését
             });
     } else {
         clearRecipeContainer(name, SearchRecipeResultContainer);
@@ -147,7 +107,7 @@ function searchRecipeIngredient(event, SearchRecipeResultContainer) {
 
 
 // Keresőből visszatért értékek renderelése
-function renderSearchRecipeResult(name, SearchRecipeResultContainer) {
+function renderSearchRecipeResult(name, SearchRecipeResultContainer, isIngredientForUpdate) {
     let searchRecipeResultTemplate = ``; //Paginationt hozzá adjuk
     const PaginationTemplate = ` 
     <nav aria-label="Page navigation example">
@@ -188,21 +148,21 @@ function renderSearchRecipeResult(name, SearchRecipeResultContainer) {
     const NextButton = document.getElementById('next-button');
 
     // Majd ellátjuk a hozzájuk kellő metódusokkal, ezeknek szintén átadjuk a keresőből kiszedett értéket és azt a containert ahova majd beillesztjük azokat 
-    PrevButton.addEventListener('click', () => prevRecipe(name, SearchRecipeResultContainer))
+    PrevButton.addEventListener('click', () => prevRecipe(name, SearchRecipeResultContainer, isIngredientForUpdate))
 
-    NextButton.addEventListener('click', () => nextRecipe(name, SearchRecipeResultContainer))
+    NextButton.addEventListener('click', () => nextRecipe(name, SearchRecipeResultContainer, isIngredientForUpdate))
 
 
     // Kiszedjük az összes keresőből visszatért hozzávaló elemet,
     let ingredients = document.querySelectorAll('.ingredient-item');
     // És meghivjuk azt a metódust ami majd végig iterál az elemeken és gombnyomásra ki keresi az adott id-ú elemet
-    searchIngredientData(ingredients);
+    searchIngredientData(ingredients, isIngredientForUpdate);
 }
 
 // Elindul a renderelés ami majd ki rendereli a keresésből visszatérő hozzávaló elemeket
-function searchIngredientData(ingredients) {
+function searchIngredientData(ingredients, isIngredientForUpdate) {
     const RecipeDataContainer = document.getElementById("recipe-data-container") // Ki szedjük a containert amibe szeretnénk ezeket az elemeket bele helyezni
-
+    console.log(isIngredientForUpdate);
     ingredients.forEach((ingredient) => { // Végig iterálunk ezeken az elemeket
         ingredient.addEventListener('click', async (event) => {
             let id = event.target.dataset.id; // Ki szedjük az ID-ját
@@ -211,7 +171,7 @@ function searchIngredientData(ingredients) {
             const SearchRecipeIngredient = document.getElementById("search-recipe-ingredient");
             SearchRecipeIngredient.value = ingredient.ingredientName;
             if (ingredient) { // És ha ez létezik
-                renderIngredientDataTemplate(RecipeDataContainer, ingredient);  // Akkor ki rendereljük az adatokat módosító formot
+                renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredientForUpdate);  // Akkor ki rendereljük az adatokat módosító formot
             }
         })
     })
@@ -220,7 +180,7 @@ function searchIngredientData(ingredients) {
 
 
 // Ki rendereljük az adatokat módosító formot
-function renderIngredientDataTemplate(RecipeDataContainer, ingredient) {
+function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredientForUpdate) {
     let ingredientUnitTemplate = renderIngredientUnits(ingredient.ingredientUnits);
     let ingredientDataTemplate = `
     <div class="mt-5 p-1">
@@ -237,6 +197,85 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient) {
     `
 
     RecipeDataContainer.innerHTML = ingredientDataTemplate;
+
+    const SubmitRecipeIngredient = document.getElementById("submit-recipe-ingredient")
+    const Units = document.getElementById("units");
+    const Quantity = document.getElementById("quantity")
+
+    Units.addEventListener('change', (event) => {
+        const selectedIndex = parseInt(event.target.options[event.target.selectedIndex].getAttribute('data-index'));
+        for (i = 0; i < ingredient.ingredientUnits.length; i++) {
+            if (selectedIndex === i) {
+                ingredient.ingredientUnits[i].isSelected = true;
+            } else {
+                ingredient.ingredientUnits[i].isSelected = false;
+            }
+        }
+    })
+
+
+    console.log(isIngredientForUpdate);
+    if (isIngredientForUpdate) {
+        SubmitRecipeIngredient.addEventListener('click', () => {
+            let id = JSON.parse(localStorage.getItem("ingredientForUpdateId"));
+
+
+            let newIngredient = {
+                id: id,
+                ingredientName: ingredient.ingredientName,
+                unit: ingredient.unit,
+                unit_quantity: Quantity.value,
+                commonUnit: ingredient.common_unit,
+                common_unit_ex: ingredient.common_unit_ex,
+                partOfTheDay: 1,
+                selectedUnit: ingredient.ingredientUnits.find(ingredient => ingredient.isSelected === true),
+                calorie: ingredient.calorie,
+                protein: ingredient.protein,
+                carb: ingredient.carb,
+                fat: ingredient.fat,
+                glychemicIndex: ingredient.glycemicIndex,
+                ingredientUnits: ingredient.ingredientUnits,
+                allergens: ingredient.allergens
+            }
+
+
+            
+            let index = recipeIngredientState.findIndex(ingredient => ingredient.id === id);
+            recipeIngredientState[index] = newIngredient;
+
+
+            localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState));
+            return;
+        })
+    } else {
+        SubmitRecipeIngredient.disabled = false;
+        SubmitRecipeIngredient.addEventListener('click', () => {
+            let newIngredient = {
+                id: generateUUID(),
+                ingredientName: ingredient.ingredientName,
+                unit: ingredient.unit,
+                unit_quantity: Quantity.value,
+                commonUnit: ingredient.common_unit,
+                common_unit_ex: ingredient.common_unit_ex,
+                partOfTheDay: 1,
+                selectedUnit: ingredient.ingredientUnits.find(ingredient => ingredient.isSelected === true),
+                calorie: ingredient.calorie,
+                protein: ingredient.protein,
+                carb: ingredient.carb,
+                fat: ingredient.fat,
+                glychemicIndex: ingredient.glycemicIndex,
+                ingredientUnits: ingredient.ingredientUnits,
+                allergens: ingredient.allergens
+            }
+
+            recipeIngredientState.push(newIngredient);
+
+            localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState))
+
+            console.log("ADDDD");
+
+        })
+    }
 }
 
 
@@ -246,7 +285,7 @@ function renderIngredientUnits(units) {
 
     units.forEach((unit) => {
         unitTemplate += `
-            <option ${unit.isSelected ? 'selected' : ''}>${unit.unitName}</option>
+            <option ${unit.isSelected ? 'selected' : ''} data-index="${unit.index}">${unit.unitName}</option>
         `
     })
 
@@ -287,7 +326,7 @@ function clearRecipeContainer(name, name, SearchRecipeResultContainer) {
     }
 }
 
-function prevRecipe(name, SearchRecipeResultContainer) {
+function prevRecipe(name, SearchRecipeResultContainer, isIngredientForUpdate) {
     if (pageCounter > 1) {
         pageCounter--;
         localStorage.setItem("page-counter", pageCounter)
@@ -298,11 +337,11 @@ function prevRecipe(name, SearchRecipeResultContainer) {
         .then((data) => {
             searchResult = data["ingredients"]
             numberOfPage = (data["number_of_page"] - 1);
-            renderSearchRecipeResult(name, SearchRecipeResultContainer);
+            renderSearchRecipeResult(name, SearchRecipeResultContainer, isIngredientForUpdate);
         });
 }
 
-function nextRecipe(name, SearchRecipeResultContainer) {
+function nextRecipe(name, SearchRecipeResultContainer, isIngredientForUpdate) {
     if (pageCounter <= numberOfPage) {
         pageCounter++;
         localStorage.setItem("page-counter", pageCounter)
@@ -312,7 +351,7 @@ function nextRecipe(name, SearchRecipeResultContainer) {
         .then((data) => {
             searchResult = data["ingredients"]
             numberOfPage = (data["number_of_page"] - 1);
-            renderSearchRecipeResult(name, SearchRecipeResultContainer);
+            renderSearchRecipeResult(name, SearchRecipeResultContainer, isIngredientForUpdate);
         });
 }
 
