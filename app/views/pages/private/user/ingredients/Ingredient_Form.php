@@ -1,7 +1,5 @@
 <?php
 $ingredient = $params["ingredient"];
-
-var_dump($ingredient);
 ?>
 
 <div class="container-fluid add-ingredient-container bg-light d-flex align-items-center justify-content-center">

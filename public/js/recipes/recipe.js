@@ -256,6 +256,14 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
     const Units = document.getElementById("units");
     const Quantity = document.getElementById("quantity")
 
+    Quantity.addEventListener('input', (event) => {
+        if (event.target.value < 1) {
+            SubmitRecipeIngredient.disabled = true;
+        } else {
+            SubmitRecipeIngredient.disabled = false;
+        }
+    })
+
     Units.addEventListener('change', (event) => {
         const selectedIndex = parseInt(event.target.options[event.target.selectedIndex].getAttribute('data-index'));
         for (i = 0; i < ingredient.ingredientUnits.length; i++) {

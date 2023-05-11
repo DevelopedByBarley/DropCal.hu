@@ -80,12 +80,11 @@ const allergens = [
 // Ha update-lünk kiszedjük 
 
 // Oldal töltődése után kiüritjük a localstorage-t és elinditjuk a render függvényt
-window.onload = () => {
-  localStorage.clear();
-  getValuesOfAllergensForUpdate();
-  render();
-  checkNoAllergenIsActive();
-}
+localStorage.clear();
+getValuesOfAllergensForUpdate();
+render();
+checkNoAllergenIsActive();
+
 
 
 // Render metódus
@@ -153,7 +152,11 @@ function checkNoAllergenIsActive() {
     if (isNoAllergen) {
       allergensCon.classList.add("inactive");
       isNoAllergenBtnActive = true;
-    } 
+      let noAllergen = document.getElementById("no-allergen");
+      noAllergen.classList.add("btn-warning")
+      noAllergen.classList.add("text-light")
+
+    }
   }
 }
 
@@ -162,13 +165,17 @@ if (noAllergen) {
   checkNoAllergenIsActive();
   noAllergen.addEventListener("click", function (event) {
     event.preventDefault();
+
+
     isNoAllergenBtnActive = !isNoAllergenBtnActive;
+
+
+
     event.target.classList.toggle("btn-warning");
     event.target.classList.toggle("text-light");
 
     allergensCon.classList.toggle("inactive");
 
-    console.log(isNoAllergenBtnActive);
 
 
     if (isNoAllergenBtnActive) {
@@ -186,7 +193,7 @@ if (noAllergen) {
     } else {
       let index = selectedAllergens.findIndex(allergen => allergen.allergenId === 0);
       selectedAllergens.splice(index, 1);
-      console.log(selectedAllergens);
+
       localStorage.setItem("allergens", JSON.stringify(selectedAllergens));
     }
   });
@@ -206,8 +213,6 @@ function sendIngredient(event) {
   let isIngredientForUpdate = event.target.dataset.exist;
   let ingredientId = event.target.dataset.id;
 
-  console.log(isRecommended);
-
 
 
   let newIngredient = {
@@ -226,9 +231,14 @@ function sendIngredient(event) {
   };
 
 
+  let allergensData = JSON.parse(localStorage.getItem("allergens"));
+  let isAllergensEmpty = allergensData.length < 1;
+
   // Az a szekció, hogy ha be van kapcsolva az isRecommended és a glikémiás index vagy az allergének valamelyike nincs bepipálva, ne engedje elküldeni a formot
 
-  if ((isRecommended && allergenInput.value === "") || (isRecommended && glychemicIndex.value === "")) {
+  if ((isRecommended && allergenInput.value === "") || (isRecommended && glychemicIndex.value === "") || (isRecommended && isAllergensEmpty)) {
+
+
     if (glychemicIndex.value === "") {
       glycemicAlert.innerHTML =
         "Közösségbe való ajánlás esetén kitöltése kötelező!";
@@ -236,7 +246,7 @@ function sendIngredient(event) {
     } else {
       glycemicAlert.innerHTML = "";
     }
-    if (allergenInput.value === "" || allergenInput.value === "[]") {
+    if (allergenInput.value === "" || isAllergensEmpty) {
       allergensAlert.innerHTML =
         "Közösségbe való ajánlás esetén kitöltése kötelező!";
     } else {
@@ -277,6 +287,7 @@ function getValuesOfAllergensForUpdate() {
         allergenId: parseInt(item.dataset.id),
         isSelected: true
       }
+
 
       selectedAllergens.push(selectedAllergen);
       localStorage.setItem("allergens", JSON.stringify(selectedAllergens));
