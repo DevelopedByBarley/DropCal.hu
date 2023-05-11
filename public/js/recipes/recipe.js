@@ -5,13 +5,67 @@ let recipeIngredientState = localStorage.getItem("recipeIngredientState") ? JSON
 window.onload = () => {
     localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState))
     localStorage.removeItem("page-counter")
+    renderIngredientList()
 }
+
+
+function renderIngredientList() {
+    let recipeListTemplate = ``;
+
+    recipeIngredientState.forEach((ingredient) => {
+        recipeListTemplate += `
+            <div class="row border p-2">
+                <div class="col-5">${ingredient.ingredientName}</div>
+                <div class="col-5"><b>${ingredient.calorie}</b> kCal</div>
+                <div class="col-2 d-flex align-items-center justify-content-end">
+                    <button class="btn btn-warning text-light btn-sm update-ingredient" data-id="${ingredient.id}">
+                        <i class="bi bi-arrow-clockwise"></i>
+                    </button>
+                    <button class="btn btn-danger text-light btn-sm delete-ingredient" data-id="${ingredient.id}">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+
+    document.getElementById("ingredient-list-container").innerHTML = recipeListTemplate;
+
+
+    const deleteIngredientBtns = document.querySelectorAll(".delete-ingredient");
+    deleteIngredientBtns.forEach(btn => btn.addEventListener("click", (event) => deleteIngredient(event)));
+
+    const updateIngredientBtns = document.querySelectorAll(".update-ingredient");
+    updateIngredientBtns.forEach(btn => btn.addEventListener("click", (event) => updateIngredient(event)));
+}
+
+
+
+function deleteIngredient(event) {
+    event.preventDefault()
+    let id = event.currentTarget.dataset.id;
+
+    let indexForDelete = recipeIngredientState.findIndex(ingredient => ingredient.id === id);
+    recipeIngredientState.splice(indexForDelete, 1);
+
+    localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState));
+    renderIngredientList();
+}
+
+function updateIngredient(event) {
+    event.preventDefault()
+    let id = event.currentTarget.dataset.id;
+
+    renderModal(id);
+}
+
+
 
 // Modal kirajzolása és megjelenítése
 function renderModal(idForUpdate = null) {
-    if(idForUpdate) {
+    if (idForUpdate) {
         let ingredient = recipeIngredientState.find(ingredient => ingredient.id === idForUpdate);
-        console.log(ingredient);
+
         renderModalTemplate(ingredient); // Megjelenik a modal, paraméterként meg kell adni, hogy van-e frissítendő elem
         const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
         modal.show();
@@ -26,7 +80,7 @@ function renderModal(idForUpdate = null) {
 
 function renderModalTemplate(ingredient = null) { // Ha a modalt renderelő functionnek dobunk be értéket és nem null akkor a modalt updateléshez hozzuk létre
     let isIngredientForUpdate = ingredient ? true : false;
-    let ingredientUnitTemplate = isIngredientForUpdate ? renderIngredientUnits(ingredient.ingredientUnits) : [];
+    isIngredientForUpdate ? renderIngredientUnits(ingredient.ingredientUnits) : [];
     isIngredientForUpdate ? localStorage.setItem("ingredientForUpdateId", JSON.stringify(ingredient.id)) : '';
     let modalTemplate = `
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -162,7 +216,7 @@ function renderSearchRecipeResult(name, SearchRecipeResultContainer, isIngredien
 // Elindul a renderelés ami majd ki rendereli a keresésből visszatérő hozzávaló elemeket
 function searchIngredientData(ingredients, isIngredientForUpdate) {
     const RecipeDataContainer = document.getElementById("recipe-data-container") // Ki szedjük a containert amibe szeretnénk ezeket az elemeket bele helyezni
-    console.log(isIngredientForUpdate);
+
     ingredients.forEach((ingredient) => { // Végig iterálunk ezeken az elemeket
         ingredient.addEventListener('click', async (event) => {
             let id = event.target.dataset.id; // Ki szedjük az ID-ját
@@ -213,8 +267,6 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
         }
     })
 
-
-    console.log(isIngredientForUpdate);
     if (isIngredientForUpdate) {
         SubmitRecipeIngredient.addEventListener('click', () => {
             let id = JSON.parse(localStorage.getItem("ingredientForUpdateId"));
@@ -239,12 +291,13 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
             }
 
 
-            
+
             let index = recipeIngredientState.findIndex(ingredient => ingredient.id === id);
             recipeIngredientState[index] = newIngredient;
 
 
             localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState));
+            renderIngredientList();
             return;
         })
     } else {
@@ -271,9 +324,8 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
             recipeIngredientState.push(newIngredient);
 
             localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState))
-
-            console.log("ADDDD");
-
+            renderIngredientList()
+            return;
         })
     }
 }
@@ -319,7 +371,7 @@ async function getDiaryIngredientById(url) {
 
 
 
-function clearRecipeContainer(name, name, SearchRecipeResultContainer) {
+function clearRecipeContainer(name, SearchRecipeResultContainer) {
     if (name.length < 3) {
         searchResult = [];
         SearchRecipeResultContainer.innerHTML = "";

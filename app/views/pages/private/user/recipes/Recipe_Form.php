@@ -14,9 +14,17 @@
 					</div>
 				</div>
 
+				<div class="row mb-3">
+					<label class="form-label" for="form6Example1">Összetevők</label>
+					<div class="col-12 mt-3">
+						<div id="ingredient-list-container">
+
+						</div>
+					</div>
+				</div>
+
 				<div class="row mb-4 ">
 
-					<label class="form-label" for="form6Example1">Összetevők</label>
 					<div class="col-12 border p-5 text-center">
 						<div class="form-outline">
 							<button type="button" class="btn btn-primary" onclick="renderModal()">Összetevő hozzáadása</button>
