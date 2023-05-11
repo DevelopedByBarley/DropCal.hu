@@ -16,7 +16,7 @@ function renderIngredientList() {
         recipeListTemplate += `
             <div class="row border p-2">
                 <div class="col-5">${ingredient.ingredientName}</div>
-                <div class="col-5"><b>${ingredient.calorie}</b> kCal</div>
+                <div class="col-5"><b>${ingredient.currentCalorie}</b> kCal</div>
                 <div class="col-2 d-flex align-items-center justify-content-end">
                     <button class="btn btn-warning text-light btn-sm update-ingredient" data-id="${ingredient.id}">
                         <i class="bi bi-arrow-clockwise"></i>
@@ -287,7 +287,12 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
                 fat: ingredient.fat,
                 glychemicIndex: ingredient.glycemicIndex,
                 ingredientUnits: ingredient.ingredientUnits,
-                allergens: ingredient.allergens
+                allergens: ingredient.allergens,
+                currentCalorie: calculateCalorie(Quantity.value, ingredient),
+                currentProtein: calculateMacros(Quantity.value, ingredient).protein,
+                currentCarb: calculateMacros(Quantity.value, ingredient).carb,
+                currentFat: calculateMacros(Quantity.value, ingredient).fat,
+                allergens: ingredient.allergens,
             }
 
 
@@ -318,10 +323,17 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
                 fat: ingredient.fat,
                 glychemicIndex: ingredient.glycemicIndex,
                 ingredientUnits: ingredient.ingredientUnits,
-                allergens: ingredient.allergens
+                allergens: ingredient.allergens,
+                currentCalorie: calculateCalorie(Quantity.value, ingredient),
+                currentProtein: calculateMacros(Quantity.value, ingredient).protein,
+                currentCarb: calculateMacros(Quantity.value, ingredient).carb,
+                currentFat: calculateMacros(Quantity.value, ingredient).fat,
+                allergens: ingredient.allergens,
             }
 
             recipeIngredientState.push(newIngredient);
+
+            console.log(newIngredient);
 
             localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState))
             renderIngredientList()
@@ -413,7 +425,35 @@ function nextRecipe(name, SearchRecipeResultContainer, isIngredientForUpdate) {
 
 
 
+// Kalória kalkulálása
+function calculateCalorie(quantity, ingredient) {
+    const Units = ingredient.ingredientUnits
+    let unit = Units.find(unit => unit.isSelected === true);
+    let multiplier = parseInt(unit.multiplier);
+    let kCal = parseInt(ingredient.calorie);
 
+
+    let calculated = ((parseInt(quantity) * multiplier) / 100) * kCal;
+
+    return Math.round(calculated);
+}
+
+
+// Makrók kalulálása
+function calculateMacros(quantity, ingredient) {
+    const Units = ingredient.ingredientUnits
+    let unit = Units.find(unit => unit.isSelected === true);
+    let multiplier = parseInt(unit.multiplier);
+    let protein = Math.round(((parseInt(quantity) * multiplier) / 100) * parseInt(ingredient.protein));
+    let carb = Math.round(((parseInt(quantity) * multiplier) / 100) * parseInt(ingredient.carb));
+    let fat = Math.round(((parseInt(quantity) * multiplier) / 100) * parseInt(ingredient.fat));
+
+    return {
+        protein: protein,
+        carb: carb,
+        fat: fat
+    }
+}
 
 
 
