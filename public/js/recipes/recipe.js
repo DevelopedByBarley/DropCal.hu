@@ -7,7 +7,7 @@ window.onload = () => {
     localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState))
     localStorage.removeItem("page-counter")
     renderIngredientList()
-    renderSummary();
+    renderSummaries();
     renderAllergens();
 }
 
@@ -54,8 +54,8 @@ function deleteIngredient(event) {
     recipeIngredientState.splice(indexForDelete, 1);
 
     localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState));
+    renderSummaries();
     renderAllergens();
-    renderSummary();
     renderIngredientList();
 }
 
@@ -318,7 +318,7 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
 
             localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState));
             renderIngredientList();
-            renderSummary();
+            renderSummaries();
             renderAllergens();
             return;
         })
@@ -353,7 +353,7 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
 
             localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState))
             renderIngredientList();
-            renderSummary();
+            renderSummaries();
             renderAllergens();
             return;
         })
@@ -361,42 +361,45 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
 }
 
 
-function renderSummary() {
-    if (recipeIngredientState.length > 0) {
-        let sumOfCalorie = 0;
-        let sumOfProtein = 0;
-        let sumOfCarb = 0;
-        let sumOfFat = 0;
+function renderSummaries() {
 
 
-        recipeIngredientState.forEach((ingredient) => {
-            sumOfCalorie += parseInt(ingredient.currentCalorie);
-            sumOfProtein += parseInt(ingredient.currentProtein);
-            sumOfCarb += parseInt(ingredient.currentCarb);
-            sumOfFat += parseInt(ingredient.currentFat);
-        })
+    let sumOfCalorie = 0;
+    let sumOfProtein = 0;
+    let sumOfCarb = 0;
+    let sumOfFat = 0;
 
 
-        document.getElementById("calorie-container").innerHTML = sumOfCalorie;
-        document.getElementById("protein-container").innerHTML = sumOfProtein;
-        document.getElementById("carb-container").innerHTML = sumOfCarb;
-        document.getElementById("fat-container").innerHTML = sumOfFat;
+    recipeIngredientState.forEach((ingredient) => {
+        sumOfCalorie += parseInt(ingredient.currentCalorie);
+        sumOfProtein += parseInt(ingredient.currentProtein);
+        sumOfCarb += parseInt(ingredient.currentCarb);
+        sumOfFat += parseInt(ingredient.currentFat);
+    })
 
-        let macros = {
-            sumOfCalorie: sumOfCalorie,
-            sumOfProtein: sumOfProtein,
-            sumOfCarb: sumOfCarb,
-            sumOfFat: sumOfFat,
-        }
 
-        localStorage.setItem("macros", JSON.stringify(macros));
-    } else {
+    document.getElementById("calorie-container").innerHTML = sumOfCalorie;
+    document.getElementById("protein-container").innerHTML = sumOfProtein;
+    document.getElementById("carb-container").innerHTML = sumOfCarb;
+    document.getElementById("fat-container").innerHTML = sumOfFat;
+
+    let macros = {
+        sumOfCalorie: sumOfCalorie,
+        sumOfProtein: sumOfProtein,
+        sumOfCarb: sumOfCarb,
+        sumOfFat: sumOfFat,
+    }
+
+    localStorage.setItem("macros", JSON.stringify(macros));
+
+    if(recipeIngredientState.length === 0) {
         localStorage.removeItem("macros");
     }
 
-
-
 }
+
+
+
 
 
 function renderAllergens() {
