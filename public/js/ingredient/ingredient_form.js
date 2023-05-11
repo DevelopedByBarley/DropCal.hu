@@ -80,7 +80,7 @@ const allergens = [
 // Ha update-lünk kiszedjük 
 
 // Oldal töltődése után kiüritjük a localstorage-t és elinditjuk a render függvényt
-localStorage.clear();
+
 getValuesOfAllergensForUpdate();
 render();
 checkNoAllergenIsActive();

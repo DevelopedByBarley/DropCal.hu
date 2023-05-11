@@ -35,8 +35,8 @@
 				<div class="row mb-4 ">
 					<label class="form-label" for="form6Example1">Lépések</label>
 					<div class="col-12 border p-3 text-center mt-5">
+						<div id="steps-container"></div>
 						<div class="form-outline">
-							<div id="steps-container"></div>
 							<button class="btn btn-primary" id="step"><i class="bi bi-plus"></i> Lépés</button>
 						</div>
 					</div>
