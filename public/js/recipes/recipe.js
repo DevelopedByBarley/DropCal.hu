@@ -7,7 +7,11 @@ window.onload = () => {
     localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState))
     localStorage.removeItem("page-counter")
     renderIngredientList()
+    renderSummary();
+    renderAllergens();
 }
+
+
 
 
 function renderIngredientList() {
@@ -50,6 +54,8 @@ function deleteIngredient(event) {
     recipeIngredientState.splice(indexForDelete, 1);
 
     localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState));
+    renderAllergens();
+    renderSummary();
     renderIngredientList();
 }
 
@@ -312,6 +318,8 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
 
             localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState));
             renderIngredientList();
+            renderSummary();
+            renderAllergens();
             return;
         })
     } else {
@@ -342,14 +350,93 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
 
             recipeIngredientState.push(newIngredient);
 
-            console.log(newIngredient);
 
             localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState))
-            renderIngredientList()
+            renderIngredientList();
+            renderSummary();
+            renderAllergens();
             return;
         })
     }
 }
+
+
+function renderSummary() {
+    if (recipeIngredientState.length > 0) {
+        let sumOfCalorie = 0;
+        let sumOfProtein = 0;
+        let sumOfCarb = 0;
+        let sumOfFat = 0;
+
+
+        recipeIngredientState.forEach((ingredient) => {
+            sumOfCalorie += parseInt(ingredient.currentCalorie);
+            sumOfProtein += parseInt(ingredient.currentProtein);
+            sumOfCarb += parseInt(ingredient.currentCarb);
+            sumOfFat += parseInt(ingredient.currentFat);
+        })
+
+
+        document.getElementById("calorie-container").innerHTML = sumOfCalorie;
+        document.getElementById("protein-container").innerHTML = sumOfProtein;
+        document.getElementById("carb-container").innerHTML = sumOfCarb;
+        document.getElementById("fat-container").innerHTML = sumOfFat;
+
+        let macros = {
+            sumOfCalorie: sumOfCalorie,
+            sumOfProtein: sumOfProtein,
+            sumOfCarb: sumOfCarb,
+            sumOfFat: sumOfFat,
+        }
+
+        localStorage.setItem("macros", JSON.stringify(macros));
+    } else {
+        localStorage.removeItem("macros");
+    }
+
+
+
+}
+
+
+function renderAllergens() {
+    const allergens = [];
+
+    for (const stateElem of Object.values(recipeIngredientState)) {
+        if (stateElem.allergens) {
+            for (const allergen of stateElem.allergens) {
+                if (allergen.i_allergenNumber !== '0') {
+                    let alreadyExists = false;
+                    for (const existingAllergen of allergens) {
+                        if (JSON.stringify(existingAllergen) === JSON.stringify(allergen)) {
+                            alreadyExists = true;
+                            break;
+                        }
+                    }
+                    if (!alreadyExists) {
+                        allergens.push(allergen);
+                        localStorage.setItem("recipeAllergens", JSON.stringify(allergens))
+                    }
+                }
+            }
+        }
+    }
+
+    if (allergens.length !== 0) {
+        let allergensTemplate = '';
+        for (const allergen of allergens) {
+            allergensTemplate += `
+            <span>${allergen.i_allergenNumber}</span>
+            `;
+        }
+        document.getElementById('recipe-allergens-container').innerHTML = allergensTemplate;
+    } else {
+        document.getElementById('recipe-allergens-container').innerHTML = '<span>Nincs allergén</span>';
+        localStorage.removeItem("recipeAllergens")
+    }
+}
+
+
 
 
 // Ki rendereljük az egységeket az adatokat módosító formhoz
@@ -517,7 +604,6 @@ let stepState = localStorage.getItem("stepState") ? JSON.parse(localStorage.getI
 function renderSteps() {
     let stepsTemplate = ``;
 
-    console.log(stepState);
     stepState.forEach((step, index) => {
         stepsTemplate += `
             <div class="row mb-5">

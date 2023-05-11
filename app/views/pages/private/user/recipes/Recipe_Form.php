@@ -50,9 +50,42 @@
 					</div>
 				</div>
 
+				<div class="row border text-center mb-4 bg-dark text-light p-3">
+					<div class="col-12 mt-4 mb-4">
+						<h1 class="display-6">Összegzés</h1>
+					</div>
+					<div class="col-12 col-md-4 border rounded d-flex align-items-center justify-content-center flex-column">
+						<h4>Adatok</h4>
+						<div class="row">
+							<div class="col-12">
+								<h6>Kalória</h6>
+								<span><b id="calorie-container">0</b> Kcal</span>
+							</div>
+						</div>
+						<div class="row w-100 mt-3">
+							<div class="col-12 col-sm-4 border p-3">
+								<p>Fehérje</p>
+								<div><b id="protein-container">0</b>g</div>
+							</div>
+							<div class="col-12 col-sm-4 border p-3">
+								<p>Szénhidrát</p>
+								<div><b id="carb-container">0</b>g</div>
+							</div>
+							<div class="col-12 col-sm-4 border p-3">
+								<p>Zsir</p>
+								<div><b id="fat-container">0</b>g</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-12 col-md-4 border rounded d-flex align-items-center justify-content-center flex-column">
+						<h4>Allergének</h4>
+						<div id="recipe-allergens-container"></div>
+					</div>
+					<div class="col-12 col-md-4 border rounded d-flex align-items-center justify-content-center flex-column">
+						<h4>Tipus</h4>
+					</div>
+				</div>
 
-
-				<!-- Submit button -->
 				<button type="submit" class="btn btn-primary btn-block mb-4">Recept elküldése</button>
 			</form>
 		</div>
