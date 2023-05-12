@@ -148,3 +148,5 @@ $ingredient = $params["ingredient"];
         </div>
     </div>
 </div>
+
+<script src="public/js/ingredient/ingredient_form.js"></script>

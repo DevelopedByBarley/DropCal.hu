@@ -64,11 +64,37 @@ class RecipeController
 
     public function addNewRecipe() {
         echo "<pre>";
-        var_dump($_POST);
+        var_dump(json_decode($_POST["ingredients"], true));
         echo "<br>";
         var_dump($_FILES);
         exit;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     

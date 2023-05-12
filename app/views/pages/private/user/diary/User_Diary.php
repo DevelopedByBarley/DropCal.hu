@@ -92,3 +92,5 @@ $summaries = $diaryData["summaries"];
   </div>
   <div class="col-12 col-sm-3 bg-dark  container-fluid text-light p-1" id="single-ingredient-form" data-date="<?= $_GET["date"] ?>" data-diaryid="<?= $diaryData["userDiary"]["diaryId"] ?>"></div>
 </div>
+
+<script src="public/js/diary/add_diary_ingredient.js"></script>

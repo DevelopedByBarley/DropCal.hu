@@ -1,4 +1,5 @@
-
+let pageCounter = localStorage.getItem("page-counter") ? localStorage.getItem("page-counter") : 1;
+const IngredientInput = document.getElementById("ingredients");
 
 
 
@@ -9,6 +10,7 @@ window.onload = () => {
     renderIngredientList()
     renderSummaries();
     renderAllergens();
+    IngredientInput.value = localStorage.getItem("recipeIngredientState")
 }
 
 
@@ -57,6 +59,7 @@ function deleteIngredient(event) {
     renderSummaries();
     renderAllergens();
     renderIngredientList();
+    IngredientInput.value = localStorage.getItem("recipeIngredientState")
 }
 
 function updateIngredient(event) {
@@ -202,16 +205,18 @@ function renderSearchRecipeResult(name, SearchRecipeResultContainer, isIngredien
     });
 
     // Amellyet beillesztünk a megfelelő helyre
-    SearchRecipeResultContainer.innerHTML = searchRecipeResultTemplate;
+    if(SearchRecipeResultContainer) {
+        SearchRecipeResultContainer.innerHTML = searchRecipeResultTemplate;
+    }
 
     // Ki szedjük a lapozó gombjait a dom-ból
     const PrevButton = document.getElementById('prev-button');
     const NextButton = document.getElementById('next-button');
 
     // Majd ellátjuk a hozzájuk kellő metódusokkal, ezeknek szintén átadjuk a keresőből kiszedett értéket és azt a containert ahova majd beillesztjük azokat 
-    PrevButton.addEventListener('click', () => prevRecipe(name, SearchRecipeResultContainer, isIngredientForUpdate))
+    if (PrevButton) PrevButton.addEventListener('click', () => prevRecipe(name, SearchRecipeResultContainer, isIngredientForUpdate))
 
-    NextButton.addEventListener('click', () => nextRecipe(name, SearchRecipeResultContainer, isIngredientForUpdate))
+    if (NextButton) NextButton.addEventListener('click', () => nextRecipe(name, SearchRecipeResultContainer, isIngredientForUpdate))
 
 
     // Kiszedjük az összes keresőből visszatért hozzávaló elemet,
@@ -309,17 +314,20 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
                 currentFat: calculateMacros(Quantity.value, ingredient).fat,
                 allergens: ingredient.allergens,
             }
-
-
-
+            
+            
+            
             let index = recipeIngredientState.findIndex(ingredient => ingredient.id === id);
             recipeIngredientState[index] = newIngredient;
-
-
+            
+            
             localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState));
             renderIngredientList();
             renderSummaries();
             renderAllergens();
+            
+            IngredientInput.value = localStorage.getItem("recipeIngredientState");
+                        
             return;
         })
     } else {
@@ -347,6 +355,12 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
                 currentFat: calculateMacros(Quantity.value, ingredient).fat,
                 allergens: ingredient.allergens,
             }
+            
+            for (let i = 0; i < recipeIngredientState.length; i++) {
+                if (recipeIngredientState[i].ingredientName === newIngredient.ingredientName) {
+                    return;
+                }
+            }
 
             recipeIngredientState.push(newIngredient);
 
@@ -355,6 +369,9 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
             renderIngredientList();
             renderSummaries();
             renderAllergens();
+
+
+            IngredientInput.value = localStorage.getItem("recipeIngredientState");
             return;
         })
     }
@@ -392,7 +409,7 @@ function renderSummaries() {
 
     localStorage.setItem("macros", JSON.stringify(macros));
 
-    if(recipeIngredientState.length === 0) {
+    if (recipeIngredientState.length === 0) {
         localStorage.removeItem("macros");
     }
 
@@ -485,7 +502,9 @@ async function getDiaryIngredientById(url) {
 function clearRecipeContainer(name, SearchRecipeResultContainer) {
     if (name.length < 3) {
         searchResult = [];
-        SearchRecipeResultContainer.innerHTML = "";
+        if (SearchRecipeResultContainer) {
+            SearchRecipeResultContainer.innerHTML = "";
+        }
     }
 }
 

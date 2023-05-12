@@ -1,3 +1,5 @@
+
+
 <div class="container">
 	<div class="row  mt-5">
 		<div class="col-12 mb-5">
@@ -21,6 +23,7 @@
 
 						</div>
 					</div>
+					<input type="hidden" name="ingredients" id="ingredients"/>
 				</div>
 
 				<div class="row mb-4 ">
@@ -95,3 +98,6 @@
 
 
 <div id="modal-container"></div>
+
+
+<script src="public/js/recipes/recipe.js"></script>
