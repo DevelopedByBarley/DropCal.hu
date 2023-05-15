@@ -1,5 +1,3 @@
-
-
 <div class="container">
 	<div class="row  mt-5">
 		<div class="col-12 mb-5">
@@ -23,7 +21,7 @@
 
 						</div>
 					</div>
-					<input type="hidden" name="ingredients" id="ingredients"/>
+					<input type="hidden" name="ingredients" id="ingredients" />
 				</div>
 
 				<div class="row mb-4 ">
@@ -85,7 +83,8 @@
 						<div id="recipe-allergens-container"></div>
 					</div>
 					<div class="col-12 col-md-4 border rounded d-flex align-items-center justify-content-center flex-column">
-						<h4>Tipus</h4>
+						<h4>Glikémiás index átlag</h4>
+						<div id="glycemic-index-container"></div>
 					</div>
 				</div>
 

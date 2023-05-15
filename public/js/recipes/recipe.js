@@ -10,6 +10,7 @@ window.onload = () => {
     renderIngredientList()
     renderSummaries();
     renderAllergens();
+    renderSummaryOfGlycemicIndex();
     IngredientInput.value = localStorage.getItem("recipeIngredientState")
 }
 
@@ -59,6 +60,7 @@ function deleteIngredient(event) {
     renderSummaries();
     renderAllergens();
     renderIngredientList();
+    renderSummaryOfGlycemicIndex();
     IngredientInput.value = localStorage.getItem("recipeIngredientState")
 }
 
@@ -205,7 +207,7 @@ function renderSearchRecipeResult(name, SearchRecipeResultContainer, isIngredien
     });
 
     // Amellyet beillesztünk a megfelelő helyre
-    if(SearchRecipeResultContainer) {
+    if (SearchRecipeResultContainer) {
         SearchRecipeResultContainer.innerHTML = searchRecipeResultTemplate;
     }
 
@@ -305,7 +307,7 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
                 protein: ingredient.protein,
                 carb: ingredient.carb,
                 fat: ingredient.fat,
-                glychemicIndex: ingredient.glycemicIndex,
+                glycemicIndex: ingredient.glycemicIndex,
                 ingredientUnits: ingredient.ingredientUnits,
                 allergens: ingredient.allergens,
                 currentCalorie: calculateCalorie(Quantity.value, ingredient),
@@ -314,20 +316,22 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
                 currentFat: calculateMacros(Quantity.value, ingredient).fat,
                 allergens: ingredient.allergens,
             }
-            
-            
-            
+
+
+
             let index = recipeIngredientState.findIndex(ingredient => ingredient.id === id);
             recipeIngredientState[index] = newIngredient;
-            
-            
+
+
             localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState));
             renderIngredientList();
             renderSummaries();
             renderAllergens();
-            
+            renderSummaryOfGlycemicIndex();
+
+
             IngredientInput.value = localStorage.getItem("recipeIngredientState");
-                        
+
             return;
         })
     } else {
@@ -346,7 +350,7 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
                 protein: ingredient.protein,
                 carb: ingredient.carb,
                 fat: ingredient.fat,
-                glychemicIndex: ingredient.glycemicIndex,
+                glycemicIndex: ingredient.glycemicIndex,
                 ingredientUnits: ingredient.ingredientUnits,
                 allergens: ingredient.allergens,
                 currentCalorie: calculateCalorie(Quantity.value, ingredient),
@@ -355,7 +359,7 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
                 currentFat: calculateMacros(Quantity.value, ingredient).fat,
                 allergens: ingredient.allergens,
             }
-            
+
             for (let i = 0; i < recipeIngredientState.length; i++) {
                 if (recipeIngredientState[i].ingredientName === newIngredient.ingredientName) {
                     return;
@@ -369,6 +373,7 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
             renderIngredientList();
             renderSummaries();
             renderAllergens();
+            renderSummaryOfGlycemicIndex();
 
 
             IngredientInput.value = localStorage.getItem("recipeIngredientState");
@@ -376,6 +381,26 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
         })
     }
 }
+
+function renderSummaryOfGlycemicIndex() {
+    let sumOfGlycemicIndex = 0;
+    let counter = 0;
+
+    recipeIngredientState.forEach((ingredient) => {
+        let glycemicIndex = ingredient.glycemicIndex;
+
+        if (glycemicIndex !== null) {
+            sumOfGlycemicIndex += parseInt(glycemicIndex)
+        }
+        glycemicIndex && glycemicIndex !== null ? counter += 1 : "";
+    })
+
+    const GI = sumOfGlycemicIndex !== 0 && counter !== 0 ? (sumOfGlycemicIndex / counter) : 0;
+
+    localStorage.setItem("GI", GI)
+    document.getElementById("glycemic-index-container").innerHTML = `<h4><b>${GI}</b></h4>`;
+}
+
 
 
 function renderSummaries() {

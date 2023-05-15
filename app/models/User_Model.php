@@ -107,14 +107,22 @@ class UserModel
         $userId = $this->pdo->lastInsertId();
 
         if ($userId) {
+
             foreach ($allergens as $allergen) {
-                filter_var($allergen ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
-                $stmt = $this->pdo->prepare("INSERT INTO `allergens` VALUES (NULL, :allergenName, :userId);");
-                $stmt->bindParam(':allergenName', $allergen, PDO::PARAM_STR);
-                $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
-                $stmt->execute();
+                filter_var($allergen, FILTER_SANITIZE_SPECIAL_CHARS);
+                
+                foreach (ALLERGENS as $allergenListItem) {
+                    if ($allergen === $allergenListItem["allergenName"]) {
+                        $stmt = $this->pdo->prepare("INSERT INTO `allergens` VALUES (NULL, :allergenName, :allergenNumber, :userId);");
+                        $stmt->bindParam(':allergenName', $allergenListItem["allergenName"], PDO::PARAM_STR);
+                        $stmt->bindParam(':allergenNumber', $allergenListItem["allergenId"], PDO::PARAM_INT);
+                        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+                        $stmt->execute();
+                    }
+                }
             }
         }
+
 
         $this->cookie->setCookie('registrationData', '', time() - 3600, '/');
         $this->cookie->setCookie('currentStepId', '', time() - 3600, '/');
@@ -183,6 +191,3 @@ class UserModel
         $this->logout();
     }
 }
-
-
-
