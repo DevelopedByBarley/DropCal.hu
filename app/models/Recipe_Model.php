@@ -20,12 +20,13 @@ class RecipeModel extends UserModel
         return $recipes;
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $stmt = $this->pdo->prepare("DELETE FROM  `recipes` WHERE recipeId = :id");
         $stmt->bindParam(":id", $id);
         $isSuccess = $stmt->execute();
 
-        if($isSuccess) {
+        if ($isSuccess) {
             header("Location: /user/recipes-dashboard");
         }
     }
@@ -43,5 +44,12 @@ class RecipeModel extends UserModel
 
         $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $recipes;
+    }
+
+
+    public function addRecipe($body, $files)
+    {
+        $recipeIngredients = json_decode($body["ingredients"], true);
+
     }
 }

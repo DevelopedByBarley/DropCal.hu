@@ -36,6 +36,11 @@ class RecipeController
             "userId" => $userId,
             "profileImage" => $profileImage
         ]);
+
+
+        if (isset($_GET["clearLocalStorage"]) && $_GET["clearLocalStorage"] === "true") {
+            echo "<script>localStorage.clear();</script>";
+        }
     }
 
     public function deleteRecipe($vars)
@@ -62,11 +67,21 @@ class RecipeController
         ]);
     }
 
-    public function addNewRecipe() {
+    public function addNewRecipe()
+    {
         echo "<pre>";
-        var_dump(json_decode($_POST["ingredients"], true));
-        echo "<br>";
-        var_dump($_FILES);
+        var_dump($_POST);
+        $recipeIngredients = json_decode($_POST["ingredients"], true);
+        exit;
+
+        if (empty($recipeIngredients)) {
+            header("Location: /user/recipe/new");
+            exit;
+        }
+
+        $this->recipeModel->addRecipe($_POST, $_FILES);
+
+        header("Location: /user/recipes-dashboard?clearLocalStorage=true");
         exit;
     }
 
@@ -96,8 +111,6 @@ class RecipeController
 
 
 
-
-    
 
     // Public Recipes---------------------------------
 

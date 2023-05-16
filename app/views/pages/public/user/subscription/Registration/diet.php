@@ -40,20 +40,6 @@
                         </label>
                     </div>
                     <div class="col-6 col-lg-3 d-flex align-items-center justify-content-center">
-                        <input type="radio" name="diet" id="gluten_free" value="gluten_free">
-                        <label for="gluten_free" class="mb-2">
-                            <img src="/public/assets/icons/rice.gif" style="height: 70px; width: 70px;" class="diet-gif" />
-                            <h6>Gluténmentes </h6>
-                        </label>
-                    </div>
-                    <div class="col-6 col-lg-3 d-flex align-items-center justify-content-center">
-                        <input type="radio" name="diet" id="sugar_free" value="sugar_free">
-                        <label for="sugar_free" class="mb-2">
-                            <img src="/public/assets/icons/candy-bag.gif" style="height: 70px; width: 70px;" class="diet-gif" />
-                            <h6>Cukormentes </h6>
-                        </label>
-                    </div>
-                    <div class="col-6 col-lg-3 d-flex align-items-center justify-content-center">
                         <input type="radio" name="diet" id="ketogenic" value="ketogenic">
                         <label for="ketogenic" class="mb-2">
                             <img src="/public/assets/icons/sausage.gif" style="height: 70px; width: 70px;" class="diet-gif" />
