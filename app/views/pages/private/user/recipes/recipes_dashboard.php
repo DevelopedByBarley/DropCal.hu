@@ -27,7 +27,7 @@ $recipes = $params["recipes"];
                         <h5 class="card-title"><?= $recipe["recipe_name"] ?></h5>
                         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                         <a href="#" class="btn btn-info text-light">Megtekint</a>
-                        <a href="#" class="btn btn-warning text-light">Frissit</a>
+                        <a href="/user/recipe/update" class="btn btn-warning text-light">Frissit</a>
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal<?= $recipe["recipeId"] ?>">
                             Töröl
                         </button>

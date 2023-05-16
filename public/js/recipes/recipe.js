@@ -163,7 +163,7 @@ function renderModalTemplate(ingredient = null) { // Ha a modalt renderelő func
 
 
 
-  
+
 
     if (isIngredientForUpdate) {
         renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredientForUpdate)
@@ -341,7 +341,6 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
                 unit_quantity: Quantity.value,
                 commonUnit: ingredient.common_unit,
                 common_unit_ex: ingredient.common_unit_ex,
-                partOfTheDay: 1,
                 selectedUnit: ingredient.ingredientUnits.find(ingredient => ingredient.isSelected === true),
                 calorie: ingredient.calorie,
                 protein: ingredient.protein,
@@ -349,7 +348,6 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
                 fat: ingredient.fat,
                 glycemicIndex: ingredient.glycemicIndex,
                 ingredientUnits: ingredient.ingredientUnits,
-                allergens: ingredient.allergens,
                 currentCalorie: calculateCalorie(Quantity.value, ingredient),
                 currentProtein: calculateMacros(Quantity.value, ingredient).protein,
                 currentCarb: calculateMacros(Quantity.value, ingredient).carb,
@@ -381,11 +379,12 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
             let newIngredient = {
                 id: generateUUID(),
                 ingredientName: ingredient.ingredientName,
+                ingredientCategorie : ingredient.ingredientCategorie,
                 unit: ingredient.unit,
                 unit_quantity: Quantity.value,
                 commonUnit: ingredient.common_unit,
                 common_unit_ex: ingredient.common_unit_ex,
-                partOfTheDay: 1,
+                common_unit_quantity: ingredient.common_unit_ex,
                 selectedUnit: ingredient.ingredientUnits.find(ingredient => ingredient.isSelected === true),
                 calorie: ingredient.calorie,
                 protein: ingredient.protein,
@@ -393,7 +392,6 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
                 fat: ingredient.fat,
                 glycemicIndex: ingredient.glycemicIndex,
                 ingredientUnits: ingredient.ingredientUnits,
-                allergens: ingredient.allergens,
                 currentCalorie: calculateCalorie(Quantity.value, ingredient),
                 currentProtein: calculateMacros(Quantity.value, ingredient).protein,
                 currentCarb: calculateMacros(Quantity.value, ingredient).carb,
@@ -511,14 +509,22 @@ function renderAllergens() {
                 if (allergen.i_allergenNumber !== '0') {
                     let alreadyExists = false;
                     for (const existingAllergen of allergens) {
-                        if (JSON.stringify(existingAllergen) === JSON.stringify(allergen)) {
+                        if (JSON.stringify(existingAllergen.i_allergenNumber) === JSON.stringify(allergen.i_allergenNumber)) {
                             alreadyExists = true;
                             break;
                         }
                     }
                     if (!alreadyExists) {
                         allergens.push(allergen);
-                        localStorage.setItem("recipeAllergens", JSON.stringify(allergens))
+                        let allergenNumbers = [];
+                        for (const allergen of allergens) {
+                            allergenNumbers.push(parseInt(allergen.i_allergenNumber));
+                        }
+                        allergenNumbers.sort(function (a, b) {
+                            return a - b;
+                        });
+                
+                        localStorage.setItem("recipeAllergens", JSON.stringify(allergenNumbers))
                     }
                 }
             }
@@ -527,11 +533,21 @@ function renderAllergens() {
 
     if (allergens.length !== 0) {
         let allergensTemplate = '';
+        let allergenNumbers = [];
         for (const allergen of allergens) {
-            allergensTemplate += `
-            <span>${allergen.i_allergenNumber}</span>
-            `;
+            allergenNumbers.push(parseInt(allergen.i_allergenNumber));
         }
+
+        allergenNumbers.sort(function (a, b) {
+            return a - b;
+        });
+
+        allergenNumbers.forEach((num) => {
+            allergensTemplate += `
+            <span>${num}</span>
+        `;
+        })
+
         document.getElementById('recipe-allergens-container').innerHTML = allergensTemplate;
         AllergensInput.value = localStorage.getItem("recipeAllergens");
     } else {

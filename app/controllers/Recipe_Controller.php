@@ -66,20 +66,20 @@ class RecipeController
             "profileImage" => $profileImage
         ]);
     }
-
+    
     public function addNewRecipe()
     {
-        echo "<pre>";
-        var_dump($_POST);
+        $this->loginChecker->checkUserIsLoggedInOrRedirect();
+        $userId = $_SESSION["userId"] ?? null;
         $recipeIngredients = json_decode($_POST["ingredients"], true);
-        exit;
 
         if (empty($recipeIngredients)) {
             header("Location: /user/recipe/new");
             exit;
         }
 
-        $this->recipeModel->addRecipe($_POST, $_FILES);
+        $this->recipeModel->addRecipe($_POST, $_FILES, $userId);
+
 
         header("Location: /user/recipes-dashboard?clearLocalStorage=true");
         exit;
