@@ -30,7 +30,6 @@ class RecipeModel extends UserModel
         }
 
         return $recipes;
-
     }
     public function delete($id)
     {
@@ -79,7 +78,6 @@ class RecipeModel extends UserModel
 
     public function update($body, $files, $recipeId, $userId)
     {
-
         $recipeIngredients = json_decode($body["ingredients"], true);
         $steps = $body["steps"];
         $macros = json_decode($body["macros"], true);
@@ -93,7 +91,7 @@ class RecipeModel extends UserModel
         $GI = $body["glycemic_index_summary"];
         $allergens = $body["allergens"];
 
-        $isPublic = $body["isPublic"] === 'on' ? 1 : 0;
+        $isPublic = isset($body["isPublic"]) && $body["isPublic"] === 'on' ? 1 : 0;
 
         $stmt = $this->pdo->prepare(
             "UPDATE `recipes` SET 
@@ -132,7 +130,8 @@ class RecipeModel extends UserModel
         if ($isSuccess) {
             $this->updateRecipeSteps($steps, $recipeId);
             $this->updateRecipeIngredients($recipeIngredients, $recipeId);
-            $this->updateRecipeImages($files, $recipeId);
+
+            if($files["files"]["name"][0] !== "") $this->updateRecipeImages($files, $recipeId);
         }
     }
 
@@ -175,34 +174,55 @@ class RecipeModel extends UserModel
         $stmt = $this->pdo->prepare("DELETE FROM `recipe_ingredients` WHERE `recipeRefId` = :recipeRefId");
         $stmt->bindParam(":recipeRefId", $recipeRefId);
         $stmt->execute();
-
         foreach ($recipeIngredients as $ingredient) {
-
             $stmt = $this->pdo->prepare("INSERT INTO `recipe_ingredients` 
-                VALUES 
-                (
-                    NULL,
-                    :id,
-                    :ingredientName, 
-                    :ingredientCategorie, 
-                    :unit, 
-                    :unit_quantity, 
-                    :calorie, 
-                    :common_unit, 
-                    :common_unit_quantity, 
-                    :common_unit_ex, 
-                    :protein, 
-                    :carb, 
-                    :fat, 
-                    :glycemicIndex,
-                    :ingredientUnits,
-                    :currentCalorie,
-                    :currentProtein,
-                    :currentCarb,
-                    :currentFat, 
-                    :allergens, 
-                    :recipeRefId
-                );");
+            (
+                recipeIngredientId,
+                id,
+                ingredientName,
+                ingredientCategorie,
+                unit,
+                unit_quantity,
+                calorie,
+                common_unit,
+                common_unit_quantity,
+                common_unit_ex,
+                protein,
+                carb,
+                fat,
+                glycemicIndex,
+                ingredientUnits,
+                currentCalorie,
+                currentProtein,
+                currentCarb,
+                currentFat,
+                allergens,
+                recipeRefId
+            )
+            VALUES 
+            (
+                NULL,
+                :id,
+                :ingredientName, 
+                :ingredientCategorie, 
+                :unit, 
+                :unit_quantity, 
+                :calorie, 
+                :common_unit, 
+                :common_unit_quantity, 
+                :common_unit_ex, 
+                :protein, 
+                :carb, 
+                :fat, 
+                :glycemicIndex,
+                :ingredientUnits,
+                :currentCalorie,
+                :currentProtein,
+                :currentCarb,
+                :currentFat, 
+                :allergens, 
+                :recipeRefId
+            );");
 
             $stmt->bindParam(':id', $ingredient['id']);
             $stmt->bindParam(':ingredientName', $ingredient['ingredientName']);
@@ -231,6 +251,7 @@ class RecipeModel extends UserModel
             $stmt->bindParam(':recipeRefId', $recipeRefId);
             $stmt->execute();
         }
+
     }
 
     public function addRecipe($body, $files, $userId)

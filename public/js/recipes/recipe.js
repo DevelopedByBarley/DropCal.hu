@@ -419,6 +419,9 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
                 currentFat: calculateMacros(Quantity.value, ingredient).fat,
                 allergens: ingredient.allergens,
             }
+            
+
+            console.log(newIngredient);
 
             for (let i = 0; i < recipeIngredientState.length; i++) {
                 if (recipeIngredientState[i].ingredientName === newIngredient.ingredientName) {
