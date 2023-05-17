@@ -4,8 +4,29 @@ const MacrosInput = document.getElementById("macros-input");
 const AllergensInput = document.getElementById("allergens-input")
 const RecipeName = localStorage.getItem("recipeName") ? JSON.parse(localStorage.getItem("recipeName")) : '';
 const SearchBoxContainer = document.getElementById("search-box-container");
+const RecipeForUpdate = document.getElementById("recipe-for-update");
+let recipeIngredientState = localStorage.getItem("recipeIngredientState") ? JSON.parse(localStorage.getItem("recipeIngredientState")) : [];
+
+const StepButton = document.getElementById("step");
+const StepsContainer = document.getElementById("steps-container");
+let stepState = localStorage.getItem("stepState") ? JSON.parse(localStorage.getItem("stepState")) : [
+    {
+        id: generateUUID(),
+        content: ""
+    }
+];
+
+
+if (RecipeForUpdate) {
+    let data = JSON.parse(RecipeForUpdate.dataset.update);
+    console.log(data);
+    recipeIngredientState = data.ingredients;
+    stepState = data.steps;
+}
+
 // Oldal betöltődéskor feltöltjük a state-et
 window.onload = () => {
+
     localStorage.setItem("recipeIngredientState", JSON.stringify(recipeIngredientState))
     localStorage.setItem("recipeName", JSON.stringify(RecipeName))
     localStorage.removeItem("page-counter")
@@ -14,7 +35,7 @@ window.onload = () => {
     renderAllergens();
     renderSummaryOfGlycemicIndex();
     IngredientInput.value = localStorage.getItem("recipeIngredientState")
-    document.getElementById("recipe-name").value = RecipeName;
+    RecipeName !== "" ? document.getElementById("recipe-name").value = RecipeName : null;
 }
 
 
@@ -339,7 +360,7 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
                 ingredientName: ingredient.ingredientName,
                 unit: ingredient.unit,
                 unit_quantity: Quantity.value,
-                commonUnit: ingredient.common_unit,
+                common_unit: ingredient.common_unit,
                 common_unit_ex: ingredient.common_unit_ex,
                 selectedUnit: ingredient.ingredientUnits.find(ingredient => ingredient.isSelected === true),
                 calorie: ingredient.calorie,
@@ -379,10 +400,10 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
             let newIngredient = {
                 id: generateUUID(),
                 ingredientName: ingredient.ingredientName,
-                ingredientCategorie : ingredient.ingredientCategorie,
+                ingredientCategorie: ingredient.ingredientCategorie,
                 unit: ingredient.unit,
                 unit_quantity: Quantity.value,
-                commonUnit: ingredient.common_unit,
+                common_unit: ingredient.common_unit,
                 common_unit_ex: ingredient.common_unit_ex,
                 common_unit_quantity: ingredient.common_unit_ex,
                 selectedUnit: ingredient.ingredientUnits.find(ingredient => ingredient.isSelected === true),
@@ -523,7 +544,7 @@ function renderAllergens() {
                         allergenNumbers.sort(function (a, b) {
                             return a - b;
                         });
-                
+
                         localStorage.setItem("recipeAllergens", JSON.stringify(allergenNumbers))
                     }
                 }
@@ -707,21 +728,6 @@ function calculateMacros(quantity, ingredient) {
 
 
 
-
-
-
-
-// Steps Section
-
-const StepButton = document.getElementById("step");
-const StepsContainer = document.getElementById("steps-container");
-let recipeIngredientState = localStorage.getItem("recipeIngredientState") ? JSON.parse(localStorage.getItem("recipeIngredientState")) : [];
-let stepState = localStorage.getItem("stepState") ? JSON.parse(localStorage.getItem("stepState")) : [
-    {
-        id: generateUUID(),
-        content: ""
-    }
-];
 
 
 

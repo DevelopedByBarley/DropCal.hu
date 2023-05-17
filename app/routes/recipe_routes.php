@@ -10,6 +10,7 @@ $r->addRoute('GET', '/user/recipe/update/{id}', [RecipeController::class, 'updat
 
 
 $r->addRoute('POST', '/user/recipe/new', [RecipeController::class, 'addNewRecipe']);
+$r->addRoute('POST', '/user/recipe/update/{id}', [RecipeController::class, 'updateRecipe']);
 
 
 // Public

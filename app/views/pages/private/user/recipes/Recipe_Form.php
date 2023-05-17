@@ -1,15 +1,25 @@
+<?php
+$recipeForUpdate = $params["recipeForUpdate"] ?? null;
+
+?>
+
+
+<?php if (isset($recipeForUpdate)) : ?>
+	<div id="recipe-for-update" data-update='<?= json_encode($recipeForUpdate) ?>'></div>
+<?php endif ?>
+
 <div class="container">
 	<div class="row  mt-5">
 		<div class="col-12 mb-5">
 			<h1 class="display-4">Recept hozzáadása</h1>
 		</div>
 		<div class="col-12">
-			<form action="/user/recipe/new" method="POST" enctype="multipart/form-data">
+			<form action="<?= isset($recipeForUpdate) ? "/user/recipe/update/" . $recipeForUpdate["recipeId"] : '/user/recipe/new'?>" method="POST" enctype="multipart/form-data">
 				<div class="row mb-4">
 					<div class="col">
 						<div class="form-outline">
 							<label class="form-label" for="form6Example1">Recept neve</label> <span><i style="font-size: .5rem; position: relative; top: -7px" class="bi bi-asterisk"></i></span>
-							<input type="text" id="recipe-name" class="form-control" placeholder="Recept neve" name="name" required oninput="setRecipeName(event)" />
+							<input type="text" id="recipe-name" class="form-control" placeholder="Recept neve" name="name" value="<?= isset($recipeForUpdate) ? $recipeForUpdate["recipe_name"] : '' ?>" required oninput="setRecipeName(event)" />
 						</div>
 					</div>
 				</div>
@@ -101,7 +111,7 @@
 					<label class="form-label" for="form6Example1">Fénykép <span><i style="font-size: .5rem; position: relative; top: -7px" class="bi bi-asterisk"></i></label>
 					<div class="col-12 border p-5 text-center">
 						<div class="form-outline">
-							<input type="file" id="form6Example1" class="form-control" id="file" name="files[]" required multiple />
+							<input type="file" id="form6Example1" class="form-control" id="file" name="files[]" <?php echo isset($recipeForUpdate) ? '' : 'required'?> multiple />
 						</div>
 					</div>
 				</div>

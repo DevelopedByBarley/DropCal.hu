@@ -6,7 +6,7 @@ class UserModel
     protected $calculators;
     protected $cookie;
     protected $mailer;
-    private $fileSaver;
+    protected $fileSaver;
 
     public function __construct()
     {

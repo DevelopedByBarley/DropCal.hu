@@ -27,6 +27,7 @@ class FileSaver
   private function saveMultipleFiles($files, $path)
   {
     $ret = [];
+    $fileNames = [];
 
     foreach ($files as $fieldName => $fields) {
 
@@ -36,8 +37,11 @@ class FileSaver
     }
 
     foreach ($ret as $file) {
-      $this->save($file, $path);
+      $fileName =  $this->save($file, $path);
+      $fileNames[] = $fileName;
     }
+
+    return $fileNames;
   }
 
   private function save($file, $path)
