@@ -44,7 +44,7 @@ function showSearchBox() {
     SearchBoxContainer.innerHTML = `
     <div class="form-outline">
         <div class="mb-1">
-            <label for="recipient-name" class="col-form-label">Keresés:</label>
+            <label for="recipient-name" class="col-form-label mb-2 p-2"><b>Keresés</b></label>
             <input type="text" class="form-control" id="search-recipe-ingredient" placeholder="Hozzávaló keresése">
         </div>
         <div id="search-recipe-result-container"></div>

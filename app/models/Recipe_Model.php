@@ -15,16 +15,28 @@ class RecipeModel extends UserModel
         $stmt->bindParam(":id", $id);
         $stmt->execute();
 
-        $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $recipeData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $recipes = $this->getImagesByRecipes($recipeData);
 
         return $recipes;
     }
 
+
+    private function getImagesByRecipes($recipes)
+    {
+        foreach ($recipes as &$recipe) {
+            $images = $this->getRecipeImagesById($recipe["recipeId"]);
+            $recipe["images"] = $images;
+        }
+
+        return $recipes;
+
+    }
     public function delete($id)
     {
 
         $images = $this->getRecipeImagesById($id);
-        foreach($images as $image) {
+        foreach ($images as $image) {
             unlink("./public/assets/recipe_images/" . $image["r_imageName"]);
         }
 
@@ -37,6 +49,8 @@ class RecipeModel extends UserModel
             header("Location: /user/recipes-dashboard");
         }
     }
+
+
 
     public function getRecipeImagesById($id)
     {
@@ -118,6 +132,25 @@ class RecipeModel extends UserModel
         if ($isSuccess) {
             $this->updateRecipeSteps($steps, $recipeId);
             $this->updateRecipeIngredients($recipeIngredients, $recipeId);
+            $this->updateRecipeImages($files, $recipeId);
+        }
+    }
+
+    private function updateRecipeImages($files, $recipeRefId)
+    {
+        $images = $this->getRecipeImagesById($recipeRefId);
+        foreach ($images as $image) {
+            unlink("./public/assets/recipe_images/" . $image["r_imageName"]);
+        }
+
+
+        $stmt = $this->pdo->prepare("DELETE FROM `recipe_images` WHERE `recipeRefId` = :recipeRefId");
+        $stmt->bindParam(":recipeRefId", $recipeRefId);
+        $isSuccess = $stmt->execute();
+
+        if ($isSuccess) {
+            $recipeImages = $this->fileSaver->saver($files["files"], "/recipe_images", null);
+            $this->insertRecipeImages($recipeImages,  $recipeRefId);
         }
     }
 
@@ -146,53 +179,30 @@ class RecipeModel extends UserModel
         foreach ($recipeIngredients as $ingredient) {
 
             $stmt = $this->pdo->prepare("INSERT INTO `recipe_ingredients` 
-        (
-            `recipeIngredientId`, 
-            `id`, 
-            `ingredientName`, 
-            `ingredientCategorie`,
-            `unit`, 
-            `unit_quantity`, 
-            `calorie`,
-            `common_unit`, 
-            `common_unit_quantity`, 
-            `common_unit_ex`, 
-            `protein`, 
-            `carb`, 
-            `fat`, 
-            `glycemicIndex`, 
-            `ingredientUnits`,
-            `currentCalorie`,
-            `currentProtein`,
-            `currentCarb`,
-            `currentFat`,
-            `allergens`, 
-            `recipeRefId`
-        ) 
-        VALUES 
-        (
-            NULL,
-            :id,
-            :ingredientName, 
-            :ingredientCategorie, 
-            :unit, 
-            :unit_quantity, 
-            :calorie, 
-            :common_unit, 
-            :common_unit_quantity, 
-            :common_unit_ex, 
-            :protein, 
-            :carb, 
-            :fat, 
-            :glycemicIndex,
-            :ingredientUnits,
-            :currentCalorie,
-            :currentProtein,
-            :currentCarb,
-            :currentFat, 
-            :allergens, 
-            :recipeRefId
-        );");
+                VALUES 
+                (
+                    NULL,
+                    :id,
+                    :ingredientName, 
+                    :ingredientCategorie, 
+                    :unit, 
+                    :unit_quantity, 
+                    :calorie, 
+                    :common_unit, 
+                    :common_unit_quantity, 
+                    :common_unit_ex, 
+                    :protein, 
+                    :carb, 
+                    :fat, 
+                    :glycemicIndex,
+                    :ingredientUnits,
+                    :currentCalorie,
+                    :currentProtein,
+                    :currentCarb,
+                    :currentFat, 
+                    :allergens, 
+                    :recipeRefId
+                );");
 
             $stmt->bindParam(':id', $ingredient['id']);
             $stmt->bindParam(':ingredientName', $ingredient['ingredientName']);

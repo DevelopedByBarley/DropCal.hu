@@ -1,6 +1,3 @@
-
-
-
 <div class="container">
     <div class="row  rounded mt-2  user-subscription-tab d-flex align-items-center justify-content-center">
 
@@ -10,6 +7,13 @@
                     Válaszd ki hogy milyen étrendet preferálsz!
                 </h1>
                 <div class="btn-group-inputs row mt-5 d-flex align-items-center justify-content-center">
+                    <div class="col-6 col-lg-3 d-flex align-items-center justify-content-center">
+                        <input type="radio" name="diet" id="general" value="meat">
+                        <label for="general" class="mb-2">
+                            <img src="/public/assets/icons/customer.gif" style="height: 70px; width: 70px;" class="diet-gif" />
+                            <h6>Általános</h6>
+                        </label>
+                    </div>
                     <div class="col-6 col-lg-3 d-flex align-items-center justify-content-center">
                         <input type="radio" name="diet" id="meat" value="meat">
                         <label for="meat" class="mb-2">

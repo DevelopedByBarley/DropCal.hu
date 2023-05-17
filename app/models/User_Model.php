@@ -34,7 +34,7 @@ class UserModel
         $height = filter_var((int)($userData["height"] ?? ''), FILTER_SANITIZE_NUMBER_INT);
         $activity = filter_var($userData["activity"] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
         $allergens = $userData["allergens"] ?? '';
-        $diet = filter_var($userData["diet"] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+        $diet = filter_var($userData["diet"] === '' || $userData["diet"] === null ? "general" : $userData["diet"], FILTER_SANITIZE_SPECIAL_CHARS);
         $isHaveDiabetes = filter_var($userData["isHaveDiabetes"] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
         $goal = filter_var($userData["goal"] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -110,7 +110,7 @@ class UserModel
 
             foreach ($allergens as $allergen) {
                 filter_var($allergen, FILTER_SANITIZE_SPECIAL_CHARS);
-                
+
                 foreach (ALLERGENS as $allergenListItem) {
                     if ($allergen === $allergenListItem["allergenName"]) {
                         $stmt = $this->pdo->prepare("INSERT INTO `allergens` VALUES (NULL, :allergenName, :allergenNumber, :userId);");

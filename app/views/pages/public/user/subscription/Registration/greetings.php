@@ -21,7 +21,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="row mt-5">
+                <div class="row mt-1">
 
                     <div class="col-xs-12 user-navigation-buttons d-flex">
                         <button type="submit" class="btn btn-outline-dark m-3 p-3">Vágjunk bele!</button>

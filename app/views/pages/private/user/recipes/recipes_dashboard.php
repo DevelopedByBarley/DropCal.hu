@@ -22,7 +22,7 @@ $recipes = $params["recipes"];
         <?php foreach ($recipes as $recipe) : ?>
             <div class="col-12 col-md-6 col-lg-2 mb-3 d-flex align-items-center justify-content-center">
                 <div class="card recipe-card">
-                    <div class="recipe-card-image" style="background-image: url(<?php echo isset($recipe['recipeImage']) ? $recipe['recipeImage'] : 'https://i.imgur.com/BrotgYi.jpg'; ?>); background-size: cover; background-position: center; min-height: 200px"></div>
+                    <div class="recipe-card-image" style="background-image: url(<?php echo isset($recipe['images']) ? "/public/assets/recipe_images/" . $recipe['images'][0]["r_imageName"] : 'https://i.imgur.com/BrotgYi.jpg'; ?>); background-size: cover; background-position: center; min-height: 200px"></div>
                     <div class="card-body">
                         <h5 class="card-title"><?= $recipe["recipe_name"] ?></h5>
                         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>

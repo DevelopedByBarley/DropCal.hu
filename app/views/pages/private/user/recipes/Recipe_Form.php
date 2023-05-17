@@ -58,22 +58,22 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 						<h1 class="display-5 text-center mt-5 mb-4">Milyen étkezésre ajánlod? <span><i style="font-size: .5rem; position: relative; top: -40px" class="bi bi-asterisk"></i></span></h1>
 						<div class="input-group d-flex align-items-center justify-content-center">
 							<input type="radio" class="btn-check" name="meal" id="breakfast" autocomplete="off" value="breakfast" required>
-							<label class="btn btn-outline-secondary m-1" for="breakfast">Reggeli</label>
+							<label class="btn btn-outline-dark m-1" for="breakfast">Reggeli</label>
 
 							<input type="radio" class="btn-check" name="meal" id="snack1" autocomplete="off" value="snack1" required>
-							<label class="btn btn-outline-secondary m-1" for="snack1">Tízórai</label>
+							<label class="btn btn-outline-dark m-1" for="snack1">Tízórai</label>
 
 							<input type="radio" class="btn-check" name="meal" id="lunch" autocomplete="off" value="lunch" required>
-							<label class="btn btn-outline-secondary m-1" for="lunch">Ebéd</label>
+							<label class="btn btn-outline-dark m-1" for="lunch">Ebéd</label>
 
 							<input type="radio" class="btn-check" name="meal" id="snack2" autocomplete="off" value="snack2" required>
-							<label class="btn btn-outline-secondary m-1" for="snack2">Uzsonna</label>
+							<label class="btn btn-outline-dark m-1" for="snack2">Uzsonna</label>
 
 							<input type="radio" class="btn-check" name="meal" id="dinner" autocomplete="off" value="dinner" required>
-							<label class="btn btn-outline-secondary m-1" for="dinner">Vacsora</label>
+							<label class="btn btn-outline-dark m-1" for="dinner">Vacsora</label>
 
 							<input type="radio" class="btn-check" name="meal" id="snack3" autocomplete="off" value="snack3" required>
-							<label class="btn btn-outline-secondary m-1" for="snack3">Nasi</label>
+							<label class="btn btn-outline-dark m-1" for="snack3">Nasi</label>
 						</div>
 					</div>
 				</div>
@@ -84,22 +84,22 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 						<h1 class="display-5 text-center mt-5 mb-4">Milyen étrendet képvisel a recepted? <span><i style="font-size: .5rem; position: relative; top: -40px" class="bi bi-asterisk"></i></h1>
 						<div class="input-group d-flex align-items-center justify-content-center">
 							<input type="radio" class="btn-check" name="diet" id="general" autocomplete="off" value="general" required>
-							<label class="btn btn-outline-secondary m-1" for="general">Általános</label>
+							<label class="btn btn-outline-dark m-1" for="general">Általános</label>
 
 							<input type="radio" class="btn-check" name="diet" id="meat" autocomplete="off" value="meat" required>
-							<label class="btn btn-outline-secondary m-1" for="meat">Húsimádó</label>
+							<label class="btn btn-outline-dark m-1" for="meat">Húsimádó</label>
 
 							<input type="radio" class="btn-check" name="diet" id="vegetarian" autocomplete="off" value="vegetarian" required>
-							<label class="btn btn-outline-secondary m-1" for="vegetarian">Vegetáriánus</label>
+							<label class="btn btn-outline-dark m-1" for="vegetarian">Vegetáriánus</label>
 
 							<input type="radio" class="btn-check" name="diet" id="vegan" autocomplete="off" value="vegan" required>
-							<label class="btn btn-outline-secondary m-1" for="vegan">Vegán</label>
+							<label class="btn btn-outline-dark m-1" for="vegan">Vegán</label>
 
 							<input type="radio" class="btn-check" name="diet" id="paleo" autocomplete="off" value="paleo" required>
-							<label class="btn btn-outline-secondary m-1" for="paleo">Paleo</label>
+							<label class="btn btn-outline-dark m-1" for="paleo">Paleo</label>
 
 							<input type="radio" class="btn-check" name="diet" id="ketogenic" autocomplete="off" value="ketogenic" required>
-							<label class="btn btn-outline-secondary m-1" for="ketogenic">Ketogén</label>
+							<label class="btn btn-outline-dark m-1" for="ketogenic">Ketogén</label>
 						</div>
 					</div>
 				</div>
