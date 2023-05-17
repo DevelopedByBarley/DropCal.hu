@@ -14,9 +14,9 @@
 					</div>
 				</div>
 
-				<div class="row mb-3">
+				<div class="row mb-1">
 					<label class="form-label" for="form6Example1">Összetevők <span><i style="font-size: .5rem; position: relative; top: -7px" class="bi bi-asterisk"></i></span></label>
-					<div class="col-12 mt-3">
+					<div class="col-12 ">
 						<div id="ingredient-list-container">
 
 						</div>
@@ -24,7 +24,7 @@
 					<input type="hidden" name="ingredients" id="ingredients" required />
 				</div>
 
-				<div class="row mb-4 mt-5 mb-5 d-flex align-items-center justify-content-center">
+				<div class="row mb-4 mt-3 mb-5 d-flex align-items-center justify-content-center">
 					<div class="col-12 col-sm-5 mt-2  p-1 text-center" id="search-box-container">
 						<div class="form-outline">
 							<button type="button" class="btn btn-primary" onclick="showSearchBox()">Összetevő hozzáadása</button>

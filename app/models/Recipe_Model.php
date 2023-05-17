@@ -49,8 +49,8 @@ class RecipeModel extends UserModel
 
     public function addRecipe($body, $files, $userId)
     {
-
         $recipeIngredients = json_decode($body["ingredients"], true);
+        $steps = $body["steps"];
         $macros = json_decode($body["macros"], true);
         $recipe_name = $body["name"];
         $calorie = $macros["sumOfCalorie"];
@@ -162,8 +162,15 @@ class RecipeModel extends UserModel
                 $stmt->bindParam(':allergens', $allergens);
                 $stmt->bindParam(':recipeRefId', $lastInsertedId);
 
-                $stmt->execute();    
+                $stmt->execute();
+            }
 
+
+            foreach($steps as $step) {
+                $stmt = $this->pdo->prepare("INSERT INTO `recipe_steps` (`stepId`, `content`, `recipeRefId`) VALUES (NULL, :content, :recipeRefId);");
+                $stmt->bindParam(":content", $step);
+                $stmt->bindParam(":recipeRefId", $lastInsertedId);
+                $stmt->execute();
             }
         }
     }
