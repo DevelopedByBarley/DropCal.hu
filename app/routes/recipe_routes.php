@@ -7,6 +7,7 @@ $r->addRoute('GET', '/user/recipes-dashboard', [RecipeController::class, 'recipe
 $r->addRoute('GET', '/user/recipe/new', [RecipeController::class, 'recipeForm']);
 $r->addRoute('GET', '/user/recipe/delete/{id}', [RecipeController::class, 'deleteRecipe']);
 $r->addRoute('GET', '/user/recipe/update/{id}', [RecipeController::class, 'updateRecipeForm']);
+$r->addRoute('GET', '/user/recipe/{id}', [RecipeController::class, 'recipeSingle']);
 
 
 $r->addRoute('POST', '/user/recipe/new', [RecipeController::class, 'addNewRecipe']);

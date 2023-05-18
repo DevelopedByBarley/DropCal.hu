@@ -66,7 +66,7 @@ class RecipeController
             "profileImage" => $profileImage
         ]);
     }
-    
+
     public function addNewRecipe()
     {
         $this->loginChecker->checkUserIsLoggedInOrRedirect();
@@ -85,7 +85,8 @@ class RecipeController
         exit;
     }
 
-    public function updateRecipeForm($vars) {
+    public function updateRecipeForm($vars)
+    {
         $this->loginChecker->checkUserIsLoggedInOrRedirect();
         $userId = $_SESSION["userId"] ?? null;
         $user =  $this->userModel->getUserData();
@@ -103,7 +104,8 @@ class RecipeController
     }
 
 
-    public function updateRecipe($vars) {
+    public function updateRecipe($vars)
+    {
         $this->loginChecker->checkUserIsLoggedInOrRedirect();
         $userId = $_SESSION["userId"] ?? null;
         $this->loginChecker->checkUserIsLoggedInOrRedirect();
@@ -113,15 +115,23 @@ class RecipeController
     }
 
 
-
-
-
-
-
-
-
-
-
+    public function recipeSingle($vars)
+    {
+        $this->loginChecker->checkUserIsLoggedInOrRedirect();
+        $userId = $_SESSION["userId"] ?? null;
+        $user =  $this->userModel->getUserData();
+        $recipe = $this->recipeModel->getRecipeById($vars["id"]);
+        $profileImage = $user["profileImage"];
+        echo $this->renderer->render("Layout.php", [
+            "content" => $this->renderer->render("/pages/private/user/recipes/Recipe_Single.php", [
+                "isSuccess" => $_GET["isSuccess"] ?? null,
+                "recipe" => $recipe ?? null
+            ]),
+            "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0,
+            "userId" => $userId,
+            "profileImage" => $profileImage
+        ]);
+    }
 
 
 

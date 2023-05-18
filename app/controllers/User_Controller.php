@@ -20,6 +20,23 @@ class UserController
         $this->registrationData = isset($_COOKIE["registrationData"]) ? json_decode($_COOKIE["registrationData"], true) : $_POST;
     }
 
+    public function userProfile()
+    {
+        $this->loginChecker->checkUserIsLoggedInOrRedirect();
+        $userId = $_SESSION["userId"] ?? null;
+        $user =  $this->userModel->getUserData();
+        $profileImage = $user["profileImage"];
+        $userName = $user["userName"];
+        echo $this->renderer->render("Layout.php", [
+            "content" => $this->renderer->render("/pages/private/user/profile/Profile.php", [
+                "isSuccess" => $_GET["isSuccess"] ?? null,
+                "recipes" => $recipes ?? null
+            ]),
+            "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0,
+            "userId" => $userId,
+            "profileImage" => $profileImage
+        ]);
+    }
 
     public function registration()
     {
@@ -93,7 +110,7 @@ class UserController
 
     public function renderWelcomePage()
     {
-        $this->loginChecker->checkUserIsLoggedInOrRedirect(); 
+        $this->loginChecker->checkUserIsLoggedInOrRedirect();
         $user = $this->userModel->getUserData();
         $userName = $user["userName"];
         echo $this->renderer->render("Layout.php", [

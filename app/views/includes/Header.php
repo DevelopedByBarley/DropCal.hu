@@ -12,8 +12,8 @@
                             Profil
                         </a>
                         <ul class="dropdown-menu text-center" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item disabled bg-danger text-light" href="/profile">Profil</a></li>
-                            <li><a class="dropdown-item disabled bg-danger text-light" href="/profile">Napló</a></li>
+                            <li><a class="dropdown-item text-light" href="/user/profile">Profil</a></li>
+                            <li><a class="dropdown-item text-light" href="/diary/currentDiary?date=<?= date("Y-m-d") ?>">Napló</a></li>
                             <li><a class="dropdown-item" href="/ingredients">Ételeim</a></li>
                             <li><a class="dropdown-item" href="/user/recipes-dashboard">Receptjeim</a></li>
                             <li>
@@ -81,8 +81,12 @@
                     <div class="row mt-5">
                         <div class="col-xs-12">
                             <ul class="list-group">
-                                <li class="list-group-item profile-nav-listItem disabled bg-danger text-light">Profil</li>
-                                <li class="list-group-item profile-nav-listItem disabled bg-danger text-light">Napló</li>
+                                <a href="/user/profile" class="link no-underline">
+                                    <li class="list-group-item profile-nav-listItem">Profil</li>
+                                </a>
+                                <a href="/diary/currentDiary?date=<?= date("Y-m-d") ?>" class="link no-underline">
+                                    <li class="list-group-item profile-nav-listItem">Napló</li>
+                                </a>
                                 <a href="/ingredients" class="link no-underline">
                                     <li class="list-group-item profile-nav-listItem">Ételeim</li>
                                 </a>

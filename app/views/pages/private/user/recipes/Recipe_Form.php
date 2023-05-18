@@ -111,7 +111,7 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 					<label class="form-label" for="form6Example1">Fénykép <span><i style="font-size: .5rem; position: relative; top: -7px" class="bi bi-asterisk"></i></label>
 					<div class="col-12 border p-5 text-center">
 						<div class="form-outline">
-							<input type="file" id="form6Example1" class="form-control" id="file" name="files[]" <?php echo isset($recipeForUpdate) ? '' : 'required'?> multiple />
+							<input type="file" id="form6Example1" class="form-control" id="file" name="files[]" max="4" <?php echo isset($recipeForUpdate) ? '' : 'required'?> multiple />
 						</div>
 					</div>
 				</div>

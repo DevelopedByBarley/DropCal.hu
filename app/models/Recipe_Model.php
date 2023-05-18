@@ -431,9 +431,11 @@ class RecipeModel extends UserModel
 
         $ingredients = $this->getIngredientsByRecipeId($recipe["recipeId"]);
         $steps = $this->getStepsByRecipeId($recipe["recipeId"]);
-
+        $images= $this->getRecipeImagesById($recipe["recipeId"]);
+        
         $recipe["steps"] = $steps;
         $recipe["ingredients"] = $ingredients;
+        $recipe["images"] = $images;
 
         return $recipe;
     }
