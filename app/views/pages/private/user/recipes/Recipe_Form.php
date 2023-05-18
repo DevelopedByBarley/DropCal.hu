@@ -172,7 +172,7 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 
 						<div class="form-check">
 							<input type="checkbox" class="form-check-input" id="isPublic" name="isPublic">
-							<label class="form-check-label" for="isPublic">Publikálom a receptet</label>
+							<label class="form-check-label" for="isPublic">Publikálásra ajánlom a receptet</label>
 						</div>
 					</div>
 				</div>

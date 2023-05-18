@@ -12,8 +12,8 @@
                             Profil
                         </a>
                         <ul class="dropdown-menu text-center" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item text-light" href="/user/profile">Profil</a></li>
-                            <li><a class="dropdown-item text-light" href="/diary/currentDiary?date=<?= date("Y-m-d") ?>">Napló</a></li>
+                            <li><a class="dropdown-item" href="/user/profile">Profil</a></li>
+                            <li><a class="dropdown-item" href="/diary/currentDiary?date=<?= date("Y-m-d") ?>">Napló</a></li>
                             <li><a class="dropdown-item" href="/ingredients">Ételeim</a></li>
                             <li><a class="dropdown-item" href="/user/recipes-dashboard">Receptjeim</a></li>
                             <li>
@@ -35,15 +35,20 @@
                         </ul>
                     </li>
                 <?php endif ?>
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Kezdőlap</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled bg-danger text-light" href="/recipes">Receptek</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled bg-danger text-light" href="#">Hírek</a>
-                </li>
+                <?php if (isset($params["userId"])) : ?>
+                   
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/">Kezdőlap</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled bg-danger text-light" href="/recipes">Receptek</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled bg-danger text-light" href="#">Hírek</a>
+                        </li>
+
+                <?php endif ?>
+
             </ul>
             <?php if (!isset($params["userId"])) : ?>
                 <div class="d-flex align-items-center justify-content-center">

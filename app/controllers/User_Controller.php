@@ -26,11 +26,10 @@ class UserController
         $userId = $_SESSION["userId"] ?? null;
         $user =  $this->userModel->getUserData();
         $profileImage = $user["profileImage"];
-        $userName = $user["userName"];
         echo $this->renderer->render("Layout.php", [
             "content" => $this->renderer->render("/pages/private/user/profile/Profile.php", [
                 "isSuccess" => $_GET["isSuccess"] ?? null,
-                "recipes" => $recipes ?? null
+                "user" => $user ?? null
             ]),
             "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0,
             "userId" => $userId,
