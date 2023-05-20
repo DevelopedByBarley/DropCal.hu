@@ -20,6 +20,7 @@ class UserController
         $this->registrationData = isset($_COOKIE["registrationData"]) ? json_decode($_COOKIE["registrationData"], true) : $_POST;
     }
 
+
     public function userProfile()
     {
         $this->loginChecker->checkUserIsLoggedInOrRedirect();
@@ -28,6 +29,23 @@ class UserController
         $profileImage = $user["profileImage"];
         echo $this->renderer->render("Layout.php", [
             "content" => $this->renderer->render("/pages/private/user/profile/Profile.php", [
+                "isSuccess" => $_GET["isSuccess"] ?? null,
+                "user" => $user ?? null
+            ]),
+            "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0,
+            "userId" => $userId,
+            "profileImage" => $profileImage
+        ]);
+    }
+
+
+    public function updateProfileForm() {
+        $this->loginChecker->checkUserIsLoggedInOrRedirect();
+        $userId = $_SESSION["userId"] ?? null;
+        $user =  $this->userModel->getUserData();
+        $profileImage = $user["profileImage"];
+        echo $this->renderer->render("Layout.php", [
+            "content" => $this->renderer->render("/pages/private/user/profile/Update_Profile.php", [
                 "isSuccess" => $_GET["isSuccess"] ?? null,
                 "user" => $user ?? null
             ]),

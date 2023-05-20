@@ -15,7 +15,7 @@ class APIModel
         $page = isset($_GET["page"]) ? $_GET["page"] : 1;
         $offset = ($page - 1) * $limit;
 
-        $stmt = $this->pdo->prepare("SELECT * FROM `ingredients` WHERE ingredientName LIKE :name AND (userRefId = :userId OR userRefId IS NULL) OR isAccepted = 1 LIMIT :limit OFFSET :offset");
+        $stmt = $this->pdo->prepare("SELECT * FROM `ingredients` WHERE ingredientName LIKE :name AND (userRefId = :userId OR userRefId IS NULL OR isAccepted = 1) LIMIT :limit OFFSET :offset");
         $stmt->bindValue(':name', '%' . $name . '%', PDO::PARAM_STR);
         $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
@@ -333,7 +333,7 @@ class APIModel
         $stmt->bindParam(':d_ingredientId', $id);
 
         $isSuccess = $stmt->execute();
-     
+
         return $isSuccess;
     }
 

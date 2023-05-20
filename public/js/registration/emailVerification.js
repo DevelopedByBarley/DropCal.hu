@@ -4,22 +4,43 @@ const eVerificationCon = document.querySelector(
 );
 const eVerificationBtn = document.querySelector(".verification_btn");
 const verificationState = document.querySelector(".verification_state");
+const Email = document.getElementById("email");
 
-if (eVerificationToggle) {
+
+if (eVerificationToggle && Email) {
   eVerificationToggle.addEventListener("click", (event) => {
     event.preventDefault();
+    if (Email.value === '') {
+      alert("Az email mező kitöltése kötelező!");
+      return;
+    }
+
+    // Email formátum ellenőrzése
+    const emailRegex = /^[^\s@]{4,}@[^\s@]{4,}\.[^\s@]{2,}$/;
+    const email = Email.value.trim();
+
+    if (!emailRegex.test(email)) {
+      alert("Kérlek, adj meg egy érvényes email címet!");
+      return;
+    }
+
     eVerificationCon.classList.add("active");
-    let email = event.target.parentElement.childNodes[3].value;
     event.target.style.display = "none";
 
-    fetch(`/user/verification/email/send/${email}`)
+    fetch(`/user/verification/email/send/${email}`);
   });
 }
+
 
 if (eVerificationBtn) {
   eVerificationBtn.addEventListener("click", (event) => {
     event.preventDefault();
     let verificationCode = event.target.parentElement.childNodes[3].value;
+    if (verificationCode.length !== 4) {
+      alert("A hitelesitő kódnak 4 karekteresnek kell lennie!");
+      return;
+    }
+
     fetch(`/user/verification/email/${verificationCode}`)
       .then((res) => res.json())
       .then((data) => {

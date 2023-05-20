@@ -52,7 +52,7 @@ $profile = $params["user"];
 </div>
 
 <div class="col-xs-12 text-center mt-5">
-    <a class="btn btn-danger text-light" href="/profile/update">
+    <a class="btn btn-danger text-light" href="/user/profile/update">
         Profil szerkesztése
     </a>    
 </div>

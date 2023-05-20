@@ -21,7 +21,7 @@
 
                         <div class="form-outline mb-4 w-100">
                             <label class="form-label" for="form1Example1">Email</label>
-                            <input type="email" id="form1Example1" class="form-control " style="background: none; border: none; border-bottom: 1px solid " name="email" required value="<?= $params["registrationData"]["email"] ?? "" ?>" />
+                            <input type="email" id="email" class="form-control" style="background: none; border: none; border-bottom: 1px solid" name="email" required value="<?= $params["registrationData"]["email"] ?? "" ?>" />
                             <p class="verification_state"></p>
                             <button id="verification_toggle" class="mt-2 btn btn-outline-dark">Email hitelesítése</button>
                             <span class="email_verification_container">
@@ -35,7 +35,7 @@
                                     </div>
                                 </div>
 
-                                <input type="number" name="verification_code" placeholder="hitelesítő kód">
+                                <input type="number" name="verification_code" min="4" max="4">
                                 <button class="verification_btn mb-2 btn btn-info text-light">Elküld</button>
                             </span>
                         </div>
