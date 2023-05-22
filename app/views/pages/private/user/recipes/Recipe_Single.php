@@ -2,6 +2,7 @@
 $recipe = $params["recipe"] ?? null;
 ?>
 
+<div class="container">
     <div class="row" id="header">
         <div class="col-12" style="min-height: 500px; background-image: url(<?php echo isset($recipe['images']) ? "/public/assets/recipe_images/" . $recipe['images'][0]["r_imageName"] : 'https://i.imgur.com/BrotgYi.jpg'; ?>);background-position: center center; background-size: cover;"></div>
     </div>
@@ -35,13 +36,21 @@ $recipe = $params["recipe"] ?? null;
         <div class="col-12 col-sm-2 d-flex align-items-center justify-content-center mt-5 text-center">
             <div>
                 <img src="/public/assets/icons/diet.png" style="height: 50px; width: 50px;" />
-                <h4 class="mt-3"><?= $recipe["diet"] ?></h4>
+                <div class="mt-3">
+                    <?php foreach ($recipe["diets"] as $diet) : ?>
+                        <b><span><?= $diet["r_diet"] ?></span></b>
+                    <?php endforeach ?>
+                </div>
             </div>
         </div>
         <div class="col-12 col-sm-2 d-flex align-items-center justify-content-center mt-5 text-center">
             <div>
                 <img src="/public/assets/icons/clock.png" style="height: 50px; width: 50px;" />
-                <h4 class="mt-3"><?= $recipe["meal"] ?></h4>
+                <div class="mt-3">
+                    <?php foreach ($recipe["meals"] as $meal) : ?>
+                        <b><span><?= $meal["r_meal"] ?></span></b>
+                    <?php endforeach ?>
+                </div>
             </div>
         </div>
     </div>
@@ -80,11 +89,11 @@ $recipe = $params["recipe"] ?? null;
     </div>
 
     <div class="row mt-5">
-        <?php if(count($recipe["images"]) > 1):?>
+        <?php if (count($recipe["images"]) > 1) : ?>
             <?php foreach ($recipe["images"] as $image) : ?>
-            <div class="col-12 col-sm-3" style="min-height: 300px; background-image: url(<?php echo isset($recipe['images']) ? "/public/assets/recipe_images/" . $image["r_imageName"] : 'https://i.imgur.com/BrotgYi.jpg'; ?>);background-position: center center; background-size: cover;"></div>
-        <?php endforeach ?>
-        <?php endif?>
+                <div class="col-12 col-sm-3" style="min-height: 300px; background-image: url(<?php echo isset($recipe['images']) ? "/public/assets/recipe_images/" . $image["r_imageName"] : 'https://i.imgur.com/BrotgYi.jpg'; ?>);background-position: center center; background-size: cover;"></div>
+            <?php endforeach ?>
+        <?php endif ?>
     </div>
 
     <div class="row">
@@ -93,3 +102,4 @@ $recipe = $params["recipe"] ?? null;
             <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sint nostrum repellendus provident, consequatur totam vero modi corrupti aperiam, quod quae velit quos nesciunt molestias? Quas maxime perferendis nobis inventore quo?</p>
         </div>
     </div>
+</div>

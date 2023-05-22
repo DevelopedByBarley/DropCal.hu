@@ -29,8 +29,8 @@ class HomeController
 
     private function renderPublicPage()
     {
-     
-        
+
+
         echo $this->renderer->render("Layout.php", [
             "content" => $this->renderer->render("/pages/public/Home.php", [
                 "user" => null,
@@ -44,7 +44,9 @@ class HomeController
     {
         $this->loginChecker->checkUserIsLoggedInOrRedirect();
         $user =  $this->userModel->getUserData();
+
         $diary_data = $this->diaryModel->getDiaryData($user["userId"], isset($_POST) ? $_POST : null);
+
         $profileImage = $user["profileImage"];
         echo $this->renderer->render("Layout.php", [
             "content" => $this->renderer->render("/pages/private/Home.php", [

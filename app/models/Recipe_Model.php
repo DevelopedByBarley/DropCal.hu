@@ -43,6 +43,7 @@ class RecipeModel extends UserModel
         $stmt->bindParam(":id", $id);
         $isSuccess = $stmt->execute();
 
+
         if ($isSuccess) {
 
             header("Location: /user/recipes-dashboard");
@@ -96,8 +97,6 @@ class RecipeModel extends UserModel
         $stmt = $this->pdo->prepare(
             "UPDATE `recipes` SET 
             `recipe_name` = :recipe_name,
-            `meal` = :meal,
-            `diet` = :diet,
             `calorie` = :calorie,
             `protein` = :protein,
             `carb` = :carb,
@@ -111,8 +110,6 @@ class RecipeModel extends UserModel
 
 
         $stmt->bindParam(':recipe_name', $recipe_name, PDO::PARAM_STR);
-        $stmt->bindParam(':meal', $meal, PDO::PARAM_STR);
-        $stmt->bindParam(':diet', $diet, PDO::PARAM_STR);
         $stmt->bindParam(':calorie', $calorie, PDO::PARAM_INT);
         $stmt->bindParam(':protein', $protein, PDO::PARAM_INT);
         $stmt->bindParam(':carb', $carb, PDO::PARAM_INT);
@@ -130,10 +127,43 @@ class RecipeModel extends UserModel
         if ($isSuccess) {
             $this->updateRecipeSteps($steps, $recipeId);
             $this->updateRecipeIngredients($recipeIngredients, $recipeId);
+            $this->updateRecipeDiets($diet, $recipeId);
+            $this->updateRecipeMeals($meal, $recipeId);
 
-            if($files["files"]["name"][0] !== "") $this->updateRecipeImages($files, $recipeId);
+            if ($files["files"]["name"][0] !== "") $this->updateRecipeImages($files, $recipeId);
         }
     }
+
+    private function updateRecipeDiets($diets, $recipeId)
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM `recipe_diets` WHERE `recipeRefId` = :recipeRefId");
+        $stmt->bindParam(":recipeRefId", $recipeId);
+        $stmt->execute();
+
+        foreach ($diets as $diet) {
+            $stmt = $this->pdo->prepare("INSERT INTO `recipe_diets` (`r_dietId`, `r_diet`, `recipeRefId`) VALUES (NULL, :r_diet, :recipeRefId);");
+            $stmt->bindParam(":r_diet", $diet);
+            $stmt->bindParam(":recipeRefId", $recipeId);
+
+            $stmt->execute();
+        }
+    }
+    private function updateRecipeMeals($meals, $recipeId)
+    {
+
+        $stmt = $this->pdo->prepare("DELETE FROM `recipe_meals` WHERE `recipeRefId` = :recipeRefId");
+        $stmt->bindParam(":recipeRefId", $recipeId);
+        $stmt->execute();
+
+        foreach ($meals as $meal) {
+            $stmt = $this->pdo->prepare("INSERT INTO `recipe_meals` (`r_mealId`, `r_meal`, `recipeRefId`) VALUES (NULL, :r_meal, :recipeRefId);");
+            $stmt->bindParam(":r_meal", $meal);
+            $stmt->bindParam(":recipeRefId", $recipeId);
+
+            $stmt->execute();
+        }
+    }
+
 
     private function updateRecipeImages($files, $recipeRefId)
     {
@@ -251,7 +281,6 @@ class RecipeModel extends UserModel
             $stmt->bindParam(':recipeRefId', $recipeRefId);
             $stmt->execute();
         }
-
     }
 
     public function addRecipe($body, $files, $userId)
@@ -278,8 +307,6 @@ class RecipeModel extends UserModel
         VALUES 
         (NULL, 
         :recipe_name, 
-        :meal, 
-        :diet, 
         :calorie, 
         :protein, 
         :carb, 
@@ -292,8 +319,6 @@ class RecipeModel extends UserModel
 
 
         $stmt->bindParam(':recipe_name', $recipe_name, PDO::PARAM_STR);
-        $stmt->bindParam(':meal', $meal, PDO::PARAM_STR);
-        $stmt->bindParam(':diet', $diet, PDO::PARAM_STR);
         $stmt->bindParam(':calorie', $calorie, PDO::PARAM_INT);
         $stmt->bindParam(':protein', $protein, PDO::PARAM_INT);
         $stmt->bindParam(':carb', $carb, PDO::PARAM_INT);
@@ -312,8 +337,35 @@ class RecipeModel extends UserModel
             $this->insertRecipeImages($recipeImages,  $lastInsertedId);
             $this->insertRecipeIngredients($recipeIngredients, $lastInsertedId);
             $this->insertRecipeSteps($steps, $lastInsertedId);
+            $this->insertRecipeDiets($diet, $lastInsertedId);
+            $this->insertRecipeMeals($meal, $lastInsertedId);
         }
     }
+
+
+    private  function insertRecipeDiets($diets, $lastInsertedId)
+    {
+        foreach ($diets as $diet) {
+            $stmt = $this->pdo->prepare("INSERT INTO `recipe_diets` (`r_dietId`, `r_diet`, `recipeRefId`) VALUES (NULL, :r_diet, :recipeRefId);");
+            $stmt->bindParam(":r_diet", $diet);
+            $stmt->bindParam(":recipeRefId", $lastInsertedId);
+
+            $stmt->execute();
+        }
+    }
+
+
+    private function insertRecipeMeals($meals, $lastInsertedId)
+    {
+        foreach ($meals as $meal) {
+            $stmt = $this->pdo->prepare("INSERT INTO `recipe_meals` (`r_mealId`, `r_meal`, `recipeRefId`) VALUES (NULL, :r_meal, :recipeRefId);");
+            $stmt->bindParam(":r_meal", $meal);
+            $stmt->bindParam(":recipeRefId", $lastInsertedId);
+
+            $stmt->execute();
+        }
+    }
+
 
     private function insertRecipeImages($recipeImages,  $lastInsertedId)
     {
@@ -431,29 +483,54 @@ class RecipeModel extends UserModel
 
         $ingredients = $this->getIngredientsByRecipeId($recipe["recipeId"]);
         $steps = $this->getStepsByRecipeId($recipe["recipeId"]);
-        $images= $this->getRecipeImagesById($recipe["recipeId"]);
-        
+        $images = $this->getRecipeImagesById($recipe["recipeId"]);
+        $diets = $this->getRecipeDietsById($recipe["recipeId"]);
+        $meals = $this->getRecipeMealsById($recipe["recipeId"]);
+
+
         $recipe["steps"] = $steps;
         $recipe["ingredients"] = $ingredients;
+        $recipe["diets"] = $diets;
+        $recipe["meals"] = $meals;
         $recipe["images"] = $images;
 
         return $recipe;
     }
 
-    private function getStepsByRecipeId($id)
+    private function getRecipeDietsById($recipeRefId)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM `recipe_steps` WHERE `recipeRefId` = :id");
-        $stmt->bindParam(":id", $id);
+        $stmt = $this->pdo->prepare("SELECT * FROM `recipe_diets` WHERE `recipeRefId` = :id");
+        $stmt->bindParam(":id", $recipeRefId);
+        $stmt->execute();
+        $diets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $diets;
+    }
+
+    private function getRecipeMealsById($recipeRefId)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM `recipe_meals` WHERE `recipeRefId` = :id");
+        $stmt->bindParam(":id", $recipeRefId);
         $stmt->execute();
         $steps = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $steps;
     }
 
-    private function getIngredientsByRecipeId($id)
+    private function getStepsByRecipeId($recipeRefId)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM `recipe_steps` WHERE `recipeRefId` = :id");
+        $stmt->bindParam(":id", $recipeRefId);
+        $stmt->execute();
+        $steps = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $steps;
+    }
+
+    private function getIngredientsByRecipeId($recipeRefId)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM `recipe_ingredients` WHERE `recipeRefId` = :id");
-        $stmt->bindParam(":id", $id);
+        $stmt->bindParam(":id", $recipeRefId);
         $stmt->execute();
         $ingredients = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

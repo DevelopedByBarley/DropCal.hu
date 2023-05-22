@@ -34,7 +34,7 @@ class UserModel
         $height = filter_var((int)($userData["height"] ?? ''), FILTER_SANITIZE_NUMBER_INT);
         $activity = filter_var($userData["activity"] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
         $allergens = $userData["allergens"] ?? '';
-        $diet = filter_var($userData["diet"] === '' || $userData["diet"] === null ? "general" : $userData["diet"], FILTER_SANITIZE_SPECIAL_CHARS);
+        $diets = $userData["diet"] === '' || $userData["diet"] === null ? "general" : $userData["diet"];
         $isHaveDiabetes = filter_var($userData["isHaveDiabetes"] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
         $goal = filter_var($userData["goal"] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -75,8 +75,7 @@ class UserModel
          :finalBMR, 
          :protein, 
          :carbohydrate, 
-         :fat, 
-         :diet);
+         :fat);
          ");
 
 
@@ -100,7 +99,6 @@ class UserModel
         $stmt->bindParam(':protein', $protein, PDO::PARAM_INT);
         $stmt->bindParam(':carbohydrate', $carbohydrate, PDO::PARAM_INT);
         $stmt->bindParam(':fat', $fat, PDO::PARAM_INT);
-        $stmt->bindParam(':diet', $diet, PDO::PARAM_STR);
         $stmt->execute();
 
 
@@ -120,6 +118,14 @@ class UserModel
                         $stmt->execute();
                     }
                 }
+            }
+
+
+            foreach ($diets as $diet) {
+                $stmt = $this->pdo->prepare("INSERT INTO `user_diets` VALUES (NULL, :diet, :userRefId);");
+                $stmt->bindParam(':diet', $diet, PDO::PARAM_STR);
+                $stmt->bindParam(':userRefId', $userId, PDO::PARAM_INT);
+                $stmt->execute();
             }
         }
 
@@ -144,6 +150,8 @@ class UserModel
             return $user;
         }
     }
+
+
 
 
 

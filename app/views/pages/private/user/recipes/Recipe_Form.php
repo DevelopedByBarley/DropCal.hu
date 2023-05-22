@@ -57,22 +57,22 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 					<div class="col-12">
 						<h1 class="display-5 text-center mt-5 mb-4">Milyen étkezésre ajánlod? <span><i style="font-size: .5rem; position: relative; top: -40px" class="bi bi-asterisk"></i></span></h1>
 						<div class="input-group d-flex align-items-center justify-content-center">
-							<input type="radio" class="btn-check" name="meal" id="breakfast" autocomplete="off" value="breakfast" required>
+							<input type="checkbox" class="btn-check" name="meal[]" id="breakfast" autocomplete="off" value="breakfast">
 							<label class="btn btn-outline-dark m-1" for="breakfast">Reggeli</label>
 
-							<input type="radio" class="btn-check" name="meal" id="snack1" autocomplete="off" value="snack1" required>
+							<input type="checkbox" class="btn-check" name="meal[]" id="snack1" autocomplete="off" value="snack1">
 							<label class="btn btn-outline-dark m-1" for="snack1">Tízórai</label>
 
-							<input type="radio" class="btn-check" name="meal" id="lunch" autocomplete="off" value="lunch" required>
+							<input type="checkbox" class="btn-check" name="meal[]" id="lunch" autocomplete="off" value="lunch">
 							<label class="btn btn-outline-dark m-1" for="lunch">Ebéd</label>
 
-							<input type="radio" class="btn-check" name="meal" id="snack2" autocomplete="off" value="snack2" required>
+							<input type="checkbox" class="btn-check" name="meal[]" id="snack2" autocomplete="off" value="snack2">
 							<label class="btn btn-outline-dark m-1" for="snack2">Uzsonna</label>
 
-							<input type="radio" class="btn-check" name="meal" id="dinner" autocomplete="off" value="dinner" required>
+							<input type="checkbox" class="btn-check" name="meal[]" id="dinner" autocomplete="off" value="dinner">
 							<label class="btn btn-outline-dark m-1" for="dinner">Vacsora</label>
 
-							<input type="radio" class="btn-check" name="meal" id="snack3" autocomplete="off" value="snack3" required>
+							<input type="checkbox" class="btn-check" name="meal[]" id="snack3" autocomplete="off" value="snack3" >
 							<label class="btn btn-outline-dark m-1" for="snack3">Nasi</label>
 						</div>
 					</div>
@@ -83,22 +83,22 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 					<div class="col-12">
 						<h1 class="display-5 text-center mt-5 mb-4">Milyen étrendet képvisel a recepted? <span><i style="font-size: .5rem; position: relative; top: -40px" class="bi bi-asterisk"></i></h1>
 						<div class="input-group d-flex align-items-center justify-content-center">
-							<input type="radio" class="btn-check" name="diet" id="general" autocomplete="off" value="general" required>
+							<input type="checkbox" class="btn-check" name="diet[]" id="general" autocomplete="off" value="general">
 							<label class="btn btn-outline-dark m-1" for="general">Általános</label>
 
-							<input type="radio" class="btn-check" name="diet" id="meat" autocomplete="off" value="meat" required>
+							<input type="checkbox" class="btn-check" name="diet[]" id="meat" autocomplete="off" value="meat" >
 							<label class="btn btn-outline-dark m-1" for="meat">Húsimádó</label>
 
-							<input type="radio" class="btn-check" name="diet" id="vegetarian" autocomplete="off" value="vegetarian" required>
+							<input type="checkbox" class="btn-check" name="diet[]" id="vegetarian" autocomplete="off" value="vegetarian" >
 							<label class="btn btn-outline-dark m-1" for="vegetarian">Vegetáriánus</label>
 
-							<input type="radio" class="btn-check" name="diet" id="vegan" autocomplete="off" value="vegan" required>
+							<input type="checkbox" class="btn-check" name="diet[]" id="vegan" autocomplete="off" value="vegan" >
 							<label class="btn btn-outline-dark m-1" for="vegan">Vegán</label>
 
-							<input type="radio" class="btn-check" name="diet" id="paleo" autocomplete="off" value="paleo" required>
+							<input type="checkbox" class="btn-check" name="diet[]" id="paleo" autocomplete="off" value="paleo" >
 							<label class="btn btn-outline-dark m-1" for="paleo">Paleo</label>
 
-							<input type="radio" class="btn-check" name="diet" id="ketogenic" autocomplete="off" value="ketogenic" required>
+							<input type="checkbox" class="btn-check" name="diet[]" id="ketogenic" autocomplete="off" value="ketogenic" >
 							<label class="btn btn-outline-dark m-1" for="ketogenic">Ketogén</label>
 						</div>
 					</div>
