@@ -54,7 +54,6 @@ class RecipeController
         $this->loginChecker->checkUserIsLoggedInOrRedirect();
         $userId = $_SESSION["userId"] ?? null;
         $user =  $this->userModel->getUserData();
-        $recipes =  $this->recipeModel->getRecipesByUser($userId);
         $profileImage = $user["profileImage"];
         echo $this->renderer->render("Layout.php", [
             "content" => $this->renderer->render("/pages/private/user/recipes/Recipe_Form.php", [

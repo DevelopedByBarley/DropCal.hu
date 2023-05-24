@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/public/bootstrap/css/bootstrap.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="/public/css/main.css?v=<?php echo time() ?>" />
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
 
     <script src="/public/bootstrap/js/bootstrap.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -36,6 +36,7 @@
     <script src="public/js/includes/headerNavigation.js"></script>
     <script src="public/js/cookie/cookieModalHandle.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 
 </body>
 

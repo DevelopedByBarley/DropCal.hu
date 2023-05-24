@@ -8,7 +8,7 @@
                 </h1>
                 <div class="btn-group-inputs row mt-5 d-flex align-items-center justify-content-center">
                     <div class="col-6 col-lg-3 d-flex align-items-center justify-content-center">
-                        <input type="checkbox" name="diet[]" id="general" value="meat">
+                        <input type="checkbox" name="diet[]" id="general" value="general">
                         <label for="general" class="mb-2">
                             <img src="/public/assets/icons/customer.gif" style="height: 70px; width: 70px;" class="diet-gif" />
                             <h6>Általános</h6>

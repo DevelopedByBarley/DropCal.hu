@@ -14,7 +14,7 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 			<h1 class="display-4">Recept hozzáadása</h1>
 		</div>
 		<div class="col-12">
-			<form action="<?= isset($recipeForUpdate) ? "/user/recipe/update/" . $recipeForUpdate["recipeId"] : '/user/recipe/new'?>" method="POST" enctype="multipart/form-data">
+			<form action="<?= isset($recipeForUpdate) ? "/user/recipe/update/" . $recipeForUpdate["recipeId"] : '/user/recipe/new' ?>" method="POST" enctype="multipart/form-data">
 				<div class="row mb-4">
 					<div class="col">
 						<div class="form-outline">
@@ -72,7 +72,7 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 							<input type="checkbox" class="btn-check" name="meal[]" id="dinner" autocomplete="off" value="dinner">
 							<label class="btn btn-outline-dark m-1" for="dinner">Vacsora</label>
 
-							<input type="checkbox" class="btn-check" name="meal[]" id="snack3" autocomplete="off" value="snack3" >
+							<input type="checkbox" class="btn-check" name="meal[]" id="snack3" autocomplete="off" value="snack3">
 							<label class="btn btn-outline-dark m-1" for="snack3">Nasi</label>
 						</div>
 					</div>
@@ -86,32 +86,39 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 							<input type="checkbox" class="btn-check" name="diet[]" id="general" autocomplete="off" value="general">
 							<label class="btn btn-outline-dark m-1" for="general">Általános</label>
 
-							<input type="checkbox" class="btn-check" name="diet[]" id="meat" autocomplete="off" value="meat" >
+							<input type="checkbox" class="btn-check" name="diet[]" id="meat" autocomplete="off" value="meat">
 							<label class="btn btn-outline-dark m-1" for="meat">Húsimádó</label>
 
-							<input type="checkbox" class="btn-check" name="diet[]" id="vegetarian" autocomplete="off" value="vegetarian" >
+							<input type="checkbox" class="btn-check" name="diet[]" id="vegetarian" autocomplete="off" value="vegetarian">
 							<label class="btn btn-outline-dark m-1" for="vegetarian">Vegetáriánus</label>
 
-							<input type="checkbox" class="btn-check" name="diet[]" id="vegan" autocomplete="off" value="vegan" >
+							<input type="checkbox" class="btn-check" name="diet[]" id="vegan" autocomplete="off" value="vegan">
 							<label class="btn btn-outline-dark m-1" for="vegan">Vegán</label>
 
-							<input type="checkbox" class="btn-check" name="diet[]" id="paleo" autocomplete="off" value="paleo" >
+							<input type="checkbox" class="btn-check" name="diet[]" id="paleo" autocomplete="off" value="paleo">
 							<label class="btn btn-outline-dark m-1" for="paleo">Paleo</label>
 
-							<input type="checkbox" class="btn-check" name="diet[]" id="ketogenic" autocomplete="off" value="ketogenic" >
+							<input type="checkbox" class="btn-check" name="diet[]" id="ketogenic" autocomplete="off" value="ketogenic">
 							<label class="btn btn-outline-dark m-1" for="ketogenic">Ketogén</label>
 						</div>
 					</div>
 				</div>
 
-
+				<div class="col-xs-12 d-flex align-items-center justify-content-center mt-5">
+					<div class="form-check form-switch">
+						<label class="form-check-label" for="isRecipeSugarFree" style="position: relative; top: 10px;">
+							<b> Cukormentes recept</b>
+						</label>
+						<input class="form-check-input" type="checkbox" id="isRecipeSugarFree" name="isForDiab" style="font-size: 1.7rem; cursor: pointer"/>
+					</div>
+				</div>
 
 
 				<div class="row mb-4 mt-5 ">
 					<label class="form-label" for="form6Example1">Fénykép <span><i style="font-size: .5rem; position: relative; top: -7px" class="bi bi-asterisk"></i></label>
 					<div class="col-12 border p-5 text-center">
 						<div class="form-outline">
-							<input type="file" id="form6Example1" class="form-control" id="file" name="files[]" max="4" <?php echo isset($recipeForUpdate) ? '' : 'required'?> multiple />
+							<input type="file" id="form6Example1" class="form-control" id="file" name="files[]" max="4" <?php echo isset($recipeForUpdate) ? '' : 'required' ?> multiple />
 						</div>
 					</div>
 				</div>
@@ -171,7 +178,7 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 					<div class="col-12 border border-warning p-2">
 
 						<div class="form-check">
-							<input type="checkbox" class="form-check-input" id="isPublic" name="isPublic">
+							<input type="checkbox" class="form-check-input" id="isPublic" name="isRecommended">
 							<label class="form-check-label" for="isPublic">Publikálásra ajánlom a receptet</label>
 						</div>
 					</div>

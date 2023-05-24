@@ -34,7 +34,7 @@ class UserModel
         $height = filter_var((int)($userData["height"] ?? ''), FILTER_SANITIZE_NUMBER_INT);
         $activity = filter_var($userData["activity"] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
         $allergens = $userData["allergens"] ?? '';
-        $diets = $userData["diet"] === '' || $userData["diet"] === null ? "general" : $userData["diet"];
+        $diets = $userData["diet"] === '' || $userData["diet"] === null ? ["general"] : $userData["diet"];
         $isHaveDiabetes = filter_var($userData["isHaveDiabetes"] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
         $goal = filter_var($userData["goal"] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -122,9 +122,9 @@ class UserModel
 
 
             foreach ($diets as $diet) {
-                $stmt = $this->pdo->prepare("INSERT INTO `user_diets` VALUES (NULL, :diet, :userRefId);");
+                $stmt = $this->pdo->prepare("INSERT INTO `user_diets` VALUES (NULL, :diet, :userId);");
                 $stmt->bindParam(':diet', $diet, PDO::PARAM_STR);
-                $stmt->bindParam(':userRefId', $userId, PDO::PARAM_INT);
+                $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
                 $stmt->execute();
             }
         }
@@ -147,8 +147,24 @@ class UserModel
             $stmt->execute();
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+            if ($user) {
+                $user["allergens"] = self::getUserAllergens($user["userId"]);
+
+            }
+
             return $user;
         }
+    }
+
+    private  function getUserAllergens($userId)
+    {
+
+        $stmt = $this->pdo->prepare("SELECT * FROM `allergens` WHERE userRefId = :userId");
+        $stmt->bindParam(":userId", $userId);
+        $stmt->execute();
+        $allergens = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $allergens;
     }
 
 

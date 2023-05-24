@@ -91,6 +91,7 @@ class RecipeModel extends UserModel
         $fat = $macros["sumOfFat"];
         $GI = $body["glycemic_index_summary"];
         $allergens = $body["allergens"];
+        $isForDiab = $body["isForDiab"];
 
         $isPublic = isset($body["isPublic"]) && $body["isPublic"] === 'on' ? 1 : 0;
 
@@ -103,6 +104,7 @@ class RecipeModel extends UserModel
             `fat` = :fat,
             `glycemic_index` = :glycemic_index,
             `allergens` = :allergens,
+            `isForDiab` = :isForDiab,
             `isPublic` = :isPublic,
             `userRefId` = :userRefId 
             WHERE `recipeId` = :recipeId;"
@@ -116,6 +118,7 @@ class RecipeModel extends UserModel
         $stmt->bindParam(':fat', $fat, PDO::PARAM_INT);
         $stmt->bindParam(':glycemic_index', $GI, PDO::PARAM_INT);
         $stmt->bindParam(':allergens', $allergens, PDO::PARAM_STR);
+        $stmt->bindParam(':isForDiab', $isForDiab, PDO::PARAM_STR);
         $stmt->bindParam(':isPublic', $isPublic, PDO::PARAM_INT);
         $stmt->bindParam(':userRefId', $userId, PDO::PARAM_INT);
         $stmt->bindParam(':recipeId', $recipeId, PDO::PARAM_INT);
@@ -286,6 +289,9 @@ class RecipeModel extends UserModel
     public function addRecipe($body, $files, $userId)
     {
 
+     
+    
+
         $recipeIngredients = json_decode($body["ingredients"], true);
         $steps = $body["steps"];
         $macros = json_decode($body["macros"], true);
@@ -298,8 +304,9 @@ class RecipeModel extends UserModel
         $fat = $macros["sumOfFat"];
         $GI = $body["glycemic_index_summary"];
         $allergens = $body["allergens"];
-
-        $isPublic = $body["isPublic"] === 'on' ? 1 : 0;
+        $isForDiab = $body["isForDiab"] === 'on' ? 1 : 0;
+        $isRecommended = isset($body["isRecommended"]) && $body["isRecommended"] === 'on' ? 1 : 0;
+        $isAccepted = isset($isRecommended) ? 0 : "";
 
         $stmt = $this->pdo->prepare(
             "INSERT INTO 
@@ -313,7 +320,9 @@ class RecipeModel extends UserModel
         :fat, 
         :glycemic_index, 
         :allergens,
-        :isPublic, 
+        :isForDiab,
+        :isRecommended, 
+        :isAccepted, 
         :userRefId);"
         );
 
@@ -325,7 +334,9 @@ class RecipeModel extends UserModel
         $stmt->bindParam(':fat', $fat, PDO::PARAM_INT);
         $stmt->bindParam(':glycemic_index', $GI, PDO::PARAM_INT);
         $stmt->bindParam(':allergens', $allergens, PDO::PARAM_STR);
-        $stmt->bindParam(':isPublic', $isPublic, PDO::PARAM_INT);
+        $stmt->bindParam(':isForDiab', $isForDiab, PDO::PARAM_STR);
+        $stmt->bindParam(':isRecommended', $isRecommended, PDO::PARAM_INT);
+        $stmt->bindParam(':isAccepted', $isAccepted, PDO::PARAM_INT);
         $stmt->bindParam(':userRefId', $userId, PDO::PARAM_INT);
 
         $stmt->execute();
