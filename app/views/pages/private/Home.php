@@ -10,7 +10,7 @@ $dedicatedRecipes = $params["dedicatedRecipesForYou"];
 ?>
 
 
-<div id="diary-component" style="min-height: 80vh">
+<div id="diary-component" style="min-height: 50vh">
     <div class="mt-5 shadow-4 rounded-3">
         <div class="row">
             <div class="col-xs-12"></div>
@@ -65,7 +65,7 @@ $dedicatedRecipes = $params["dedicatedRecipesForYou"];
     <?php if (isset($dedicatedRecipes) && count($dedicatedRecipes) !== 0) : ?>
         <div class="col-xs-12 col-lg-6 d-flex align-items-center justify-content-center flex-column">
             <b>
-                <h1 class="display-3 text-center mt-3 mb-4">Receptek személyedre szabva</h1>
+                <h1 class="display-3 text-center mt-3 mb-4" style="padding-top: 6rem;">Receptek személyedre szabva</h1>
             </b>
             <p class="p-3">
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit.
@@ -73,7 +73,7 @@ $dedicatedRecipes = $params["dedicatedRecipesForYou"];
                 nesciunt quisquam dignissimos, exercitationem laboriosam sequi,
                 quas pariatur fugit quidem dolor iusto quae. Optio, odit?
             </p>
-            <a class="btn btn-outline-light btn-lg mt-4" href="#">Receptek böngészése</a>
+            <a class="btn btn-outline-light btn-lg mt-4" href="/error">Receptek böngészése</a>
         </div>
         <div class="col-xs-12 col-lg-6">
             <swiper-container class="mySwiper" pagination="true" effect="coverflow" grab-cursor="true" centered-slides="true" slides-per-view="auto" coverflow-effect-rotate="50" coverflow-effect-stretch="0" coverflow-effect-depth="100" coverflow-effect-modifier="1" coverflow-effect-slide-shadows="true">
@@ -98,7 +98,7 @@ $dedicatedRecipes = $params["dedicatedRecipesForYou"];
                 <h1 class="display-5 text-center mt-3 mb-4">Nincs még egyetlen rád szabható recept sem</h1>
                 <div class="button-group">
                     <a href="/user/recipe/new" class="btn btn-outline-light">Új recept</a>
-                    <a href="#" class="btn btn-outline-light">Böngészés</a>
+                    <a href="/error" class="btn btn-outline-light">Böngészés</a>
                 </div>
             </div>
         </div>
@@ -114,7 +114,7 @@ $dedicatedRecipes = $params["dedicatedRecipesForYou"];
                 <div class="card-body">
                     <h5 class="card-title">Story</h5>
                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="btn btn-info text-light">Megtekint</a>
+                    <a href="/error" class="btn btn-info text-light">Megtekint</a>
                 </div>
             </div>
         </div>
@@ -124,7 +124,7 @@ $dedicatedRecipes = $params["dedicatedRecipesForYou"];
                 <div class="card-body">
                     <h5 class="card-title">Story</h5>
                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="btn btn-info text-light">Megtekint</a>
+                    <a href="/error" class="btn btn-info text-light">Megtekint</a>
                 </div>
             </div>
         </div>
@@ -134,7 +134,7 @@ $dedicatedRecipes = $params["dedicatedRecipesForYou"];
                 <div class="card-body">
                     <h5 class="card-title">Story</h5>
                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="btn btn-info text-light">Megtekint</a>
+                    <a href="/error" class="btn btn-info text-light">Megtekint</a>
                 </div>
             </div>
         </div>
@@ -144,7 +144,7 @@ $dedicatedRecipes = $params["dedicatedRecipesForYou"];
                 <div class="card-body">
                     <h5 class="card-title">Story</h5>
                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="btn btn-info text-light">Megtekint</a>
+                    <a href="/error" class="btn btn-info text-light">Megtekint</a>
                 </div>
             </div>
         </div>
@@ -154,7 +154,7 @@ $dedicatedRecipes = $params["dedicatedRecipesForYou"];
                 <div class="card-body">
                     <h5 class="card-title">Story</h5>
                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="btn btn-info text-light">Megtekint</a>
+                    <a href="/error" class="btn btn-info text-light">Megtekint</a>
                 </div>
             </div>
         </div>
@@ -164,12 +164,12 @@ $dedicatedRecipes = $params["dedicatedRecipesForYou"];
                 <div class="card-body">
                     <h5 class="card-title">Story</h5>
                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="btn btn-info text-light">Megtekint</a>
+                    <a href="/error" class="btn btn-info text-light">Megtekint</a>
                 </div>
             </div>
         </div>
         <div class="col-xs-12 text-center mt-5 mb-3">
-            <a class="btn btn-outline-dark" href="#">További hírek</a>
+            <a class="btn btn-outline-dark" href="/error">További hírek</a>
         </div>
     </div>
 
@@ -179,8 +179,8 @@ $dedicatedRecipes = $params["dedicatedRecipesForYou"];
 
     <style>
         .slanted-top {
-            transform: skewY(2deg);
-            min-height: 80px;
+            transform: skewY(1deg);
+            min-height: 100px;
             position: relative;
             top: 80px;
         }

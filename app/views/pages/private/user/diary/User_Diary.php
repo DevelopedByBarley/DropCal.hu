@@ -65,14 +65,14 @@ $summaries = $diaryData["summaries"];
     <div class="col-12 col-sm-6 ">
       <div class="search-box">
         <div class="input-group rounded">
-          <input type="search" oninput="searchIngredients(event)" class="form-control rounded border" placeholder="Keresés" aria-label="Search" aria-describedby="search-addon" id="search"/>
+          <input type="search" oninput="searchIngredients(event)" class="form-control rounded border" placeholder="Keresés" aria-label="Search" aria-describedby="search-addon" id="search" />
           <span class="input-group-text border-0" id="search-addon">
             <i class="bi bi-search" style="cursor: pointer" id="search-ingredient"></i>
           </span>
         </div>
       </div>
     </div>
-    <ul class="col-12 col-sm-7 col-lg-6 list-group mt-3" id="search-result-container"></ul>
+    <ul class="col-12  col-lg-6 list-group mt-3" id="search-result-container"></ul>
   </div>
   <div class="row d-flex align-items-center justify-content-center flex-column">
     <div class="col-12 col-sm-5" id="ingredients">
@@ -90,7 +90,25 @@ $summaries = $diaryData["summaries"];
       <?php endif ?>
     </div>
   </div>
-  <div class="col-12 col-sm-3 bg-dark  container-fluid text-light p-1" id="single-ingredient-form" data-date="<?= $_GET["date"] ?>" data-diaryid="<?= $diaryData["userDiary"]["diaryId"] ?>"></div>
+
+  <div class="modal fade" id="staticBackdrop"  data-date="<?= $_GET["date"] ?>" data-diaryid="<?= $diaryData["userDiary"]["diaryId"] ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Understood</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script src="public/js/diary/add_diary_ingredient.js"></script>

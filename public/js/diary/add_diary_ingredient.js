@@ -6,7 +6,7 @@ const searchBtn = document.getElementById("search-ingredient");
 const searchResultContainer = document.getElementById(
   "search-result-container"
 );
-const diaryIngredientForm = document.getElementById("single-ingredient-form");
+const diaryIngredientForm = document.getElementById("staticBackdrop");
 let ingredientItems = document.querySelectorAll('.ingredient-item');
 let numberOfPage;
 let pageCounter = localStorage.getItem("page-counter") ? localStorage.getItem("page-counter") : 1;
@@ -55,19 +55,6 @@ if (searchBtn) {
         .then((res) => res.json())
         .then((data) => (searchResult = data));
     }
-  });
-}
-
-// Toggle button
-if (diaryToggle) {
-  diaryToggle.addEventListener("click", () => {
-    ingredientsToggle.classList.add("active");
-  });
-}
-// Cancel button
-if (cancelIngredients) {
-  cancelIngredients.addEventListener("click", () => {
-    ingredientsToggle.classList.remove("active");
   });
 }
 
@@ -184,33 +171,126 @@ function getDiaryIngredientById(url, isIngredientForUpdate) {
             ingredient: data,
           };
 
-        // Majd a diaryIngredientForm  megkapja az aktív class-t
 
-        diaryIngredientForm.classList.add("active");
-        // Amiben a kirajzolt tartalomért a renderDiaryIngredientForm() felel
-        renderDiaryIngredientForm();
+
+        let modal = new bootstrap.Modal(diaryIngredientForm)
+        modal.show();
+        renderDiaryModal();
       }
     });
 }
 
+//  template kigenerálása
+function generateDiaryFormTemplate() {
+  const Units = state.hasOwnProperty("ingredientForUpdate")
+    ? state.ingredientForUpdate.ingredientUnits
+    : state.ingredient.ingredientUnits;
+  let isIngredientForUpdate = state.hasOwnProperty("ingredientForUpdate"); // Megnézzük hogy a state feltöltése updatelni való ingredientből vagy nem
+  let ingredient = state.hasOwnProperty("ingredientForUpdate")
+    ? state.ingredientForUpdate
+    : state.ingredient; // Ennek függvényében töltjük fel az ingredient értékét
+  let template = "";
+  let unitTemplate = generateUnitTemplate(Units);
+  let quantity = localStorage.getItem("quantity") ? localStorage.getItem("quantity") : ingredient.unit_quantity;
+  let allergensTemplate = "";
+
+
+  if (ingredient.allergens) {
+
+    ingredient.allergens.forEach((allergen) => {
+      allergensTemplate += `
+          <span class="text-warning"> ${allergen.i_allergenNumber}, </span>
+        `;
+    });
+  } else {
+    allergensTemplate += `
+    <span class="text-warning"> Nincs allergén </span>
+  `;
+  }
+
+
+  template += `
+   
+
+        <div class="modal-dialog">
+        <div class="modal-content text-center ">
+          <div class="modal-header">
+            <h5 class="modal-title" id="name">
+             ${ingredient.ingredientName}
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="diary-ingredient-container">
+            <div class="col-12">
+              <input type="number" id="quantity" name="quantity" value="${quantity}"/>
+            </div>
+
+            <div class="col-12 mt-3 mb-3 d-flex align-items-center justify-content-center">
+              ${unitTemplate}
+            </div>
+
+            <div class="col-12 calorie border p-1 mb-2" style="font-size: 1.6rem">
+              <b><span id="result-of-calorie" ></span> Kcal</b>
+          </div>
+
+          <div class="d-flex text-center">
+            <div class="col-4 macros" >
+              <h5>Protein</h5> 
+              <span id="result-of-protein"></span>g
+            </div>
+            <div class="col-4 macros" >
+              <h5>Szénhidrát</h5>  
+              <span id="result-of-carb"></span>g
+            </div>
+            <div class="col-4 macros" >
+              <h5>Zsir</h5> 
+              <span id="result-of-fat"></span>g
+            </div>
+          </div>
+         
+          </div>
+          <hr>
+       
+          <div class="row text-center mt-2">
+            <div class="col-12">
+              <h2>GI <br>${ingredient.glycemicIndex ? ingredient.glycemicIndex : 0}</h2>
+            </div> 
+          </div>
+          <hr>
+          <div class="row">
+            <h1 class="display-6 mb-3">Allergének</h1>
+            <div class="col-12" >
+              ${allergensTemplate}
+            </div>
+          </div>
+     
+          
+          <div class="modal-footer">
+          <div class="col-12 mt-4">
+            <button data-id="${ingredient.d_ingredientId}" class="btn ${isIngredientForUpdate ? 'btn-warning' : 'btn-primary'} text-light" id="send">${isIngredientForUpdate ? 'Frissit' : 'Hozzáad  ' }</button>
+            ${isIngredientForUpdate ? ` <button class='btn btn-danger text-light' data-id="${ingredient.d_ingredientId}" id='delete'>Törlés</button>` : ""}
+            </div>
+          </div>
+        </div>
+  `;
+  // Templateben lévő diary-ingredient-containerben generáljuk ki a napló vagy adatok gombra kattintva a kívánt tartalmat
+  return template;
+}
+
 // A napló hozzáadásához való form kirajzolása, 
-function renderDiaryIngredientForm() {
+function renderDiaryModal() {
+
   let template = generateDiaryFormTemplate();
   diaryIngredientForm.innerHTML = template;
 
-  const DiaryIngredientContainer = document.getElementById(
-    "diary-ingredient-container"
-  );
-
-
   // Kirajzold formból kikérjük az elemeket
   const DiaryBtn = document.getElementById("diary-btn");
-  const DataBtn = document.getElementById("data-btn");
   const Units = document.querySelectorAll(".units");
   const Quantity = document.getElementById("quantity");
   const DeleteBtn = document.getElementById("delete");
 
   const ResultOfCalorie = document.getElementById("result-of-calorie");
+
   const ResultOfProtein = document.getElementById("result-of-protein");
   const ResultOfCarb = document.getElementById("result-of-carb");
   const ResultOfFat = document.getElementById("result-of-fat");
@@ -245,20 +325,18 @@ function renderDiaryIngredientForm() {
   });
 
   if (DiaryBtn) {
-    DiaryBtn.onclick = () => renderDiaryIngredientForm();
-  }
-  if (DataBtn) {
-    DataBtn.onclick = () => renderData(DiaryIngredientContainer);
+    DiaryBtn.onclick = () => renderDiaryModal();
   }
 
+  
   // Küldés a backendnek ÚJ ingredient hozzáadása esetén vagy UPDATE esetén
   sendBtn.addEventListener('click', (event) => {
     event.preventDefault();
     const Ingredient = state.hasOwnProperty("ingredientForUpdate")
-      ? state.ingredientForUpdate
-      : state.ingredient
+    ? state.ingredientForUpdate
+    : state.ingredient
     let isIngredientForUpdate = state.hasOwnProperty("ingredientForUpdate"); // Megnézzük hogy a state feltöltése updatelni való ingredientből vagy nem
-    let date = event.target.parentElement.parentElement.parentElement.dataset.date
+    let date = event.target.parentElement.parentElement.parentElement.parentElement.parentElement.dataset.date
 
 
     let newIngredient = {
@@ -275,37 +353,44 @@ function renderDiaryIngredientForm() {
       carb: Ingredient.carb,
       fat: Ingredient.fat,
       glychemicIndex: Ingredient.glycemicIndex,
-      currentCalorie: parseInt(event.target.parentElement.parentElement.querySelector("#result-of-calorie").innerHTML),
-      currentProtein: parseInt(event.target.parentElement.parentElement.querySelector("#result-of-protein").innerHTML),
-      currentCarb: parseInt(event.target.parentElement.parentElement.querySelector("#result-of-carb").innerHTML),
-      currentFat: parseInt(event.target.parentElement.parentElement.querySelector("#result-of-fat").innerHTML),
-      diaryRefId: parseInt(event.target.parentElement.parentElement.parentElement.dataset.diaryid),
+      currentCalorie: parseInt(event.target.parentElement.parentElement.parentElement.querySelector("#result-of-calorie").innerHTML),
+      currentProtein: parseInt(event.target.parentElement.parentElement.parentElement.querySelector("#result-of-protein").innerHTML),
+      currentCarb: parseInt(event.target.parentElement.parentElement.parentElement.querySelector("#result-of-carb").innerHTML),
+      currentFat: parseInt(event.target.parentElement.parentElement.parentElement.querySelector("#result-of-fat").innerHTML),
+      diaryRefId: parseInt(event.target.parentElement.parentElement.parentElement.parentElement.parentElement.dataset.diaryid)
     }
 
-    let id = Ingredient.d_ingredientId;
 
+    
     if (isIngredientForUpdate) {
+      let id = event.target.dataset.id;
+      let date = event.target.parentElement.parentElement.parentElement.parentElement.parentElement.dataset.date
+
       fetchIngredient(`/api/ingredient-update/${id}`, newIngredient, date)
+      localStorage.removeItem('quantity');
       return;
     }
     fetchIngredient("/api/ingredient-new", newIngredient, date);
+    localStorage.removeItem('quantity');
   })
-
-
+  
+  
   if (DeleteBtn) {
     DeleteBtn.addEventListener('click', (event) => {
-      let id = event.currentTarget.dataset.id;
-
-      let date = event.target.parentElement.parentElement.parentElement.dataset.date;
+      let date = event.target.parentElement.parentElement.parentElement.parentElement.parentElement.dataset.date
+      let id = event.target.dataset.id;
+  
+      
       fetch(`/api/ingredient-delete/${id}`)
-        .then(res => res.json())
-        .then(data => {
-          let state = data.state;
-          if (state) {
-            window.location.href = `/diary/currentDiary?date=${date}`
-          }
-        });
-
+      .then(res => res.json())
+      .then(data => {
+        let state = data.state;
+        if (state) {
+          window.location.href = `/diary/currentDiary?date=${date}`
+          localStorage.removeItem('quantity');
+        }
+      });
+      
     })
   }
 }
@@ -417,6 +502,7 @@ function calculateMacros(quantity) {
 
 // Aktív class beállítása gombnyomásra
 function setUnitButton(event) {
+  event.preventDefault();
   const Units = state.hasOwnProperty("ingredientForUpdate")
     ? state.ingredientForUpdate.ingredientUnits
     : state.ingredient.ingredientUnits;
@@ -432,7 +518,7 @@ function setUnitButton(event) {
       Units[i].isSelected = false;
     }
   }
-  renderDiaryIngredientForm();
+  renderDiaryModal();
 }
 
 // -----------------TEMPLATE SECTION--------------------------------------------------------------------->
@@ -443,118 +529,11 @@ const generateUnitTemplate = (Units) => {
 
   Units.forEach((unit) => {
     unitTemplate += `<button data-index="${unit.index
-      }" class="units btn btn-outline-warning text-light btn-md m-1 ${unit.isSelected ? "active" : ""
+      }" class="units btn btb-lg btn-outline-dark btn-md m-1 ${unit.isSelected ? "active" : ""
       }">${unit.unitName}</button>`;
   });
 
   return unitTemplate;
 };
 
-//  template kigenerálása
-function generateDiaryFormTemplate() {
-  const Units = state.hasOwnProperty("ingredientForUpdate")
-    ? state.ingredientForUpdate.ingredientUnits
-    : state.ingredient.ingredientUnits;
-  let isIngredientForUpdate = state.hasOwnProperty("ingredientForUpdate"); // Megnézzük hogy a state feltöltése updatelni való ingredientből vagy nem
-  let ingredient = state.hasOwnProperty("ingredientForUpdate")
-    ? state.ingredientForUpdate
-    : state.ingredient; // Ennek függvényében töltjük fel az ingredient értékét
-  let template = "";
-  let unitTemplate = generateUnitTemplate(Units);
-  let quantity = localStorage.getItem("quantity") ? localStorage.getItem("quantity") : ingredient.unit_quantity;
 
-
-
-  console.log(ingredient);
-  template += `
-    <div class="row mt-2 diary-form">
-        <h1 class="display-5 mt-2 mb-2" id="name">${ingredient.ingredientName}</h1>
-     
-        <div class="btn-group d-flex align-items-center justify-content-center" role="group" aria-label="Basic mixed styles example">
-          <button type="button" class="btn btn-info text-light m-3" id="diary-btn">Napló</button>
-          <button type="button" class="btn btn-warning text-light m-3" id="data-btn">Adatok</button>
-         </div>
-        <hr>
-        </div>
-        <div class="row" id="diary-ingredient-container"> 
-          <div class="col-12">
-            <input type="number" id="quantity" name="quantity" value="${quantity}"/>
-          </div>
-
-          <div class="col-12 mt-3 mb-3">
-            ${unitTemplate}
-          </div>
-          
-          <div class="col-12 calorie border p-1 mb-2" style="font-size: 1.2rem">
-            <span id="result-of-calorie" ></span> Kcal
-          </div>
-
-          <div class="col-4 macros" >
-            <h5>Protein</h5> 
-            <span id="result-of-protein"></span>g
-          </div>
-          <div class="col-4 macros" >
-            <h5>Szénhidrát</h5>  
-            <span id="result-of-carb"></span>
-          </div>
-          <div class="col-4 macros" >
-            <h5>Zsir</h5> 
-            <span id="result-of-fat"></span>
-          </div>
-          <div class="col-12 mt-4">
-            <button class="btn ${isIngredientForUpdate ? 'btn-warning' : 'btn-primary'} text-light" id="send">${isIngredientForUpdate ? 'Frissit' : 'Hozzáad  '}</button>
-            ${isIngredientForUpdate ? ` <button class='btn btn-danger text-light' data-id="${ingredient.d_ingredientId}" id='delete'>Törlés</button>` : ""}
-          </div>
-        </div>
-  `;
-  // Templateben lévő diary-ingredient-containerben generáljuk ki a napló vagy adatok gombra kattintva a kívánt tartalmat
-  return template;
-}
-
-// Ha az "Adatok" gombra kattintunk generáljuk ki ezt a tartalmat
-function renderData(diaryIngredientContainer) {
-  let ingredient = state.hasOwnProperty("ingredientForUpdate")
-    ? state.ingredientForUpdate
-    : state.ingredient;
-  let allergensTemplate = "";
-
-
-
-  if (ingredient.allergens) {
-    ingredient.allergens.forEach((allergen) => {
-      allergensTemplate += `
-        <span class="text-warning"> ${allergen.i_allergenNumber}, </span>
-      `;
-    });
-  }
-
-  let diaryDataTemplate = `
-    <div class="row text-center mt-2">
-      <h1 class="display-6 mb-3">Adatok/100g</h1>
-      <div class="col-4">
-          <h6>Protein <br> ${ingredient.protein}g</h6>
-      </div>
-      <div class="col-4">
-          <h6>Szénhidrát <br> ${ingredient.carb}g</h6>
-      </div>
-      <div class="col-4">
-          <h6>Zsír <br>${ingredient.fat}g</h6>
-      </div>
-      <div class="col-6">
-          <h6>Kalória  <br>${ingredient.calorie}</h6>
-      </div>
-      <div class="col-6">
-        <h6>Glikémiás I <br>${ingredient.glycemicIndex ? ingredient.glycemicIndex : 0}</h6>
-      </div> 
-    </div>
-    <hr>
-    <div class="row">
-     <h1 class="display-6 mb-3">Allergének</h1>
-     <div class="col-12" >
-      ${allergensTemplate}
-     </div>
-    </div>
-  `;
-
-  diaryIngredientContainer.innerHTML = diaryDataTemplate;
-}
