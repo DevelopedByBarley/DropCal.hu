@@ -8,8 +8,8 @@ const searchResultContainer = document.getElementById(
 );
 const diaryIngredientForm = document.getElementById("staticBackdrop");
 let ingredientItems = document.querySelectorAll('.ingredient-item');
-let numberOfPage;
 let pageCounter = localStorage.getItem("page-counter") ? localStorage.getItem("page-counter") : 1;
+let numberOfPage;
 let searchResult = [];
 let state = [];
 
@@ -29,12 +29,14 @@ ingredientItems.forEach((item) => {
 function searchIngredients() {
   //I. Input mezőbe írunk valamit lekérjük az adatbázist és feltöltjük a state-t
   let name = Search.value;
+   
   if (name.length >= 2) {
     fetch(`/api/search/${name}`)
       .then((res) => res.json())
       .then((data) => {
         searchResult = data["ingredients"]
-        numberOfPage = (data["number_of_page"] - 1);
+        numberOfPage = data["number_of_page"];
+        localStorage.setItem('page-counter', numberOfPage)
         renderSearchResult();
       });
 
@@ -100,7 +102,6 @@ function renderSearchResult() {
   Next.addEventListener('click', (event) => next(event))
 
   let ingredientItems = document.querySelectorAll(".ingredient-item");
-  console.log(ingredientItems);
   ingredientItems.forEach((ingredientItem) => {
     ingredientItem.addEventListener("click", (event) => {
       let id = event.currentTarget.dataset.id;
@@ -115,14 +116,13 @@ function prev(event) {
   let name = Search.value
   if (pageCounter > 1) {
     pageCounter--;
-    localStorage.setItem("page-counter", pageCounter)
   }
 
   fetch(`/api/search/${name}?page=${pageCounter}`)
     .then((res) => res.json())
     .then((data) => {
       searchResult = data["ingredients"]
-      numberOfPage = (data["number_of_page"] - 1);
+      numberOfPage = data["number_of_page"];
       renderSearchResult();
     });
 }
@@ -130,15 +130,20 @@ function prev(event) {
 function next(event) {
   event.preventDefault();
   let name = Search.value;
-  if (pageCounter <= numberOfPage) {
+
+
+  if (pageCounter < numberOfPage) {
     pageCounter++;
-    localStorage.setItem("page-counter", pageCounter)
+  } else {
+    pageCounter = numberOfPage
+    renderSearchResult();
+    return;
   }
   fetch(`/api/search/${name}?page=${pageCounter}`)
     .then((res) => res.json())
     .then((data) => {
       searchResult = data["ingredients"]
-      numberOfPage = (data["number_of_page"] - 1);
+      numberOfPage = data["number_of_page"];
       renderSearchResult();
     });
 }
@@ -161,7 +166,6 @@ function getDiaryIngredientById(url, isIngredientForUpdate) {
   fetch(url)
     .then((res) => res.json())
     .then((data) => {
-      console.log(data);
       if (data) {
 
         isIngredientForUpdate ? state = {

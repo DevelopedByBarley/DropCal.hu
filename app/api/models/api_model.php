@@ -11,7 +11,7 @@ class APIModel
 
     public function searchIngredient($userId, $name)
     {
-        $limit = 7;
+        $limit = 1;
         $page = isset($_GET["page"]) ? $_GET["page"] : 1;
         $offset = ($page - 1) * $limit;
 
@@ -25,13 +25,14 @@ class APIModel
 
         // GET all page counter
 
-        $stmt = $this->pdo->prepare("SELECT COUNT(*) as count FROM `ingredients` WHERE ingredientName LIKE :name AND (userRefId = :userId OR userRefId IS NULL) OR isAccepted = 1");
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) as count FROM `ingredients` WHERE ingredientName LIKE :name AND (userRefId = :userId OR userRefId IS NULL AND isAccepted = 1)");
         $stmt->bindValue(':name', '%' . $name . '%', PDO::PARAM_STR);
         $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
         $stmt->execute();
         $ingredientCounterData = $stmt->fetch(PDO::FETCH_ASSOC);
         $ingredientCount = (int)$ingredientCounterData["count"];
 
+   
         $counter = 0;
 
         for ($i = 0; $i < $ingredientCount; $i += $limit) {
@@ -39,6 +40,8 @@ class APIModel
         }
 
 
+        
+  
         return [
             "ingredients" => $ingredients,
             "number_of_page" => $counter

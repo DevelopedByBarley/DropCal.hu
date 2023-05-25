@@ -209,7 +209,7 @@ function searchRecipeIngredient(event, SearchRecipeResultContainer, isIngredient
             .then((res) => res.json())
             .then((data) => {
                 searchResult = data["ingredients"] // Vissza térünk a hozzávalókkal 
-                numberOfPage = (data["number_of_page"] - 1); // És amit a backend kiszámított nekünk lapozó oldal szám értékével
+                numberOfPage = data["number_of_page"]; // És amit a backend kiszámított nekünk lapozó oldal szám értékével
                 renderSearchRecipeResult(name, SearchRecipeResultContainer, isIngredientForUpdate); // Ekkor elindigjuk a visszatért értékek kirenderelését
             });
     } else {
@@ -229,7 +229,7 @@ function renderSearchRecipeResult(name, SearchRecipeResultContainer, isIngredien
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
-        <li class="page-item"><a class="page-link">${pageCounter} / ${(numberOfPage + 1)}</a></li>
+        <li class="page-item"><a class="page-link">${pageCounter} / ${numberOfPage}</a></li>
         <li class="page-item">
           <a class="page-link ${pageCounter >= numberOfPage ? 'disabled' : ''}" aria-label="Next" style="cursor: pointer" id="next-button">
             <span aria-hidden="true">&raquo;</span>
@@ -419,7 +419,7 @@ function renderIngredientDataTemplate(RecipeDataContainer, ingredient, isIngredi
                 currentFat: calculateMacros(Quantity.value, ingredient).fat,
                 allergens: ingredient.allergens,
             }
-            
+
 
             console.log(newIngredient);
 
@@ -646,21 +646,25 @@ function prevRecipe(name, SearchRecipeResultContainer, isIngredientForUpdate) {
         .then((res) => res.json())
         .then((data) => {
             searchResult = data["ingredients"]
-            numberOfPage = (data["number_of_page"] - 1);
+            numberOfPage = data["number_of_page"];
             renderSearchRecipeResult(name, SearchRecipeResultContainer, isIngredientForUpdate);
         });
 }
 
 function nextRecipe(name, SearchRecipeResultContainer, isIngredientForUpdate) {
-    if (pageCounter <= numberOfPage) {
+    if (pageCounter < numberOfPage) {
         pageCounter++;
         localStorage.setItem("page-counter", pageCounter)
+    } else {
+        pageCounter = numberOfPage
+        renderSearchRecipeResult(name, SearchRecipeResultContainer, isIngredientForUpdate);
+        return;
     }
     fetch(`/api/search/${name}?page=${pageCounter}`)
         .then((res) => res.json())
         .then((data) => {
             searchResult = data["ingredients"]
-            numberOfPage = (data["number_of_page"] - 1);
+            numberOfPage = data["number_of_page"];
             renderSearchRecipeResult(name, SearchRecipeResultContainer, isIngredientForUpdate);
         });
 }
