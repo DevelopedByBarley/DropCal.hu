@@ -88,12 +88,13 @@ class RecipeModel extends UserModel
         $fat = $macros["sumOfFat"];
         $GI = $body["glycemic_index_summary"];
         $allergens = $body["allergens"];
-        $isForDiab = $body["isForDiab"];
+        $isForDiab = $body["isForDiab"] === 'on' ? 1 : 0;
         $video = isset($body["video"]) ? $body["video"] : null;
         $description = $body["description"];
         $isRecommended = isset($body["isRecommended"]) && $body["isRecommended"] === 'on' ? 1 : 0;
         $isAccepted = isset($isRecommended) ? 0 : "";
 
+        
 
         $stmt = $this->pdo->prepare(
             "UPDATE `recipes` SET 
@@ -522,22 +523,30 @@ class RecipeModel extends UserModel
 
     private function getRecipeDietsById($recipeRefId)
     {
+        $ret = [];
         $stmt = $this->pdo->prepare("SELECT * FROM `recipe_diets` WHERE `recipeRefId` = :id");
         $stmt->bindParam(":id", $recipeRefId);
         $stmt->execute();
         $diets = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return $diets;
+        foreach($diets as $diet) {
+            $ret[] = $diet["r_diet"];
+        }
+        return $ret;
     }
 
     private function getRecipeMealsById($recipeRefId)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM `recipe_meals` WHERE `recipeRefId` = :id");
+        $ret = [];
+        $stmt = $this->pdo->prepare("SELECT `r_meal` FROM `recipe_meals` WHERE `recipeRefId` = :id");
         $stmt->bindParam(":id", $recipeRefId);
         $stmt->execute();
-        $steps = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $meals = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        return $steps;
+        foreach($meals as $meal) {
+            $ret[] = $meal["r_meal"];
+        }
+
+        return $ret;
     }
 
     private function getStepsByRecipeId($recipeRefId)

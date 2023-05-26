@@ -20,7 +20,7 @@ class Queries extends UserModel
         $isGeneralDiet = false;
 
         foreach ($diets as $diet) {
-            if (in_array("general", $diet)) {
+            if (in_array("Általános", $diet)) {
                 $isGeneralDiet = true;
             }
         }

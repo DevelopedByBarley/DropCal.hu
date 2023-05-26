@@ -68,7 +68,9 @@ public function deleteRecipe($vars)
         echo $this->renderer->render("Layout.php", [
             "content" => $this->renderer->render("/pages/private/user/recipes/Recipe_Form.php", [
                 "isSuccess" => $_GET["isSuccess"] ?? null,
-                "recipes" => $recipes ?? null
+                "recipes" => $recipes ?? null,
+                "meals" => MEALS,
+                "diets" => DIETS
             ]),
             "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0,
             "userId" => $userId,
@@ -104,7 +106,9 @@ public function deleteRecipe($vars)
         echo $this->renderer->render("Layout.php", [
             "content" => $this->renderer->render("/pages/private/user/recipes/Recipe_Form.php", [
                 "isSuccess" => $_GET["isSuccess"] ?? null,
-                "recipeForUpdate" => $recipeForUpdate ?? null
+                "recipeForUpdate" => $recipeForUpdate ?? null,
+                "meals" => MEALS,
+                "diets" => DIETS
             ]),
             "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0,
             "userId" => $userId,

@@ -46,9 +46,6 @@ class IngredientController extends DiaryController
     public function getIngredientForm()
     {
         $this->loginChecker->checkUserIsLoggedInOrRedirect();
-        $ingredientCategories = ["Fagylalt", "Jégkrém", "Gomba", "Gabona", "Gyümölcs", "Hal", "Húskészítmény", "Ital", "Készétel", "Köret", "Leves", "Olaj", "Pékáru", "Édesség", "Sütemény", "Rágcsa", "Tészta", "Tejtermék"];
-        $units = ["100g", "100ml"];
-        $common_units = ["Darab", "Bögre", "Csésze", "Szelet", "Marék", "Evőkanál", "Zacskó", "Csipet", "Csomag", "Doboz", "Üveg", "Tubus", "Gerezd"];
 
         $userId = $_SESSION["userId"] ?? null;
         $user =  $this->userModel->getUserData();
@@ -61,9 +58,9 @@ class IngredientController extends DiaryController
 
         echo $this->renderer->render("Layout.php", [
             "content" => $this->renderer->render("/pages/private/user/ingredients/Ingredient_Form.php", [
-                "ingredientCategories" => $ingredientCategories,
-                "units" => $units,
-                "common_units" => $common_units,
+                "ingredientCategories" => INGREDIENT_CATEGORIES,
+                "units" => UNITS,
+                "common_units" => COMMON_UNITS,
                 "ingredientId" => $ingredientId,
                 "ingredient" => $ingredient ?? null
             ]),

@@ -1,6 +1,8 @@
 <?php
 $recipeForUpdate = $params["recipeForUpdate"] ?? null;
-
+echo "<br>";
+echo "<br>";
+var_dump((int)$recipeForUpdate["isForDiab"]);
 ?>
 
 
@@ -57,23 +59,12 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 					<div class="col-12">
 						<h1 class="display-5 text-center mt-5 mb-4">Milyen étkezésre ajánlod? <span><i style="font-size: .5rem; position: relative; top: -40px" class="bi bi-asterisk"></i></span></h1>
 						<div class="input-group d-flex align-items-center justify-content-center">
-							<input type="checkbox" class="btn-check" name="meal[]" id="breakfast" autocomplete="off" value="breakfast">
-							<label class="btn btn-outline-dark m-1" for="breakfast">Reggeli</label>
+							<?php foreach ($params["meals"] as $meal) : ?>
+								<input type="checkbox" class="btn-check" name="meal[]" id="<?= $meal ?>" autocomplete="off" value="<?= $meal ?>" <?php echo isset($recipeForUpdate) && !empty($recipeForUpdate["meals"]) && in_array($meal, $recipeForUpdate["meals"]) ? 'checked' : '' ?>>
+								<label class="btn btn-outline-dark m-1" for="<?= $meal ?>"><?= $meal ?></label>
+							<?php endforeach ?>
 
-							<input type="checkbox" class="btn-check" name="meal[]" id="snack1" autocomplete="off" value="snack1">
-							<label class="btn btn-outline-dark m-1" for="snack1">Tízórai</label>
 
-							<input type="checkbox" class="btn-check" name="meal[]" id="lunch" autocomplete="off" value="lunch">
-							<label class="btn btn-outline-dark m-1" for="lunch">Ebéd</label>
-
-							<input type="checkbox" class="btn-check" name="meal[]" id="snack2" autocomplete="off" value="snack2">
-							<label class="btn btn-outline-dark m-1" for="snack2">Uzsonna</label>
-
-							<input type="checkbox" class="btn-check" name="meal[]" id="dinner" autocomplete="off" value="dinner">
-							<label class="btn btn-outline-dark m-1" for="dinner">Vacsora</label>
-
-							<input type="checkbox" class="btn-check" name="meal[]" id="snack3" autocomplete="off" value="snack3">
-							<label class="btn btn-outline-dark m-1" for="snack3">Nasi</label>
 						</div>
 					</div>
 				</div>
@@ -83,23 +74,10 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 					<div class="col-12">
 						<h1 class="display-5 text-center mt-5 mb-4">Milyen étrendet képvisel a recepted? <span><i style="font-size: .5rem; position: relative; top: -40px" class="bi bi-asterisk"></i></h1>
 						<div class="input-group d-flex align-items-center justify-content-center">
-							<input type="checkbox" class="btn-check" name="diet[]" id="general" autocomplete="off" value="general">
-							<label class="btn btn-outline-dark m-1" for="general">Általános</label>
-
-							<input type="checkbox" class="btn-check" name="diet[]" id="meat" autocomplete="off" value="meat">
-							<label class="btn btn-outline-dark m-1" for="meat">Húsimádó</label>
-
-							<input type="checkbox" class="btn-check" name="diet[]" id="vegetarian" autocomplete="off" value="vegetarian">
-							<label class="btn btn-outline-dark m-1" for="vegetarian">Vegetáriánus</label>
-
-							<input type="checkbox" class="btn-check" name="diet[]" id="vegan" autocomplete="off" value="vegan">
-							<label class="btn btn-outline-dark m-1" for="vegan">Vegán</label>
-
-							<input type="checkbox" class="btn-check" name="diet[]" id="paleo" autocomplete="off" value="paleo">
-							<label class="btn btn-outline-dark m-1" for="paleo">Paleo</label>
-
-							<input type="checkbox" class="btn-check" name="diet[]" id="ketogenic" autocomplete="off" value="ketogenic">
-							<label class="btn btn-outline-dark m-1" for="ketogenic">Ketogén</label>
+							<?php foreach ($params["diets"] as $diet) : ?>
+								<input type="checkbox" class="btn-check" name="diet[]" id="<?= $diet ?>" autocomplete="off" value="<?= $diet ?>" <?php echo isset($recipeForUpdate) && !empty($recipeForUpdate["diets"]) && in_array($diet, $recipeForUpdate["diets"]) ? 'checked' : '' ?>>
+								<label class="btn btn-outline-dark m-1" for="<?= $diet ?>"><?= $diet ?></label>
+							<?php endforeach ?>
 						</div>
 					</div>
 				</div>
@@ -109,7 +87,7 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 						<label class="form-check-label" for="isRecipeSugarFree" style="position: relative; top: 10px;">
 							<b> Cukormentes recept</b>
 						</label>
-						<input class="form-check-input" type="checkbox" id="isRecipeSugarFree" name="isForDiab" style="font-size: 1.7rem; cursor: pointer" />
+						<input class="form-check-input" type="checkbox" id="isRecipeSugarFree" name="isForDiab" style="font-size: 1.7rem; cursor: pointer" <?php echo  (int)$recipeForUpdate["isForDiab"] === 1 ? 'checked' : '' ?> />
 					</div>
 				</div>
 
@@ -141,7 +119,7 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 					</div>
 				</div>
 
-				<div class="row border text-center mb-4 bg-dark text-light p-3">
+				<div class="row border text-center bg-dark text-light p-3">
 					<div class="col-12 mt-4 mb-4">
 						<h1 class="display-6">Összegzés</h1>
 					</div>
@@ -183,16 +161,23 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 
 				</div>
 
-				<div class="row mb-3">
-					<div class="col-12 border border-warning p-2">
-
-						<div class="form-check">
-							<input type="checkbox" class="form-check-input" id="isPublic" name="isRecommended">
-							<label class="form-check-label" for="isPublic">Publikálásra ajánlom a receptet</label>
+				
+				<div class="row mb-5 mt-4 p-2 text-light bg-danger">
+					<div class="col-12 p-2">
+						<div class="col-xs-12 d-flex align-items-center justify-content-center">
+							<div class="form-check form-switch">
+								<label class="form-check-label" for="isRecipeSugarFree" style="position: relative; top: 10px;">
+									<b> Publikálásra ajánlom a receptet!</b>
+								</label>
+								<input class="form-check-input" type="checkbox" id="isRecommended" name="isRecommended" style="font-size: 1.7rem; cursor: pointer" <?php echo  (int)$recipeForUpdate["isRecommended"] === 1 ? 'checked' : '' ?> />
+							</div>
 						</div>
 					</div>
 				</div>
-				<button type="submit" class="btn btn-primary btn-block mb-4">Recept elküldése</button>
+
+				<div class="text-center">
+					<button type="submit" class="btn btn-outline-dark btn-block mb-4 mt-5">Recept elküldése</button>	
+				</div>
 			</form>
 		</div>
 	</div>

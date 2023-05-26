@@ -57,3 +57,34 @@ define('ALLERGENS', [
         "allergenId" => 14,
     ],
 ]);
+
+
+define('INGREDIENT_CATEGORIES', [
+    "Fagylalt", "Jégkrém", "Gomba", "Gabona", "Gyümölcs", "Hal", "Húskészítmény", "Ital", "Készétel", "Köret", "Leves", "Olaj", "Pékáru", "Édesség", "Sütemény", "Rágcsa", "Tészta", "Tejtermék"
+]);
+
+define('UNITS', [
+    "100g", "100ml"
+]);
+
+define('COMMON_UNITS', [
+    "Darab", "Bögre", "Csésze", "Szelet", "Marék", "Evőkanál", "Zacskó", "Csipet", "Csomag", "Doboz", "Üveg", "Tubus", "Gerezd"
+]);
+
+
+define("MEALS", [
+    "Reggeli",
+    "Tizórai",
+    "Ebéd",
+    "Vacsora",
+    "Uzsonna"
+]);
+
+define("DIETS", [
+    "Általános",
+    "Húsimádó",
+    "Vegetáriánus",
+    "Vegán",
+    "Paleo",
+    "Ketogén"
+]);
