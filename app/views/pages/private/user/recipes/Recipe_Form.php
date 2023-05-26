@@ -1,8 +1,6 @@
 <?php
 $recipeForUpdate = $params["recipeForUpdate"] ?? null;
-echo "<br>";
-echo "<br>";
-var_dump((int)$recipeForUpdate["isForDiab"]);
+
 ?>
 
 
@@ -87,7 +85,7 @@ var_dump((int)$recipeForUpdate["isForDiab"]);
 						<label class="form-check-label" for="isRecipeSugarFree" style="position: relative; top: 10px;">
 							<b> Cukormentes recept</b>
 						</label>
-						<input class="form-check-input" type="checkbox" id="isRecipeSugarFree" name="isForDiab" style="font-size: 1.7rem; cursor: pointer" <?php echo  (int)$recipeForUpdate["isForDiab"] === 1 ? 'checked' : '' ?> />
+						<input class="form-check-input" type="checkbox" id="isRecipeSugarFree" name="isForDiab" style="font-size: 1.7rem; cursor: pointer" <?php echo isset($recipeForUpdate) &&  (int)$recipeForUpdate["isForDiab"] === 1 ? 'checked' : '' ?> />
 					</div>
 				</div>
 
@@ -169,7 +167,8 @@ var_dump((int)$recipeForUpdate["isForDiab"]);
 								<label class="form-check-label" for="isRecipeSugarFree" style="position: relative; top: 10px;">
 									<b> Publikálásra ajánlom a receptet!</b>
 								</label>
-								<input class="form-check-input" type="checkbox" id="isRecommended" name="isRecommended" style="font-size: 1.7rem; cursor: pointer" <?php echo  (int)$recipeForUpdate["isRecommended"] === 1 ? 'checked' : '' ?> />
+								<input class="form-check-input" type="checkbox" id="isRecommended" name="isRecommended" style="font-size: 1.7rem; cursor: pointer" 
+								<?php echo  isset($recipeForUpdate) && (int)$recipeForUpdate["isRecommended"] === 1 ? 'checked' : '' ?> />
 							</div>
 						</div>
 					</div>
