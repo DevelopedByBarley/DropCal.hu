@@ -1,5 +1,10 @@
 <?php
 $recipe = $params["recipe"] ?? null;
+function isValidYoutubeEmbedUrl($url)
+{
+    $pattern = '/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|embed\/)?([a-zA-Z0-9_-]{11})/';
+    return preg_match($pattern, $url);
+}
 ?>
 
 <div class="container">
@@ -84,7 +89,17 @@ $recipe = $params["recipe"] ?? null;
                     <?php endforeach ?>
                 </ul>
             </div>
+        </div>
+    </div>
 
+    <div class="row w-100 mt-5">
+        <div class="col-12 d-flex align-items-center justify-content-center">
+            <?php if (isset($recipe["video"]) && !empty($recipe["video"]) && isValidYoutubeEmbedUrl($recipe["video"])) : ?>
+                <div class="embed-responsive embed-responsive-16by9">
+                    <iframe class="embed-responsive-item"  height="400" width="600" src="<?= $recipe["video"] ?>" allowfullscreen></iframe>
+                </div>
+
+            <?php endif ?>
         </div>
     </div>
 
@@ -99,7 +114,7 @@ $recipe = $params["recipe"] ?? null;
     <div class="row">
         <div class="col-12">
             <h1 class="display-4 mt-5 mb-3 border p-2">Megjegyzés</h1>
-            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sint nostrum repellendus provident, consequatur totam vero modi corrupti aperiam, quod quae velit quos nesciunt molestias? Quas maxime perferendis nobis inventore quo?</p>
+            <p><?= $recipe["description"] ?></p>
         </div>
     </div>
 </div>

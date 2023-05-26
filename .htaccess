@@ -8,7 +8,7 @@
   SetEnv DB_PASSWORD Csak1enter
   SetEnv MAILER_HOST smtp.rackhost.hu
   SetEnv MAILER_PW 27WVt7E04g^J
- 
+  SetEnv TOKEN_ADD http://localhost:8080
   
 
   # Ha a public mappában lévő fájlra érkezett a kérés, szolgáld ki a fájlt

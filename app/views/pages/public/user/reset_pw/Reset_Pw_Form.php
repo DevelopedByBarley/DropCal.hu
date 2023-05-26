@@ -10,7 +10,7 @@
             <div class="user-subscription-content row">
                 <div class="col-xs-12  d-flex align-items-center justify-content-center">
                     <h1 class="text-center mt-5 display-6">Új jelszó beállítása</h1>
-
+                    
                 </div>
                 <div class="row d-flex align-items-center justify-content-center flex-column mt-5">
 

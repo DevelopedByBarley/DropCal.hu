@@ -43,11 +43,8 @@ class RecipeModel extends UserModel
         $stmt->bindParam(":id", $id);
         $isSuccess = $stmt->execute();
 
-
-        if ($isSuccess) {
-
-            header("Location: /user/recipes-dashboard");
-        }
+        return $isSuccess;
+  
     }
 
 
@@ -92,8 +89,11 @@ class RecipeModel extends UserModel
         $GI = $body["glycemic_index_summary"];
         $allergens = $body["allergens"];
         $isForDiab = $body["isForDiab"];
+        $video = isset($body["video"]) ? $body["video"] : null;
+        $description = $body["description"];
+        $isRecommended = isset($body["isRecommended"]) && $body["isRecommended"] === 'on' ? 1 : 0;
+        $isAccepted = isset($isRecommended) ? 0 : "";
 
-        $isPublic = isset($body["isPublic"]) && $body["isPublic"] === 'on' ? 1 : 0;
 
         $stmt = $this->pdo->prepare(
             "UPDATE `recipes` SET 
@@ -105,11 +105,13 @@ class RecipeModel extends UserModel
             `glycemic_index` = :glycemic_index,
             `allergens` = :allergens,
             `isForDiab` = :isForDiab,
-            `isPublic` = :isPublic,
+            `video` = :video,
+            `description` = :description,
+            `isRecommended` = :isRecommended,
+            `isAccepted` = :isAccepted,
             `userRefId` = :userRefId 
             WHERE `recipeId` = :recipeId;"
         );
-
 
         $stmt->bindParam(':recipe_name', $recipe_name, PDO::PARAM_STR);
         $stmt->bindParam(':calorie', $calorie, PDO::PARAM_INT);
@@ -119,7 +121,10 @@ class RecipeModel extends UserModel
         $stmt->bindParam(':glycemic_index', $GI, PDO::PARAM_INT);
         $stmt->bindParam(':allergens', $allergens, PDO::PARAM_STR);
         $stmt->bindParam(':isForDiab', $isForDiab, PDO::PARAM_STR);
-        $stmt->bindParam(':isPublic', $isPublic, PDO::PARAM_INT);
+        $stmt->bindParam(':video', $video, PDO::PARAM_STR);
+        $stmt->bindParam(':description', $description, PDO::PARAM_STR);
+        $stmt->bindParam(':isRecommended', $isRecommended, PDO::PARAM_INT);
+        $stmt->bindParam(':isAccepted', $isAccepted, PDO::PARAM_INT);
         $stmt->bindParam(':userRefId', $userId, PDO::PARAM_INT);
         $stmt->bindParam(':recipeId', $recipeId, PDO::PARAM_INT);
 
@@ -135,6 +140,7 @@ class RecipeModel extends UserModel
 
             if ($files["files"]["name"][0] !== "") $this->updateRecipeImages($files, $recipeId);
         }
+
     }
 
     private function updateRecipeDiets($diets, $recipeId)
@@ -305,6 +311,8 @@ class RecipeModel extends UserModel
         $GI = $body["glycemic_index_summary"];
         $allergens = $body["allergens"];
         $isForDiab = $body["isForDiab"] === 'on' ? 1 : 0;
+        $video = isset($body["video"]) ? $body["video"] : null;
+        $description = $body["description"];
         $isRecommended = isset($body["isRecommended"]) && $body["isRecommended"] === 'on' ? 1 : 0;
         $isAccepted = isset($isRecommended) ? 0 : "";
 
@@ -321,6 +329,8 @@ class RecipeModel extends UserModel
         :glycemic_index, 
         :allergens,
         :isForDiab,
+        :video,
+        :description,
         :isRecommended, 
         :isAccepted, 
         :userRefId);"
@@ -335,6 +345,8 @@ class RecipeModel extends UserModel
         $stmt->bindParam(':glycemic_index', $GI, PDO::PARAM_INT);
         $stmt->bindParam(':allergens', $allergens, PDO::PARAM_STR);
         $stmt->bindParam(':isForDiab', $isForDiab, PDO::PARAM_STR);
+        $stmt->bindParam(':video', $video, PDO::PARAM_STR);
+        $stmt->bindParam(':description', $description, PDO::PARAM_STR);
         $stmt->bindParam(':isRecommended', $isRecommended, PDO::PARAM_INT);
         $stmt->bindParam(':isAccepted', $isAccepted, PDO::PARAM_INT);
         $stmt->bindParam(':userRefId', $userId, PDO::PARAM_INT);

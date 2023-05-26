@@ -8,7 +8,7 @@ class RecipeController
     private $renderer;
     private $userModel;
     private $recipeModel;
-
+    private $toast;
 
     public function __construct()
     {
@@ -17,6 +17,7 @@ class RecipeController
         $this->renderer = new Renderer();
         $this->userModel = new UserModel();
         $this->recipeModel = new RecipeModel();
+        $this->toast = new Toast(); 
     }
 
     // User recipes--------------
@@ -27,6 +28,8 @@ class RecipeController
         $user =  $this->userModel->getUserData();
         $recipes =  $this->recipeModel->getRecipesByUser($userId);
         $profileImage = $user["profileImage"];
+
+        
         echo $this->renderer->render("Layout.php", [
             "content" => $this->renderer->render("/pages/private/user/recipes/recipes_dashboard.php", [
                 "isSuccess" => $_GET["isSuccess"] ?? null,
@@ -36,18 +39,25 @@ class RecipeController
             "userId" => $userId,
             "profileImage" => $profileImage
         ]);
+        $this->toast->getToastMessageAndShow();
 
 
         if (isset($_GET["clearLocalStorage"]) && $_GET["clearLocalStorage"] === "true") {
             echo "<script>localStorage.clear();</script>";
         }
     }
+public function deleteRecipe($vars)
+{
+    $this->loginChecker->checkUserIsLoggedInOrRedirect();
+    $isSuccess = $this->recipeModel->delete($vars["id"]);
 
-    public function deleteRecipe($vars)
-    {
-        $this->loginChecker->checkUserIsLoggedInOrRedirect();
-        $this->recipeModel->delete($vars["id"]);
+    if ($isSuccess) {
+        $this->toast->setToastMessage("Recept sikeresen törölve!");
+        header("Location: /user/recipes-dashboard");
+
+        exit; // Kilépés a script futtatásából
     }
+}
 
     public function recipeForm()
     {
@@ -78,7 +88,7 @@ class RecipeController
         }
 
         $this->recipeModel->addRecipe($_POST, $_FILES, $userId);
-
+        $this->toast->setToastMessage("Recept sikeresen hozzáadva!");
 
         header("Location: /user/recipes-dashboard?clearLocalStorage=true");
         exit;
@@ -109,6 +119,7 @@ class RecipeController
         $userId = $_SESSION["userId"] ?? null;
         $this->loginChecker->checkUserIsLoggedInOrRedirect();
         $this->recipeModel->update($_POST, $_FILES, $vars["id"], $userId);
+        $this->toast->setToastMessage("Recept sikeresen frissitve   !");
 
         header("Location: /user/recipes-dashboard?clearLocalStorage=true");
     }

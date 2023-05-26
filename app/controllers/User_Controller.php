@@ -9,6 +9,7 @@ class UserController
     private $authentication;
     private $emailVerification;
     private $loginChecker;
+    private $toast;
     public function __construct()
     {
 
@@ -18,6 +19,7 @@ class UserController
         $this->emailVerification = new EmailVerification();
         $this->loginChecker = new LoginChecker();
         $this->registrationData = isset($_COOKIE["registrationData"]) ? json_decode($_COOKIE["registrationData"], true) : $_POST;
+        $this->toast =  new Toast();
     }
 
 
@@ -112,6 +114,8 @@ class UserController
     {
         $id = $vars["id"];
         $this->userModel->login($_POST, $id);
+        $this->toast->setToastMessage("Sikeres bejelentkezés!");
+        header("Location: /user/welcome");
     }
 
     public function logoutUser()
@@ -135,5 +139,8 @@ class UserController
                 "userName" => $userName
             ])
         ]);
+
+        $this->toast->getToastMessageAndShow();
+
     }
 }

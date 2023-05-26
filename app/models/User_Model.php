@@ -187,8 +187,7 @@ class UserModel
         if (isset($_SESSION["isRemember"])) {
             $this->cookie->setCookie("userId", $id, $expires, "/");
         }
-
-        header("Location: /user/welcome");
+        
     }
 
     public function logout()

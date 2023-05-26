@@ -34,7 +34,7 @@ class Queries extends UserModel
         
         switch ($user["goal"]) {
             case 'testsúly_csökkentése':
-                $query .= " AND (calorie <= 600)";
+                $query .= " AND (calorie <= 800)";
                 break;
             case 'testsúly_növelése':
                 $query .= " AND (calorie >= 900)";
@@ -49,6 +49,8 @@ class Queries extends UserModel
 
         $stmt->execute();
         $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    
 
         if (isset($recipes) && !empty($recipes)) { // Ha létezik a recipes és nem üres
             $recipes = self::getRecipesDiets($recipes);

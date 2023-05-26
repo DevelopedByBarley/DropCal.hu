@@ -66,7 +66,7 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            Biztosan törlöd a <b style="font-size: 1rem" class="text-info"><?= $ingredient["ingredientName"] ?></b> nevű ételt?
+                                            Biztosan törlöd a <b style="font-size: 1rem" class="text-danger border rounded-lg border-danger p-1"><?= $ingredient["ingredientName"] ?></b> nevű ételt?
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Mégsem</button>

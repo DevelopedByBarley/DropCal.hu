@@ -109,7 +109,7 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 						<label class="form-check-label" for="isRecipeSugarFree" style="position: relative; top: 10px;">
 							<b> Cukormentes recept</b>
 						</label>
-						<input class="form-check-input" type="checkbox" id="isRecipeSugarFree" name="isForDiab" style="font-size: 1.7rem; cursor: pointer"/>
+						<input class="form-check-input" type="checkbox" id="isRecipeSugarFree" name="isForDiab" style="font-size: 1.7rem; cursor: pointer" />
 					</div>
 				</div>
 
@@ -127,8 +127,17 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 					<div class="col">
 						<div class="form-outline">
 							<label class="form-label" for="form6Example1">Videó URL</label>
-							<input type="text" id="video" class="form-control" placeholder="Video URL" name="video" />
+							<input type="text" id="video" class="form-control" placeholder="Video URL" name="video" value="<?php echo isset($recipeForUpdate) && isset($recipeForUpdate["video"]) ? $recipeForUpdate["video"] : "" ?>" />
 						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="form-outline mb-4">
+						<label class="form-label" for="form4Example3">Leirás</label>
+						<textarea class="form-control" id="form4Example3" rows="4" name="description" required>
+							<?php echo isset($recipeForUpdate) ? $recipeForUpdate["description"] : '' ?>
+						</textarea>
 					</div>
 				</div>
 

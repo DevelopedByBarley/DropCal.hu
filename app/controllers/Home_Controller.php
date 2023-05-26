@@ -55,6 +55,7 @@ class HomeController
         $diary_data = $this->diaryModel->getDiaryData($user["userId"], isset($_POST) ? $_POST : null);
 
         $profileImage = $user["profileImage"];
+
         echo $this->renderer->render("Layout.php", [
             "content" => $this->renderer->render("/pages/private/Home.php", [
                 "user" => $user,
@@ -65,5 +66,6 @@ class HomeController
             "userId" => $userId,
             "profileImage" => $profileImage ?? ""
         ]);
+
     }
 }

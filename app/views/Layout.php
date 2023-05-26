@@ -19,14 +19,14 @@
     <div id="layout">
         <?php include 'includes/Header.php' ?>
         <?php include 'components/Preloader.php' ?>
-        <div class="container-fluid" id="root" style="margin-bottom: 100px;">
+        <div class="container-fluid" id="root" style="margin-bottom: 100px; margin-top: 3rem;">
             <div class="row">
                 <div class="col" style="min-height: 79vh">
                     <?= $params["content"] ?? "" ?>
                 </div>
             </div>
         </div>
-
+        <div id="toast-container" style="position: fixed; bottom: 70px; right: 10px; z-index: 3"></div>
         <?php include 'includes/Footer.php' ?>
     </div>
     <?php include 'components/CookieModal.php' ?>
@@ -35,6 +35,7 @@
     <script src="public/js/includes/preLoader.js"></script>
     <script src="public/js/includes/headerNavigation.js"></script>
     <script src="public/js/cookie/cookieModalHandle.js"></script>
+    <script src="public/js/toast/Toast.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 

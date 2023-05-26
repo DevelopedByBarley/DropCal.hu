@@ -65,7 +65,7 @@ $dedicatedRecipes = $params["dedicatedRecipesForYou"];
     <?php if (isset($dedicatedRecipes) && count($dedicatedRecipes) !== 0) : ?>
         <div class="col-xs-12 col-lg-6 d-flex align-items-center justify-content-center flex-column">
             <b>
-                <h1 class="display-3 text-center mt-3 mb-4" style="padding-top: 6rem;">Receptek személyedre szabva</h1>
+                <h1 class="display-4 text-center mt-5">Receptek személyedre szabva</h1>
             </b>
             <p class="p-3">
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit.
@@ -73,17 +73,18 @@ $dedicatedRecipes = $params["dedicatedRecipesForYou"];
                 nesciunt quisquam dignissimos, exercitationem laboriosam sequi,
                 quas pariatur fugit quidem dolor iusto quae. Optio, odit?
             </p>
-            <a class="btn btn-outline-light btn-lg mt-4" href="/error">Receptek böngészése</a>
         </div>
-        <div class="col-xs-12 col-lg-6">
+        <div class="col-xs-12 col-lg-6 ">
             <swiper-container class="mySwiper" pagination="true" effect="coverflow" grab-cursor="true" centered-slides="true" slides-per-view="auto" coverflow-effect-rotate="50" coverflow-effect-stretch="0" coverflow-effect-depth="100" coverflow-effect-modifier="1" coverflow-effect-slide-shadows="true">
                 <?php foreach ($dedicatedRecipes as $recipe) : ?>
                     <swiper-slide>
                         <a href="/user/recipe/<?= $recipe["recipeId"] ?>" class="text-dark" style="text-decoration:none">
-                            <div class="card recipe-card">
-                                <div class="recipe-card-image" style="background-image: url(<?= isset($recipe['images']) ? "/public/assets/recipe_images/" . $recipe["images"][0]["r_imageName"] : 'https://i.imgur.com/BrotgYi.jpg'; ?>); background-size: cover; background-position: center center; min-height: 300px"></div>
+                            <div class="card recipe-card" style="width: 100%;">
+                                <div class="recipe-card-image" style="background-image: url(<?= isset($recipe['images']) ? "/public/assets/recipe_images/" . $recipe["images"][0]["r_imageName"] : 'https://i.imgur.com/BrotgYi.jpg'; ?>); background-size: cover; background-position: center center; min-height: 200px"></div>
+                                
                                 <div class="card-body p-2 mt-3 mb-3">
                                     <h5 class="card-title"><?= $recipe["recipe_name"] ?></h5>
+                                    <hr>
                                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                                 </div>
                             </div>
@@ -91,6 +92,9 @@ $dedicatedRecipes = $params["dedicatedRecipesForYou"];
                     </swiper-slide>
                 <?php endforeach ?>
             </swiper-container>
+            <div class="text-center">
+                <a class="btn btn-outline-light mt-4 mb-3" href="/error">Receptek böngészése</a>
+            </div>
         </div>
     <?php else : ?>
         <div class="col-xs-12 text-center d-flex align-items-center justify-content-center flex-column p-5">
@@ -179,10 +183,10 @@ $dedicatedRecipes = $params["dedicatedRecipesForYou"];
 
     <style>
         .slanted-top {
-            transform: skewY(1deg);
+            transform: skewY(2deg);
             min-height: 100px;
             position: relative;
-            top: 80px;
+            top: 90px;
         }
 
         swiper-container {

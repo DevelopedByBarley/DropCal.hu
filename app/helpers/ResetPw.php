@@ -1,64 +1,64 @@
 <?php
-    class ResetPw
+class ResetPw
+{
+    private $renderer;
+    private $pdo;
+    private $mailer;
+
+    public function __construct()
     {
-        private $renderer;
-        private $pdo;
-        private $mailer;
+        $db = new Database();
+        $this->pdo = $db->getConnect();
+        $this->renderer = new Renderer();
+        $this->mailer = new Mailer();
+    }
 
-        public function __construct()
-        {
-            $db = new Database();
-            $this->pdo = $db->getConnect();
-            $this->renderer = new Renderer();
-            $this->mailer = new Mailer();
-        }
-    
-        public function forgotPwForm()
-        {
-    
-            echo $this->renderer->render("Layout.php", [
-                "content" => $this->renderer->render("/pages/user/reset_pw/Forgot_Pw_Form.php", []),
-                "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0
-            ]);
-        }
-    
-        public function newPwRequest()
-        {
-    
-            $this->pwRequest($_POST);
-        }
-    
-        public function resetPwForm()
-        {
-            $token = $_GET["token"] ?? null;
-            $expires = $_GET["expires"] ?? null;
-            $emailByToken = $this->checkTokenData($token, $expires);
-            if(!$emailByToken) {
-                echo "Token nem lejárt vagy nem létezik!";
-                return;
-            } 
-    
-    
-            echo $this->renderer->render("Layout.php", [
-                "content" => $this->renderer->render("/pages/user/reset_pw/Reset_Pw_Form.php", [
-                    "emailByToken" => $emailByToken,
-                    "token" => $token
-                ]),
-                "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0,
-    
-            ]);
-        }
-    
-        public function setNewPw()
-        {
-            $this->newPw($_POST);
+    public function forgotPwForm()
+    {
+
+        echo $this->renderer->render("Layout.php", [
+            "content" => $this->renderer->render("/pages/public/user/reset_pw/Forgot_Pw_Form.php", []),
+            "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0
+        ]);
+    }
+
+    public function newPwRequest()
+    {
+
+        $this->pwRequest($_POST);
+    }
+
+    public function resetPwForm()
+    {
+        $token = $_GET["token"] ?? null;
+        $expires = $_GET["expires"] ?? null;
+        $emailByToken = $this->checkTokenData($token, $expires);
+        if (!$emailByToken) {
+            echo "Token nem lejárt vagy nem létezik!";
+            return;
         }
 
 
+        echo $this->renderer->render("Layout.php", [
+            "content" => $this->renderer->render("/pages/public/user/reset_pw/Reset_Pw_Form.php", [
+                "emailByToken" => $emailByToken,
+                "token" => $token
+            ]),
+            "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0,
+
+        ]);
+    }
+
+    public function setNewPw()
+    {
+        $this->newPw($_POST);
+    }
 
 
 
-        private function pwRequest($body)
+
+
+    private function pwRequest($body)
     {
         $email = $body["email"];
         $stmt = $this->pdo->prepare("SELECT * FROM `users` WHERE email = :email");
@@ -68,10 +68,7 @@
         $token = uniqid();
         $current_time = time();
         $expires = date('Y-m-d H:i:s', strtotime('+10 minutes', $current_time));
-        if (!$user) {
-            header("Location: /forgot_password?isEmailExist=0");
-            return;
-        }
+
 
         $stmt = $this->pdo->prepare("INSERT INTO 
         `password_reset_tokens` 
@@ -96,9 +93,9 @@
         $stmt->bindParam(':expires', $expires);
 
         $stmt->execute();
-        $body = "http://localhost:8080/reset_password?token=" . $token . "&expires=" . strtotime($expires);
+        $body = $_SERVER["TOKEN_ADD"] . "/reset_pw?token=" . $token . "&expires=" . strtotime($expires);
         $subject = "Jelszó megváltoztatása!";
-        $this->mailer->send($email, $body, $subject);
+        !$user ? "" : $this->mailer->send($email, $body, $subject);
 
         header("Location: /user/login?isEmailSent=1");
     }
@@ -123,7 +120,7 @@
         $expires = strtotime($token["expires"]);
 
         if ($currentDate > $expires) {
-      
+
             return false;
         }
 
@@ -156,4 +153,4 @@
 
         header("Location: /user/login?isPwUpdated=1");
     }
-    }
+}

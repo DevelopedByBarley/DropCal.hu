@@ -1,5 +1,6 @@
 <?php
     require 'vendor/autoload.php';
+    require 'app/helpers/ShowToast.php';
     require 'config/Variables.php';
     require 'app/helpers/Cookie.php';
     require 'config/Database.php';
