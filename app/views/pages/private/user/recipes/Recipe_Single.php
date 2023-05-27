@@ -43,7 +43,7 @@ function isValidYoutubeEmbedUrl($url)
                 <img src="/public/assets/icons/diet.png" style="height: 50px; width: 50px;" />
                 <div class="mt-3">
                     <?php foreach ($recipe["diets"] as $diet) : ?>
-                        <b><span><?= $diet["r_diet"] ?></span></b>
+                        <b><span><?= $diet ?></span></b>
                     <?php endforeach ?>
                 </div>
             </div>
@@ -53,7 +53,7 @@ function isValidYoutubeEmbedUrl($url)
                 <img src="/public/assets/icons/clock.png" style="height: 50px; width: 50px;" />
                 <div class="mt-3">
                     <?php foreach ($recipe["meals"] as $meal) : ?>
-                        <b><span><?= $meal["r_meal"] ?></span></b>
+                        <b><span><?= $meal ?></span></b>
                     <?php endforeach ?>
                 </div>
             </div>

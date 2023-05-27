@@ -35,7 +35,7 @@
                                     </div>
                                 </div>
 
-                                <input type="number" name="verification_code" min="4" max="4">
+                                <input type="number" name="verification_code">
                                 <button class="verification_btn mb-2 btn btn-info text-light">Elküld</button>
                             </span>
                         </div>

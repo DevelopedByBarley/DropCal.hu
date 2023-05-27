@@ -56,8 +56,10 @@ class Queries extends UserModel
             $recipes = self::getRecipesDiets($recipes);
             $recipesWithoutAllergens = self::checkRecipesAllergens($user["allergens"], $recipes); // Megnézzük hogy van-e olyan recept amiben ütköznek a user Allergének a recipes allergénekkel ha nem akkor visszatér 
    
+          
+
             if (empty($recipesWithoutAllergens) || !isset($recipesWithoutAllergens)) {
-                return $recipes;
+                return [];
             };
 
             if (!$isGeneralDiet) { // Ha léteznek a user allergén mentes recptek és nem üresek és a user diet is nem general
