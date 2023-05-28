@@ -229,7 +229,7 @@ function renderSearchRecipeResult(name, SearchRecipeResultContainer, isIngredien
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
-        <li class="page-item"><a class="page-link">${pageCounter} / ${numberOfPage}</a></li>
+        <li class="page-item"><a class="page-link">${pageCounter === 0 ? 1 : pageCounter} / ${numberOfPage === 0 ? 1 : numberOfPage}</a></li>
         <li class="page-item">
           <a class="page-link ${pageCounter >= numberOfPage ? 'disabled' : ''}" aria-label="Next" style="cursor: pointer" id="next-button">
             <span aria-hidden="true">&raquo;</span>

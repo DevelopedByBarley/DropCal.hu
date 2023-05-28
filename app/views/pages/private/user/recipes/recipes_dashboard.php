@@ -21,8 +21,8 @@ $recipes = $params["recipes"];
             <a href="/user/recipe/new" class="btn btn-outline-dark mt-3">Recept hozzáadása</a>
         </div>
         <?php foreach ($recipes as $recipe) : ?>
-            <div class="col-12 col-md-6 col-lg-2 mb-3 d-flex align-items-center justify-content-center">
-                <div class="card recipe-card">
+            <div class="col-12 col-md-6 col-lg-3 mb-3 d-flex align-items-center justify-content-center">
+                <div class="card recipe-card" style="max-width: 300ypx">
                     <div class="recipe-card-image" style="background-image: url(<?= isset($recipe['images']) ? "/public/assets/recipe_images/" . $recipe["images"][0]["r_imageName"] : 'https://i.imgur.com/BrotgYi.jpg'; ?>); background-size: cover; background-position: center center; min-height: 200px"></div>
                     <div class="card-body">
                         <h5 class="card-title"><?= $recipe["recipe_name"] ?></h5>

@@ -73,7 +73,7 @@ function renderSearchResult() {
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
-      <li class="page-item"><a class="page-link">${pageCounter}</a></li>
+      <li class="page-item"><a class="page-link">${parseInt(pageCounter) === 0 ? 1 : pageCounter} / ${parseInt(numberOfPage) === 0 ? 1 : numberOfPage}</a></li>
       <li class="page-item">
         <a class="page-link ${pageCounter >= numberOfPage ? 'disabled' : ''}" aria-label="Next" style="cursor: pointer" id="next">
           <span aria-hidden="true">&raquo;</span>
@@ -218,10 +218,10 @@ function generateDiaryFormTemplate() {
 
         <div class="modal-dialog">
         <div class="modal-content text-center ">
-          <div class="modal-header">
-            <h5 class="modal-title" id="name">
+          <div class="modal-header text-center">
+            <h1 class="modal-title display-6" id="name">
              ${ingredient.ingredientName}
-            </h5>
+            </h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body" id="diary-ingredient-container">
@@ -257,12 +257,12 @@ function generateDiaryFormTemplate() {
        
           <div class="row text-center mt-2">
             <div class="col-12">
-              <h2>GI <br>${ingredient.glycemicIndex ? ingredient.glycemicIndex : 0}</h2>
+              <h4>GI <br>${ingredient.glycemicIndex ? ingredient.glycemicIndex : 0}</h4>
             </div> 
           </div>
           <hr>
           <div class="row">
-            <h1 class="display-6 mb-3">Allergének</h1>
+            <h4 class="mb-3">Allergének</h4>
             <div class="col-12" >
               ${allergensTemplate}
             </div>
@@ -270,7 +270,7 @@ function generateDiaryFormTemplate() {
      
           
           <div class="modal-footer">
-          <div class="col-12 mt-4">
+          <div class="col-12">
             <button data-id="${ingredient.d_ingredientId}" class="btn ${isIngredientForUpdate ? 'btn-warning' : 'btn-primary'} text-light" id="send">${isIngredientForUpdate ? 'Frissit' : 'Hozzáad  ' }</button>
             ${isIngredientForUpdate ? ` <button class='btn btn-danger text-light' data-id="${ingredient.d_ingredientId}" id='delete'>Törlés</button>` : ""}
             </div>

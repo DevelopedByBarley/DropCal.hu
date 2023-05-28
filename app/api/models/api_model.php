@@ -11,7 +11,7 @@ class APIModel
 
     public function searchIngredient($userId, $name)
     {
-        $limit = 7;
+        $limit = 1;
         $page = isset($_GET["page"]) ? $_GET["page"] : 1;
         $offset = ($page - 1) * $limit;
 
