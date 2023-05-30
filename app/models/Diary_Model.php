@@ -29,13 +29,27 @@ class DiaryModel extends UserModel
 
         $diaryIngredients = $this->getDiaryIngredients($userDiary["diaryId"]) ?? [];
         $summaries = $this->getSummaries($diaryIngredients);
+        $partOfTheDay = $this->getPartOfTheDay($diaryIngredients);
+
         return [
             "userDiary" => $userDiary,
             "diary_ingredients" => $diaryIngredients,
             "summaries" => $summaries ?? 0,
+            "partOfTheDay" => $partOfTheDay
         ];
     }
 
+
+    private function getPartOfTheDay($diaryIngredients) {
+        $ret = [];
+        if(isset($diaryIngredients) && !empty($diaryIngredients)) {
+            foreach($diaryIngredients as $ingredient) {
+                $ret[] = (int)$ingredient["partOfTheDay"];
+            }
+        }
+      
+        return $ret;
+    }
 
 
     // Lekérjük a diary-t user és dátum alapján

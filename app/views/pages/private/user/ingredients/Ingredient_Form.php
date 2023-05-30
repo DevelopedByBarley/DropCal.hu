@@ -1,6 +1,7 @@
 <?php
 $ingredient = $params["ingredient"];
-$ingredientUnit = $ingredient["unit_quantity"] . "" . $ingredient["unit"];
+$ingredientUnit = isset($ingredient) ? $ingredient["unit_quantity"] . "" . $ingredient["unit"] : null;
+
 ?>
 
 <div class="container-fluid add-ingredient-container bg-light d-flex align-items-center justify-content-center">
@@ -35,9 +36,7 @@ $ingredientUnit = $ingredient["unit_quantity"] . "" . $ingredient["unit"];
                                         <select class="form-select" aria-label="Default select example" id="ingredientCategorie" name="ingredientCategorie" required>
                                             <option value="" disabled selected>Választ</option>$
                                             <?php foreach ($params["ingredientCategories"] as $categorie) : ?>
-                                                <?php if (isset($ingredient)) : ?>
-                                                    <option value="<?= $categorie ?>" <?php echo $ingredient["ingredientCategorie"] === $categorie ? "selected" : "" ?>> <?= $categorie ?></option>
-                                                <?php endif ?>
+                                                    <option value="<?= $categorie ?>" <?php echo (isset($ingredient) && $ingredient["ingredientCategorie"] === $categorie) ? "selected" : "" ?>> <?= $categorie ?></option>
                                             <?php endforeach ?>
                                         </select>
                                     </div>
@@ -48,9 +47,7 @@ $ingredientUnit = $ingredient["unit_quantity"] . "" . $ingredient["unit"];
                                         <select class="form-select" aria-label="Default select example" id="unit" name="unit" required>
                                             <option value="" disabled selected>Választ</option>
                                             <?php foreach ($params["units"] as $unit) : ?>
-                                                <?php if (isset($ingredient)) : ?>
-                                                    <option value="<?= $unit ?>" <?php echo $ingredientUnit === $unit ? "selected" : "" ?>> <?= $unit ?></option>
-                                                <?php endif ?>
+                                                    <option value="<?= $unit ?>" <?php echo (isset($ingredient) && $ingredientUnit === $unit) ? "selected" : "" ?>> <?= $unit ?></option>
                                             <?php endforeach ?>
 
                                         </select>
@@ -86,9 +83,7 @@ $ingredientUnit = $ingredient["unit_quantity"] . "" . $ingredient["unit"];
                                         <select class="form-select" id="common_unit" aria-label="Default select example" name="common_unit">
                                             <option value="" disabled selected>Választ</option>
                                             <?php foreach ($params["common_units"] as $unit) : ?>
-                                                <?php if (isset($ingredient)) : ?>
-                                                    <option value="<?= $unit ?>" <?php echo $unit === $ingredient["common_unit"] ? "selected" : "" ?>> <?= $unit ?></option>
-                                                <?php endif ?>
+                                                    <option value="<?= $unit ?>" <?php echo (isset($ingredient) && $unit === $ingredient["common_unit"]) ? "selected" : "" ?>> <?= $unit ?></option>
 
                                             <?php endforeach ?>
                                         </select>

@@ -237,21 +237,20 @@ function generateDiaryFormTemplate() {
               <b><span id="result-of-calorie" ></span> Kcal</b>
           </div>
 
-          <div class="d-flex text-center">
-            <div class="col-4 macros" >
-              <h5>Protein</h5> 
-              <span id="result-of-protein"></span>g
-            </div>
-            <div class="col-4 macros" >
-              <h5>Szénhidrát</h5>  
-              <span id="result-of-carb"></span>g
-            </div>
-            <div class="col-4 macros" >
-              <h5>Zsir</h5> 
-              <span id="result-of-fat"></span>g
-            </div>
-          </div>
-         
+            <div class="d-flex text-center">
+              <div class="col-4 macros" >
+                <h5>Protein</h5> 
+                <span id="result-of-protein"></span>g
+              </div>
+              <div class="col-4 macros" >
+                <h5>Szénhidrát</h5>  
+                <span id="result-of-carb"></span>g
+              </div>
+              <div class="col-4 macros" >
+                <h5>Zsir</h5> 
+                <span id="result-of-fat"></span>g
+              </div>
+            </div>     
           </div>
           <hr>
        
