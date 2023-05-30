@@ -8,7 +8,7 @@ $userCarb = $user["carbohydrate"] ?? round(($userFinalBMR * 0.53) / 4.1, 0);
 $userFat = $user["fat"] ?? round(($userFinalBMR * 0.22) / 9.3, 0);
 $summaries = $diaryData["summaries"];
 $partOfTheDay = $diaryData["partOfTheDay"];
-
+var_dump($partOfTheDay);
 
 ?>
 
@@ -80,17 +80,39 @@ $partOfTheDay = $diaryData["partOfTheDay"];
   <div class="row d-flex align-items-center justify-content-center flex-column">
     <div class="col-12 col-sm-5" id="ingredients">
       <?php if (!empty($diaryData["diary_ingredients"])) : ?>
-        <?php if (in_array(1, $partOfTheDay)) : ?>
-          <ul class="list-group border p-4">
+        <?php if (in_array(0, $partOfTheDay)) : ?>
+          <ul class="list-group border p-4 mb-4" style="box-shadow: -1px 4px 22px 0px rgba(191, 162, 34, 0.75);">
             <div>
               <h1 class="display-6">
                 Reggeli
               </h1>
+              <hr>
+            </div>
+            <?php foreach ($diaryData["diary_ingredients"] as $ingredient) : ?>
+              <?php if ((int)$ingredient["partOfTheDay"] === 0) : ?>
+                <div class="ingredient-item" data-id="<?= $ingredient["d_ingredientId"] ?>">
+                  <li class="list-group-item bg-warning text-light m-1 d-flex align-items-center justify-content-between w-100" style="cursor: pointer">
+                    <div class="name"><?= $ingredient["ingredientName"] ?></div>
+                    <div class="data">
+                      <div>
+                        <?= $ingredient["current_calorie"] ?>Kcal
+                      </div>
+                    </div>
+                  </li>
+                </div>
+              <?php endif ?>
+            <?php endforeach ?>
+          </ul>
+        <?php endif ?>
+        <?php if (in_array(1, $partOfTheDay)) : ?>
+          <ul class="list-group border p-4 mb-4" style="box-shadow: -1px 4px 22px 0px rgba(34, 139, 191, 0.75);">
+            <div>
+              <h1 class="display-6">Tízórai</h1>
             </div>
             <?php foreach ($diaryData["diary_ingredients"] as $ingredient) : ?>
               <?php if ((int)$ingredient["partOfTheDay"] === 1) : ?>
                 <div class="ingredient-item" data-id="<?= $ingredient["d_ingredientId"] ?>">
-                  <li class="list-group-item bg-warning text-light m-1 d-flex align-items-center justify-content-between w-100" style="cursor: pointer">
+                  <li class="list-group-item bg-info text-light m-1 d-flex align-items-center justify-content-between w-100" style="cursor: pointer">
                     <div class="name"><?= $ingredient["ingredientName"] ?></div>
                     <div class="data">
                       <div>
@@ -104,14 +126,14 @@ $partOfTheDay = $diaryData["partOfTheDay"];
           </ul>
         <?php endif ?>
         <?php if (in_array(2, $partOfTheDay)) : ?>
-          <ul class="list-group border p-4">
+          <ul class="list-group border p-4 mb-4" style="box-shadow: -1px 4px 22px 0px rgba(34, 191, 34, 0.75);">
             <div>
-              <h1 class="display-6">Tízórai</h1>
+              <h1 class="display-6">Ebéd</h1>
             </div>
             <?php foreach ($diaryData["diary_ingredients"] as $ingredient) : ?>
               <?php if ((int)$ingredient["partOfTheDay"] === 2) : ?>
                 <div class="ingredient-item" data-id="<?= $ingredient["d_ingredientId"] ?>">
-                  <li class="list-group-item bg-warning text-light m-1 d-flex align-items-center justify-content-between w-100" style="cursor: pointer">
+                  <li class="list-group-item bg-success text-light m-1 d-flex align-items-center justify-content-between w-100" style="cursor: pointer">
                     <div class="name"><?= $ingredient["ingredientName"] ?></div>
                     <div class="data">
                       <div>
@@ -125,14 +147,56 @@ $partOfTheDay = $diaryData["partOfTheDay"];
           </ul>
         <?php endif ?>
         <?php if (in_array(3, $partOfTheDay)) : ?>
-          <ul class="list-group border p-4">
+          <ul class="list-group border p-4 mb-4" style="box-shadow: -1px 4px 22px 0px rgba(34, 34, 191, 0.75);">
             <div>
-              <h1 class="display-6">Ebéd</h1>
+              <h1 class="display-6">Uzsonna</h1>
             </div>
             <?php foreach ($diaryData["diary_ingredients"] as $ingredient) : ?>
               <?php if ((int)$ingredient["partOfTheDay"] === 3) : ?>
                 <div class="ingredient-item" data-id="<?= $ingredient["d_ingredientId"] ?>">
-                  <li class="list-group-item bg-warning text-light m-1 d-flex align-items-center justify-content-between w-100" style="cursor: pointer">
+                  <li class="list-group-item bg-primary text-light m-1 d-flex align-items-center justify-content-between w-100" style="cursor: pointer">
+                    <div class="name"><?= $ingredient["ingredientName"] ?></div>
+                    <div class="data">
+                      <div>
+                        <?= $ingredient["current_calorie"] ?>Kcal
+                      </div>
+                    </div>
+                  </li>
+                </div>
+              <?php endif ?>
+            <?php endforeach ?>
+          </ul>
+        <?php endif ?>
+        <?php if (in_array(4, $partOfTheDay)) : ?>
+          <ul class="list-group border p-4 mb-4" style="box-shadow: -1px 4px 22px 0px rgba(128, 128, 128, 0.75);">
+            <div>
+              <h1 class="display-6">Vacsora</h1>
+            </div>
+            <?php foreach ($diaryData["diary_ingredients"] as $ingredient) : ?>
+              <?php if ((int)$ingredient["partOfTheDay"] === 4) : ?>
+                <div class="ingredient-item" data-id="<?= $ingredient["d_ingredientId"] ?>">
+                  <li class="list-group-item bg-secondary text-light m-1 d-flex align-items-center justify-content-between w-100" style="cursor: pointer">
+                    <div class="name"><?= $ingredient["ingredientName"] ?></div>
+                    <div class="data">
+                      <div>
+                        <?= $ingredient["current_calorie"] ?>Kcal
+                      </div>
+                    </div>
+                  </li>
+                </div>
+              <?php endif ?>
+            <?php endforeach ?>
+          </ul>
+        <?php endif ?>
+        <?php if (in_array(5, $partOfTheDay)) : ?>
+          <ul class="list-group border p-4 mb-4" style="box-shadow: -1px 4px 22px 0px rgba(191, 34, 34, 0.75);">
+            <div>
+              <h1 class="display-6">Nasi</h1>
+            </div>
+            <?php foreach ($diaryData["diary_ingredients"] as $ingredient) : ?>
+              <?php if ((int)$ingredient["partOfTheDay"] === 5) : ?>
+                <div class="ingredient-item" data-id="<?= $ingredient["d_ingredientId"] ?>">
+                  <li class="list-group-item bg-danger text-light m-1 d-flex align-items-center justify-content-between w-100" style="cursor: pointer">
                     <div class="name"><?= $ingredient["ingredientName"] ?></div>
                     <div class="data">
                       <div>

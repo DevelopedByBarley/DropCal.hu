@@ -1,4 +1,50 @@
 <?php
+
+define('PARTS_OF_THE_DAY', [
+    [
+        'id' => 0,
+        'value' => 'Reggeli',
+        'color' => 'warning',
+        'name' => 'breakfast',
+        'isSelected' => false,
+    ],
+    [
+        'id' => 1,
+        'value' => 'Tízórai',
+        'color' => 'info',
+        'name' => 'snack_1',
+        'isSelected' => false,
+    ],
+    [
+        'id' => 2,
+        'value' => 'Ebéd',
+        'color' => 'success',
+        'name' => 'lunch',
+        'isSelected' => false,
+    ],
+    [
+        'id' => 3,
+        'value' => 'Uzsonna',
+        'color' => 'primary',
+        'name' => 'snack_2',
+        'isSelected' => false,
+    ],
+    [
+        'id' => 4,
+        'value' => 'Vacsora',
+        'color' => 'secondary',
+        'name' => 'dinner',
+        'isSelected' => false,
+    ],
+    [
+        'id' => 5,
+        'value' => 'Nasi',
+        'color' => 'danger',
+        'name' => 'snack',
+        'isSelected' => false,
+    ],
+]);
+
 define('ALLERGENS', [
     [
         "allergenName" => "Glutén",

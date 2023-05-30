@@ -32,7 +32,7 @@ class APIModel
         $ingredientCounterData = $stmt->fetch(PDO::FETCH_ASSOC);
         $ingredientCount = (int)$ingredientCounterData["count"];
 
-   
+
         $counter = 0;
 
         for ($i = 0; $i < $ingredientCount; $i += $limit) {
@@ -40,8 +40,8 @@ class APIModel
         }
 
 
-        
-  
+
+
         return [
             "ingredients" => $ingredients,
             "number_of_page" => $counter
@@ -63,6 +63,8 @@ class APIModel
                 $ingredient["allergens"] = $allergens;
             }
         }
+        $ingredient["partsOfTheDay"] = $this->getCurrentPartOfTheDay(null);
+
 
         return $ingredient;
     }
@@ -268,8 +270,47 @@ class APIModel
                 $ingredient["allergens"] = $allergens;
             }
         }
+        $ingredient["partsOfTheDay"] = $this->getCurrentPartOfTheDay($ingredient["partOfTheDay"]);
 
         echo json_encode($ingredient);
+    }
+
+    private function getCurrentPartOfTheDay($part = null)
+    {
+
+        // Aktuális idő lekérése
+        $currentHour = date('H');
+        $parts = PARTS_OF_THE_DAY;
+
+        if(isset($part)) {
+            $parts[(int)$part]["isSelected"] = true;
+            return $parts;
+        }
+
+        // Switch utasítás az aktuális idő alapján
+        switch (true) {
+            case ($currentHour >= 5 && $currentHour < 10):
+                $parts[0]["isSelected"] = true;
+                break;
+            case ($currentHour >= 10 && $currentHour < 12):
+                // Műveletek a tízórai idősávban
+                $parts[1]["isSelected"] = true;
+                break;
+            case ($currentHour >= 12 && $currentHour < 15):
+                // Műveletek az ebéd idősávban
+                $parts[2]["isSelected"] = true;
+                break;
+            case ($currentHour >= 15 && $currentHour < 18):
+                // Műveletek az uzsonna idősávban
+                $parts[3]["isSelected"] = true;
+                break;
+            default:
+                // Műveletek, ha nincs megegyezés az idővel
+                $parts[4]["isSelected"] = true;
+                break;
+        }
+
+        return $parts;
     }
 
     public function updateIngredientForDiary($id, $body)

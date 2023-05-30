@@ -29,7 +29,7 @@ ingredientItems.forEach((item) => {
 function searchIngredients() {
   //I. Input mezőbe írunk valamit lekérjük az adatbázist és feltöltjük a state-t
   let name = Search.value;
-   
+
   if (name.length >= 2) {
     fetch(`/api/search/${name}`)
       .then((res) => res.json())
@@ -166,6 +166,7 @@ function getDiaryIngredientById(url, isIngredientForUpdate) {
   fetch(url)
     .then((res) => res.json())
     .then((data) => {
+      console.log(data);
       if (data) {
 
         isIngredientForUpdate ? state = {
@@ -184,6 +185,19 @@ function getDiaryIngredientById(url, isIngredientForUpdate) {
     });
 }
 
+function generatePartsOfTheDayTemplate(parts) {
+  let template = ``;
+  parts.forEach(part => {
+
+      template += `
+        <input type="radio" class="btn-check parts" name="partOfTheDay" id="${part.name}" autocomplete="off" ${part.isSelected ? 'checked' : ''} value="${part.id}">
+        <label class="btn btn-outline-${part.color}" for="${part.name}">${part.value}</label>
+      `
+  });
+
+  return template;
+}
+
 //  template kigenerálása
 function generateDiaryFormTemplate() {
   const Units = state.hasOwnProperty("ingredientForUpdate")
@@ -195,6 +209,7 @@ function generateDiaryFormTemplate() {
     : state.ingredient; // Ennek függvényében töltjük fel az ingredient értékét
   let template = "";
   let unitTemplate = generateUnitTemplate(Units);
+  let partsOfTheDayTemplate = generatePartsOfTheDayTemplate(ingredient.partsOfTheDay);
   let quantity = localStorage.getItem("quantity") ? localStorage.getItem("quantity") : ingredient.unit_quantity;
   let allergensTemplate = "";
 
@@ -237,23 +252,29 @@ function generateDiaryFormTemplate() {
               <b><span id="result-of-calorie" ></span> Kcal</b>
           </div>
 
-            <div class="d-flex text-center">
-              <div class="col-4 macros" >
-                <h5>Protein</h5> 
-                <span id="result-of-protein"></span>g
-              </div>
-              <div class="col-4 macros" >
-                <h5>Szénhidrát</h5>  
-                <span id="result-of-carb"></span>g
-              </div>
-              <div class="col-4 macros" >
-                <h5>Zsir</h5> 
-                <span id="result-of-fat"></span>g
-              </div>
-            </div>     
+          <div class="d-flex text-center">
+            <div class="col-4 macros" >
+              <h5>Protein</h5> 
+              <span id="result-of-protein"></span>g
+            </div>
+            <div class="col-4 macros" >
+              <h5>Szénhidrát</h5>  
+              <span id="result-of-carb"></span>g
+            </div>
+            <div class="col-4 macros" >
+              <h5>Zsir</h5> 
+              <span id="result-of-fat"></span>g
+            </div>
+          </div>
+
+         
           </div>
           <hr>
-       
+          <div class="col-12">
+            ${partsOfTheDayTemplate}
+        </div>
+        
+        <hr>
           <div class="row text-center mt-2">
             <div class="col-12">
               <h4>GI <br>${ingredient.glycemicIndex ? ingredient.glycemicIndex : 0}</h4>
@@ -270,7 +291,7 @@ function generateDiaryFormTemplate() {
           
           <div class="modal-footer">
           <div class="col-12">
-            <button data-id="${ingredient.d_ingredientId}" class="btn ${isIngredientForUpdate ? 'btn-warning' : 'btn-primary'} text-light" id="send">${isIngredientForUpdate ? 'Frissit' : 'Hozzáad  ' }</button>
+            <button data-id="${ingredient.d_ingredientId}" class="btn ${isIngredientForUpdate ? 'btn-warning' : 'btn-primary'} text-light" id="send">${isIngredientForUpdate ? 'Frissit' : 'Hozzáad  '}</button>
             ${isIngredientForUpdate ? ` <button class='btn btn-danger text-light' data-id="${ingredient.d_ingredientId}" id='delete'>Törlés</button>` : ""}
             </div>
           </div>
@@ -289,6 +310,7 @@ function renderDiaryModal() {
   // Kirajzold formból kikérjük az elemeket
   const DiaryBtn = document.getElementById("diary-btn");
   const Units = document.querySelectorAll(".units");
+  const Parts = document.querySelectorAll(".parts");
   const Quantity = document.getElementById("quantity");
   const DeleteBtn = document.getElementById("delete");
 
@@ -331,16 +353,23 @@ function renderDiaryModal() {
     DiaryBtn.onclick = () => renderDiaryModal();
   }
 
-  
+
   // Küldés a backendnek ÚJ ingredient hozzáadása esetén vagy UPDATE esetén
   sendBtn.addEventListener('click', (event) => {
     event.preventDefault();
     const Ingredient = state.hasOwnProperty("ingredientForUpdate")
-    ? state.ingredientForUpdate
-    : state.ingredient
+      ? state.ingredientForUpdate
+      : state.ingredient
     let isIngredientForUpdate = state.hasOwnProperty("ingredientForUpdate"); // Megnézzük hogy a state feltöltése updatelni való ingredientből vagy nem
     let date = event.target.parentElement.parentElement.parentElement.parentElement.parentElement.dataset.date
+    let selectedPart;
 
+    for (var i = 0; i < Parts.length; i++) {
+      if (Parts[i].checked) {
+        selectedPart = Parts[i].value;
+        break;
+      }
+    }
 
     let newIngredient = {
       name: Ingredient.ingredientName,
@@ -349,7 +378,7 @@ function renderDiaryModal() {
       commonUnit: Ingredient.common_unit,
       common_unit_quantity: parseInt(Ingredient.common_unit_quantity),
       common_unit_ex: Ingredient.common_unit_ex,
-      partOfTheDay: 1,
+      partOfTheDay: selectedPart,
       selectedUnit: Ingredient.ingredientUnits.find(ingredient => ingredient.isSelected === true),
       calorie: Ingredient.calorie,
       protein: Ingredient.protein,
@@ -364,7 +393,7 @@ function renderDiaryModal() {
     }
 
 
-    
+
     if (isIngredientForUpdate) {
       let id = event.target.dataset.id;
       let date = event.target.parentElement.parentElement.parentElement.parentElement.parentElement.dataset.date
@@ -376,24 +405,24 @@ function renderDiaryModal() {
     fetchIngredient("/api/ingredient-new", newIngredient, date);
     localStorage.removeItem('quantity');
   })
-  
-  
+
+
   if (DeleteBtn) {
     DeleteBtn.addEventListener('click', (event) => {
       let date = event.target.parentElement.parentElement.parentElement.parentElement.parentElement.dataset.date
       let id = event.target.dataset.id;
-  
-      
+
+
       fetch(`/api/ingredient-delete/${id}`)
-      .then(res => res.json())
-      .then(data => {
-        let state = data.state;
-        if (state) {
-          window.location.href = `/diary/currentDiary?date=${date}`
-          localStorage.removeItem('quantity');
-        }
-      });
-      
+        .then(res => res.json())
+        .then(data => {
+          let state = data.state;
+          if (state) {
+            window.location.href = `/diary/currentDiary?date=${date}`
+            localStorage.removeItem('quantity');
+          }
+        });
+
     })
   }
 }
