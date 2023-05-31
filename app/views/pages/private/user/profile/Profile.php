@@ -1,5 +1,8 @@
 <?php
 $profile = $params["user"];
+echo "<pre>";
+var_dump($profile);
+exit;
 ?>
 
 <div class="row mt-5 mb-5">

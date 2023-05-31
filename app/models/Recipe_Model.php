@@ -151,7 +151,8 @@ class RecipeModel extends UserModel
         $stmt->execute();
     }
 
-    public function getRecipeByIngredientId($id) {
+    public function getRecipeByIngredientId($id)
+    {
         $stmt = $this->pdo->prepare("SELECT * FROM `recipes` WHERE `ingredientRefId` = :id");
         $stmt->bindParam(":id", $id);
         $stmt->execute();
@@ -407,7 +408,7 @@ class RecipeModel extends UserModel
             }
         }
 
-   
+
 
 
         $recipeIngredients = json_decode($body["ingredients"], true);
@@ -675,6 +676,16 @@ class RecipeModel extends UserModel
         }
     }
 
+    private function getIngredientDataForRecipe($ingredientRefId)
+    {
+        $stmt = $this->pdo->prepare("SELECT `ingredientCategorie`,`unit`, `unit_quantity`, `common_unit`, `common_unit_quantity`, `common_unit_ex` FROM `ingredients` WHERE `ingredientId` = :id");
+        $stmt->bindParam(":id", $ingredientRefId);
+        $stmt->execute();
+        $ingredient = $stmt->fetch(PDO::FETCH_ASSOC);
+        $ingredient["ingredientUnit"] = $ingredient["unit_quantity"] . "" . $ingredient["unit"];
+
+        return $ingredient;
+    }
 
     public function getRecipeById($id)
     {
@@ -682,6 +693,11 @@ class RecipeModel extends UserModel
         $stmt->bindParam(":id", $id);
         $stmt->execute();
         $recipe = $stmt->fetch(PDO::FETCH_ASSOC);
+        $ingredientRefId = $recipe["ingredientRefId"];
+
+        if (isset($ingredientRefId) && $ingredientRefId !== '') {
+            $recipe["ingredientData"] = $this->getIngredientDataForRecipe($ingredientRefId);
+        }
 
         $ingredients = $this->getIngredientsByRecipeId($recipe["recipeId"]);
         $steps = $this->getStepsByRecipeId($recipe["recipeId"]);

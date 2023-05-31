@@ -152,7 +152,6 @@ class IngredientModel extends DiaryModel
 
     public function updateIngredient($ingredientId, $body)
     {
-
         $allergens = json_decode($body["allergens"], true);
         $ingredientName = $body["ingredientName"];
         $ingredientCategorie =  $body["ingredientCategorie"];
@@ -188,9 +187,10 @@ class IngredientModel extends DiaryModel
         `glycemicIndex` = :glycemicIndex, 
         `isRecommended` = :isRecommended, 
         `isAccepted` = :isAccepted, 
-        `isFromRecipe` = :isFromRecipe, 
+        `isFromRecipe` = :isFromRecipe 
         WHERE 
         `ingredients`.`ingredientId` = :ingredientId;");
+
 
         $stmt->bindParam(':ingredientName', $ingredientName, PDO::PARAM_STR);
         $stmt->bindParam(':ingredientCategorie', $ingredientCategorie, PDO::PARAM_STR);
@@ -258,14 +258,15 @@ class IngredientModel extends DiaryModel
         return $allergens;
     }
 
-    public function checkIsIngredientFromRecipes($id) {
+    public function checkIsIngredientFromRecipes($id)
+    {
         $stmt = $this->pdo->prepare("SELECT * FROM `ingredients` WHERE `ingredientId` = :id");
         $stmt->bindParam(":id", $id);
         $stmt->execute();
         $ingredient = $stmt->fetch(PDO::FETCH_ASSOC);
         $isFromRecipe = $ingredient["isFromRecipe"];
 
-        
+
         return $isFromRecipe;
     }
 }

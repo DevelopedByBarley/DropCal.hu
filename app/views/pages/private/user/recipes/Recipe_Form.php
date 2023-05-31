@@ -1,5 +1,6 @@
 <?php
 $recipeForUpdate = $params["recipeForUpdate"] ?? null;
+$recipeIngredientData = $recipeForUpdate["ingredientData"] ?? null;
 
 ?>
 
@@ -57,7 +58,7 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 
 
 
-				<div class="row mb-4">
+				<div class="row mb-4 mt-5">
 
 					<div class="col-12 col-sm-6  mb-2">
 						<div class="form-outline mb-4 w-100">
@@ -65,7 +66,7 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 							<select class="form-select" aria-label="Default select example" id="ingredientCategorie" name="ingredientCategorie" required>
 								<option value="" disabled selected>Választ</option>$
 								<?php foreach ($params["ingredientCategories"] as $categorie) : ?>
-									<option value="<?= $categorie ?>" <?php echo (isset($ingredient) && $ingredient["ingredientCategorie"] === $categorie) ? "selected" : "" ?>> <?= $categorie ?></option>
+									<option value="<?= $categorie ?>" <?php echo (isset($recipeForUpdate) && $recipeIngredientData["ingredientCategorie"] === $categorie) ? "selected" : "" ?>> <?= $categorie ?></option>
 								<?php endforeach ?>
 							</select>
 						</div>
@@ -77,27 +78,34 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 							<select class="form-select" aria-label="Default select example" id="unit" name="unit" required>
 								<option value="" disabled selected>Választ</option>
 								<?php foreach ($params["units"] as $unit) : ?>
-									<option value="<?= $unit ?>" <?php echo (isset($ingredient) && $ingredientUnit === $unit) ? "selected" : "" ?>> <?= $unit ?></option>
+									<option value="<?= $unit ?>" <?php echo (isset($recipeForUpdate) && $recipeIngredientData["ingredientUnit"] === $unit) ? "selected" : "" ?>> <?= $unit ?></option>
 								<?php endforeach ?>
 
 							</select>
 						</div>
 					</div>
-
+					<hr class="mt-3 mb-3">
 					<div class="row mb-4">
-						<div class="col-6">
+						<div class="col-xs-12 col-lg-3 d-flex align-items-center justify-content-center mb-2">
+							<div class="form-check form-switch">
+								<input class="form-check-input mb-4" style="font-size: 1.5rem; position: relative; top: -5px;" type="checkbox" id="common_unit_check" <?php echo (isset($recipeForUpdate) && $recipeIngredientData["common_unit"] !== '') ? "checked" : "" ?> />
+								<label class="form-check-label" for="form11Example4">
+									Gyakori egység megadása
+								</label>
+							</div>
+						</div>
+						<div class="col-xs-12 col-lg-4 mb-5">
 							<label class="form-label" for="form1Example1">Gyakori egység</label>
-							<select class="form-select" id="common_unit" aria-label="Default select example" name="common_unit">
+							<select class="form-select" id="common_unit" aria-label="Default select example" name="common_unit" disabled>
 								<option value="" disabled selected>Választ</option>
 								<?php foreach ($params["common_units"] as $unit) : ?>
-									<option value="<?= $unit ?>" <?php echo (isset($ingredient) && $unit === $ingredient["common_unit"]) ? "selected" : "" ?>> <?= $unit ?></option>
-
+									<option value="<?= $unit ?>" <?php echo (isset($recipeForUpdate) && $unit === $recipeIngredientData["common_unit"]) ? "selected" : "" ?>> <?= $unit ?></option>
 								<?php endforeach ?>
 							</select>
 						</div>
-						<div class="col-6">
+						<div class="col-xs-12 col-lg-4 mb-5">
 							<label class="form-label" for="form1Example1">Gyakor egység súlya (g / ml)</label>
-							<input required type="number" min="1" id="common_unit_quantity" class="form-control" placeholder="Gyakori egység súlya" style="background: none; border: none; border-bottom: 1px solid" name="common_unit_quantity" value="<?= isset($ingredient) ? $ingredient["common_unit_quantity"] : '' ?>" />
+							<input required type="number" min="1" id="common_unit_quantity" class="form-control" placeholder="Gyakori egység súlya" style="background: none; border: none; border-bottom: 1px solid" name="common_unit_quantity" value="<?= isset($recipeIngredientData) ? $recipeIngredientData["common_unit_quantity"] : '' ?>" disabled />
 						</div>
 					</div>
 				</div>

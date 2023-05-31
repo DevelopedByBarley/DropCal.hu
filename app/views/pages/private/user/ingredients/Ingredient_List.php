@@ -29,7 +29,7 @@
                     <tbody>
                         <?php foreach ($params["ingredients"] as $ingredient) : ?>
                             <tr>
-                                <th scope="row"><?= $ingredient["ingredientId"] ?></th>
+                                <th scope="row"><?= (int)$ingredient["isFromRecipe"] === 1 ? "<img src='/public/assets/icons/recipe.png' style='height: 30px; width: 30px;'/>" : "<img src='/public/assets/icons/food.png' style='height: 30px; width: 30px;'/>" ?></th>
                                 <td><?= $ingredient["ingredientName"] ?></td>
                                 <td><?= $ingredient["ingredientCategorie"] ?></td>
                                 <td><?= $ingredient["unit_quantity"] . "" . $ingredient["unit"] ?></td>

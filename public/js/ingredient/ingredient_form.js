@@ -77,13 +77,17 @@ const allergens = [
     isSelected: false,
   },
 ];
-// Ha update-lünk kiszedjük 
 
-// Oldal töltődése után kiüritjük a localstorage-t és elinditjuk a render függvényt
+
+window.onload = () => {
+  localStorage.setItem("allergens", JSON.stringify([]));
+}
+
 
 getValuesOfAllergensForUpdate();
 render();
 checkNoAllergenIsActive();
+
 
 
 
@@ -185,6 +189,7 @@ if (noAllergen) {
           allergenId: 0,
         },
       ];
+
       localStorage.removeItem("allergens");
       localStorage.setItem("allergens", JSON.stringify(noAllergen));
 
@@ -193,7 +198,6 @@ if (noAllergen) {
     } else {
       let index = selectedAllergens.findIndex(allergen => allergen.allergenId === 0);
       selectedAllergens.splice(index, 1);
-
       localStorage.setItem("allergens", JSON.stringify(selectedAllergens));
     }
   });
@@ -204,6 +208,9 @@ if (noAllergen) {
 // Új étel küldése
 function sendIngredient(event) {
   event.preventDefault();
+  let allergensData = JSON.parse(localStorage.getItem("allergens"));
+  let isAllergensEmpty = allergensData.length < 1;
+
   let isRecommended = event.target.elements.isRecommended.checked;
   let glychemicIndex = event.target.elements.glychemicIndex;
   let allergens = event.target.elements.allergens;
@@ -212,6 +219,8 @@ function sendIngredient(event) {
   let allergensAlert = document.getElementById("allergens-alert");
   let isIngredientForUpdate = event.target.dataset.exist;
   let ingredientId = event.target.dataset.id;
+
+
 
 
 
@@ -226,13 +235,13 @@ function sendIngredient(event) {
     carb: event.target.elements.carb.value,
     fat: event.target.elements.fat.value,
     glychemicIndex: glychemicIndex.value,
-    allergens: allergens.value,
+    allergens: isAllergensEmpty ? JSON.stringify([]) : allergens.value,
     isRecommended: isRecommended ? "on" : "",
   };
 
 
-  let allergensData = JSON.parse(localStorage.getItem("allergens"));
-  let isAllergensEmpty = allergensData.length < 1;
+
+
 
   // Az a szekció, hogy ha be van kapcsolva az isRecommended és a glikémiás index vagy az allergének valamelyike nincs bepipálva, ne engedje elküldeni a formot
 
@@ -259,10 +268,12 @@ function sendIngredient(event) {
   // Form elküldése
   if (!isIngredientForUpdate) {
     fetchIngredientData("/ingredient/new", newIngredient);
+    localStorage.removeItem("allergens");
     return;
   }
 
   fetchIngredientData(`/ingredient/update/${ingredientId}`, newIngredient)
+  localStorage.removeItem("allergens");
 }
 
 function fetchIngredientData(url, body) {
@@ -327,3 +338,25 @@ function renderButtons(allergens) {
   }
 }
 
+const commonUnitCheck = document.getElementById('common_unit_check');
+const commonUnit = document.getElementById('common_unit');
+const commonUnitQuantity = document.getElementById('common_unit_quantity');
+
+
+commonUnitCheck.addEventListener('change', function () {
+  checkIsCommonUnitExist();
+});
+
+checkIsCommonUnitExist();
+
+function checkIsCommonUnitExist() {
+  if (commonUnitCheck.checked) {
+    commonUnit.disabled = false;
+    commonUnitQuantity.disabled = false;
+  } else {
+    commonUnit.disabled = true;
+    commonUnitQuantity.disabled = true;
+    commonUnit.value = ''; // Mező kiürítése
+    commonUnitQuantity.value = ''; // Mező kiürítése
+  }
+}

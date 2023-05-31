@@ -131,7 +131,7 @@ class APIModel
         }
 
 
-        if (isset($ingredient["common_unit"])) {
+        if (isset($ingredient["common_unit"]) && $ingredient["common_unit"] !== '') {
             $ingredient["ingredientUnits"][] = [
                 "index" => 3,
                 "unitName" => $ingredient["common_unit"],

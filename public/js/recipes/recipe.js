@@ -7,6 +7,12 @@ const SearchBoxContainer = document.getElementById("search-box-container");
 const RecipeForUpdate = document.getElementById("recipe-for-update");
 let recipeIngredientState = localStorage.getItem("recipeIngredientState") ? JSON.parse(localStorage.getItem("recipeIngredientState")) : [];
 
+const commonUnitCheck = document.getElementById('common_unit_check');
+const commonUnit = document.getElementById('common_unit');
+const commonUnitQuantity = document.getElementById('common_unit_quantity');
+
+console.log(commonUnit);
+
 const StepButton = document.getElementById("step");
 const StepsContainer = document.getElementById("steps-container");
 let stepState = localStorage.getItem("stepState") ? JSON.parse(localStorage.getItem("stepState")) : [
@@ -15,6 +21,25 @@ let stepState = localStorage.getItem("stepState") ? JSON.parse(localStorage.getI
         content: ""
     }
 ];
+
+
+commonUnitCheck.addEventListener('change', function () {
+  checkIsCommonUnitExist();
+});
+
+checkIsCommonUnitExist();
+
+function checkIsCommonUnitExist() {
+  if (commonUnitCheck.checked) {
+    commonUnit.disabled = false;
+    commonUnitQuantity.disabled = false;
+  } else {
+    commonUnit.disabled = true;
+    commonUnitQuantity.disabled = true;
+    commonUnit.value = ''; // Mező kiürítése
+    commonUnitQuantity.value = ''; // Mező kiürítése
+  }
+}
 
 
 if (RecipeForUpdate) {
@@ -812,6 +837,21 @@ if (StepButton) {
 }
 
 renderSteps();
+
+
+
+
+
+
+
+
+
+
+commonUnitCheck.addEventListener('change', function () {
+    checkIsCommonUnitExist();
+  });
+  
+  checkIsCommonUnitExist();
 
 
 // UUID

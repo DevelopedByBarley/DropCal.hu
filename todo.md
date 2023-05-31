@@ -1,4 +1,13 @@
-2023.14.25
+2023.05.31
 
-1. Ki kell generálnunk a kalóriát, aminek az értéke vagy input változásra dinamikusan generálódjon
-2. Unit button változásra is automatikusan generálódnia kell a kalórának
+
+//1. Gyakori egységek opcionálissá tétele checkbox segítségével ingredients-nél és recipes-nél is!
+2. Profil hiányzó adatok pótlása
+//3. Recipes ingredients szekció update-nél form elementek feltöltése
+//4. Allergén bugfix
+
+
+
+További teendők : 
+
+1. ADMIN RENDSZER MEGTERVEZÉSE
