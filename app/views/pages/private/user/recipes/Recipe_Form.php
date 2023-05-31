@@ -53,6 +53,58 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 					</div>
 				</div>
 
+
+
+
+
+				<div class="row mb-4">
+
+					<div class="col-12 col-sm-6  mb-2">
+						<div class="form-outline mb-4 w-100">
+							<label class="form-label" for="form1Example2">Kategória</label>
+							<select class="form-select" aria-label="Default select example" id="ingredientCategorie" name="ingredientCategorie" required>
+								<option value="" disabled selected>Választ</option>$
+								<?php foreach ($params["ingredientCategories"] as $categorie) : ?>
+									<option value="<?= $categorie ?>" <?php echo (isset($ingredient) && $ingredient["ingredientCategorie"] === $categorie) ? "selected" : "" ?>> <?= $categorie ?></option>
+								<?php endforeach ?>
+							</select>
+						</div>
+					</div>
+
+					<div class="col-12 col-sm-6  mb-2">
+						<div class="form-outline mb-4 w-100">
+							<label class="form-label" for="form1Example2">Egység</label>
+							<select class="form-select" aria-label="Default select example" id="unit" name="unit" required>
+								<option value="" disabled selected>Választ</option>
+								<?php foreach ($params["units"] as $unit) : ?>
+									<option value="<?= $unit ?>" <?php echo (isset($ingredient) && $ingredientUnit === $unit) ? "selected" : "" ?>> <?= $unit ?></option>
+								<?php endforeach ?>
+
+							</select>
+						</div>
+					</div>
+
+					<div class="row mb-4">
+						<div class="col-6">
+							<label class="form-label" for="form1Example1">Gyakori egység</label>
+							<select class="form-select" id="common_unit" aria-label="Default select example" name="common_unit">
+								<option value="" disabled selected>Választ</option>
+								<?php foreach ($params["common_units"] as $unit) : ?>
+									<option value="<?= $unit ?>" <?php echo (isset($ingredient) && $unit === $ingredient["common_unit"]) ? "selected" : "" ?>> <?= $unit ?></option>
+
+								<?php endforeach ?>
+							</select>
+						</div>
+						<div class="col-6">
+							<label class="form-label" for="form1Example1">Gyakor egység súlya (g / ml)</label>
+							<input required type="number" min="1" id="common_unit_quantity" class="form-control" placeholder="Gyakori egység súlya" style="background: none; border: none; border-bottom: 1px solid" name="common_unit_quantity" value="<?= isset($ingredient) ? $ingredient["common_unit_quantity"] : '' ?>" />
+						</div>
+					</div>
+				</div>
+
+
+
+
 				<div class="row">
 					<div class="col-12">
 						<h1 class="display-5 text-center mt-5 mb-4">Milyen étkezésre ajánlod? <span><i style="font-size: .5rem; position: relative; top: -40px" class="bi bi-asterisk"></i></span></h1>
@@ -159,7 +211,7 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 
 				</div>
 
-				
+
 				<div class="row mb-5 mt-4 p-2 text-light bg-danger">
 					<div class="col-12 p-2">
 						<div class="col-xs-12 d-flex align-items-center justify-content-center">
@@ -167,15 +219,14 @@ $recipeForUpdate = $params["recipeForUpdate"] ?? null;
 								<label class="form-check-label" for="isRecipeSugarFree" style="position: relative; top: 10px;">
 									<b> Publikálásra ajánlom a receptet!</b>
 								</label>
-								<input class="form-check-input" type="checkbox" id="isRecommended" name="isRecommended" style="font-size: 1.7rem; cursor: pointer" 
-								<?php echo  isset($recipeForUpdate) && (int)$recipeForUpdate["isRecommended"] === 1 ? 'checked' : '' ?> />
+								<input class="form-check-input" type="checkbox" id="isRecommended" name="isRecommended" style="font-size: 1.7rem; cursor: pointer" <?php echo  isset($recipeForUpdate) && (int)$recipeForUpdate["isRecommended"] === 1 ? 'checked' : '' ?> />
 							</div>
 						</div>
 					</div>
 				</div>
 
 				<div class="text-center">
-					<button type="submit" class="btn btn-outline-dark btn-block mb-4 mt-5">Recept elküldése</button>	
+					<button type="submit" class="btn btn-outline-dark btn-block mb-4 mt-5">Recept elküldése</button>
 				</div>
 			</form>
 		</div>

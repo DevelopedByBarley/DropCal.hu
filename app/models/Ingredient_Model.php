@@ -28,7 +28,7 @@ class IngredientModel extends DiaryModel
     public function addIngredient($body)
     {
 
-        
+
 
         $allergens = json_decode($body["allergens"], true);
         $ingredientName = $body["ingredientName"];
@@ -47,8 +47,9 @@ class IngredientModel extends DiaryModel
         $isRecommended = isset($body["isRecommended"]) && $body["isRecommended"] !== "" ? 1 : 0;
         $isAccepted = $isRecommended === 0 ? null : 0;
         $userRefId = $_SESSION["userId"] ?? null;
-        
-   
+        $isFromRecipe = 0;
+
+
         $stmt = $this->pdo->prepare("INSERT INTO `ingredients` VALUES 
             (NULL, 
             :ingredientName, 
@@ -65,6 +66,7 @@ class IngredientModel extends DiaryModel
             :glycemicIndex, 
             :isRecommended, 
             :isAccepted, 
+            :isFromRecipe, 
             :userRefId);
              ");
 
@@ -82,6 +84,7 @@ class IngredientModel extends DiaryModel
         $stmt->bindParam(':glycemicIndex', $glycemicIndex, PDO::PARAM_INT);
         $stmt->bindParam(':isRecommended', $isRecommended, PDO::PARAM_INT);
         $stmt->bindParam(':isAccepted', $isAccepted, PDO::PARAM_INT);
+        $stmt->bindParam(':isFromRecipe', $isFromRecipe, PDO::PARAM_INT);
         $stmt->bindParam(':userRefId', $userRefId, PDO::PARAM_INT);
 
         $stmt->execute();
@@ -109,6 +112,19 @@ class IngredientModel extends DiaryModel
 
     public function delete($id)
     {
+        $isFromRecipe = $this->checkIsIngredientFromRecipes($id);
+
+
+        if ((int)$isFromRecipe === 1) {
+            $stmt = $this->pdo->prepare("DELETE  FROM `recipes` WHERE `ingredientRefId` = :id");
+            $stmt->bindParam(":id", $id);
+            $stmt->execute();
+            $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
+
+
+
         $stmt = $this->pdo->prepare("DELETE FROM `ingredients` WHERE `ingredientId` = :id");
         $stmt->bindParam(":id", $id);
         $isSuccess = $stmt->execute();
@@ -137,8 +153,6 @@ class IngredientModel extends DiaryModel
     public function updateIngredient($ingredientId, $body)
     {
 
-        
-
         $allergens = json_decode($body["allergens"], true);
         $ingredientName = $body["ingredientName"];
         $ingredientCategorie =  $body["ingredientCategorie"];
@@ -155,6 +169,7 @@ class IngredientModel extends DiaryModel
         $glycemicIndex = $body["glychemicIndex"] !== '' ? (int)$body["glychemicIndex"] : null;
         $isRecommended = isset($body["isRecommended"]) && $body["isRecommended"] !== "" ? 1 : 0;
         $isAccepted = $isRecommended === 0 ? null : 0;
+        $isFromRecipe = 0;
 
 
 
@@ -172,7 +187,8 @@ class IngredientModel extends DiaryModel
         `fat` = :fat, 
         `glycemicIndex` = :glycemicIndex, 
         `isRecommended` = :isRecommended, 
-        `isAccepted` = :isAccepted 
+        `isAccepted` = :isAccepted, 
+        `isFromRecipe` = :isFromRecipe, 
         WHERE 
         `ingredients`.`ingredientId` = :ingredientId;");
 
@@ -190,12 +206,13 @@ class IngredientModel extends DiaryModel
         $stmt->bindParam(':glycemicIndex', $glycemicIndex, PDO::PARAM_INT);
         $stmt->bindParam(':isRecommended', $isRecommended, PDO::PARAM_INT);
         $stmt->bindParam(':isAccepted', $isAccepted, PDO::PARAM_INT);
+        $stmt->bindParam(':isFromRecipe', $isFromRecipe, PDO::PARAM_INT);
         $stmt->bindParam(':ingredientId', $ingredientId, PDO::PARAM_INT);
 
         $stmt->execute();
 
         if (empty($allergens)) {
-            $this->deleteAllergens($ingredientId);  
+            $this->deleteAllergens($ingredientId);
             return ([
                 "state" => true
             ]);
@@ -239,5 +256,16 @@ class IngredientModel extends DiaryModel
         $allergens = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $allergens;
+    }
+
+    public function checkIsIngredientFromRecipes($id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM `ingredients` WHERE `ingredientId` = :id");
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+        $ingredient = $stmt->fetch(PDO::FETCH_ASSOC);
+        $isFromRecipe = $ingredient["isFromRecipe"];
+
+        
+        return $isFromRecipe;
     }
 }

@@ -70,7 +70,10 @@ public function deleteRecipe($vars)
                 "isSuccess" => $_GET["isSuccess"] ?? null,
                 "recipes" => $recipes ?? null,
                 "meals" => MEALS,
-                "diets" => DIETS
+                "diets" => DIETS,
+                "ingredientCategories" => INGREDIENT_CATEGORIES,
+                "units" => UNITS,
+                "common_units" => COMMON_UNITS
             ]),
             "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0,
             "userId" => $userId,
@@ -108,7 +111,10 @@ public function deleteRecipe($vars)
                 "isSuccess" => $_GET["isSuccess"] ?? null,
                 "recipeForUpdate" => $recipeForUpdate ?? null,
                 "meals" => MEALS,
-                "diets" => DIETS
+                "diets" => DIETS,
+                "ingredientCategories" => INGREDIENT_CATEGORIES,
+                "units" => UNITS,
+                "common_units" => COMMON_UNITS
             ]),
             "currentStepId" =>  $_COOKIE["currentStepId"] ?? 0,
             "userId" => $userId,

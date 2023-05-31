@@ -1,12 +1,14 @@
 <?php
 require_once 'app/controllers/Diary_Controller.php';
 require_once "app/models/Ingredient_Model.php";
+require_once 'app/models/Recipe_Model.php';
 class IngredientController extends DiaryController
 {
     private $ingredientModel;
     private $loginChecker;
     private $userModel;
     private $renderer;
+    private $recipeModel;
     public function __construct()
     {
         parent::__construct();
@@ -14,6 +16,7 @@ class IngredientController extends DiaryController
         $this->loginChecker = new LoginChecker();
         $this->userModel = new UserModel();
         $this->renderer = new Renderer();
+        $this->recipeModel = new RecipeModel();
     }
 
     public function getIngredientsByUser()
@@ -46,13 +49,22 @@ class IngredientController extends DiaryController
     public function getIngredientForm()
     {
         $this->loginChecker->checkUserIsLoggedInOrRedirect();
-
+        
+        
         $userId = $_SESSION["userId"] ?? null;
         $user =  $this->userModel->getUserData();
         $profileImage = $user["profileImage"];
-
+        
         $ingredientId = $_GET["id"] ?? null;
         if ($ingredientId) {
+            $isIngredientByRecipe = $this->ingredientModel->checkIsIngredientFromRecipes($ingredientId);
+            if($isIngredientByRecipe) {
+                $recipe = $this->recipeModel->getRecipeByIngredientId($ingredientId);
+                $recipeId = $recipe["recipeId"];
+
+                header("Location: /user/recipe/update/$recipeId");
+                exit;
+            }
             $ingredient =  $this->ingredientModel->getIngredientById($ingredientId);
         }
 
@@ -86,6 +98,7 @@ class IngredientController extends DiaryController
         $ingredientId = $vars["id"];
 
         $isSuccess = $this->ingredientModel->updateIngredient($ingredientId, $body);
+
 
         echo json_encode($isSuccess);
 

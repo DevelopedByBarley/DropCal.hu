@@ -89,7 +89,7 @@ function renderSearchResult() {
   }
   searchResult.forEach((ingredient) => {
     searchResultTemplate += `
-    <li class="list-group-item ingredient-item w-100" data-id="${ingredient.ingredientId}" style="cursor:pointer;">${ingredient.ingredientName}</li>
+    <li class="list-group-item ingredient-item w-100" data-id="${ingredient.ingredientId ? ingredient.ingredientId : ingredient.recipeId}" style="cursor:pointer;">${ingredient.ingredientName ? ingredient.ingredientName : ingredient.recipe_name}</li>
       `;
   });
   searchResultContainer.innerHTML = searchResultTemplate;

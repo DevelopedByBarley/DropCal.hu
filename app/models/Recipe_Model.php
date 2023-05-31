@@ -39,12 +39,25 @@ class RecipeModel extends UserModel
             unlink("./public/assets/recipe_images/" . $image["r_imageName"]);
         }
 
+        $stmt = $this->pdo->prepare("SELECT `ingredientRefId` FROM  `recipes` WHERE recipeId = :id");
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+        $ingredientData = $stmt->fetch(PDO::FETCH_ASSOC);
+        $ingredientRefId = $ingredientData["ingredientRefId"];
+
+
+
+        $stmt = $this->pdo->prepare("DELETE FROM  `ingredients` WHERE ingredientId = :id");
+        $stmt->bindParam(":id", $ingredientRefId);
+        $isSuccess = $stmt->execute();
+
         $stmt = $this->pdo->prepare("DELETE FROM  `recipes` WHERE recipeId = :id");
         $stmt->bindParam(":id", $id);
         $isSuccess = $stmt->execute();
 
+
+
         return $isSuccess;
-  
     }
 
 
@@ -74,6 +87,80 @@ class RecipeModel extends UserModel
         return $recipes;
     }
 
+    private function updateIngredientByRecipe($body, $id, $macros)
+    {
+        $ingredientName = $body["name"];
+        $ingredientCategorie =  $body["ingredientCategorie"];
+        $unit = $body["unit"] === '100g' ? substr($body["unit"], -1) : substr($body["unit"], -2); // Az utolsó karakter (a "g") eltávolítása
+        $unit_quantity = substr($body["unit"], 0, -1); // Az utolsó karakter (a "g") kivágása
+        $calorie = (int)$body["calorie"];
+        $common_unit =  isset($body["common_unit"]) ?  $body["common_unit"] : "";
+        $common_unit_quantity = isset($body["common_unit_quantity"]) ? (int)$body["common_unit_quantity"] : 0;
+        $common_unit_ex = isset($common_unit) ? $unit : '';
+        $calorie = $macros["sumOfCalorie"];
+        $protein = $macros["sumOfProtein"];
+        $carb = $macros["sumOfCarb"];
+        $fat = $macros["sumOfFat"];
+        $glycemicIndex = $body["glychemicIndex"] !== '' ? (int)$body["glychemicIndex"] : null;
+        $isRecommended = isset($body["isRecommended"]) && $body["isRecommended"] !== "" ? 1 : 0;
+        $isAccepted = $isRecommended === 0 ? null : 0;
+        $isFromRecipe = 1;
+
+        $stmt = $this->pdo->prepare("SELECT `ingredientRefId` FROM  `recipes` WHERE recipeId = :id");
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+        $ingredientData = $stmt->fetch(PDO::FETCH_ASSOC);
+        $ingredientRefId = $ingredientData["ingredientRefId"];
+
+        $stmt = $this->pdo->prepare("UPDATE `ingredients` SET 
+        `ingredientName` = :ingredientName, 
+        `ingredientCategorie` = :ingredientCategorie, 
+        `unit` = :unit, 
+        `unit_quantity` = :unit_quantity, 
+        `calorie` = :calorie, 
+        `common_unit` = :common_unit, 
+        `common_unit_quantity` = :common_unit_quantity,
+        `common_unit_ex` = :common_unit_ex,
+        `protein` = :protein, 
+        `carb` = :carb, 
+        `fat` = :fat, 
+        `glycemicIndex` = :glycemicIndex, 
+        `isRecommended` = :isRecommended, 
+        `isAccepted` = :isAccepted, 
+        `isFromRecipe` = :isFromRecipe 
+        WHERE 
+        `ingredients`.`ingredientId` = :ingredientId;");
+
+        $stmt->bindParam(':ingredientName', $ingredientName, PDO::PARAM_STR);
+        $stmt->bindParam(':ingredientCategorie', $ingredientCategorie, PDO::PARAM_STR);
+        $stmt->bindParam(':unit', $unit, PDO::PARAM_STR);
+        $stmt->bindParam(':unit_quantity', $unit_quantity, PDO::PARAM_INT);
+        $stmt->bindParam(':calorie', $calorie, PDO::PARAM_INT);
+        $stmt->bindParam(':common_unit', $common_unit, PDO::PARAM_STR);
+        $stmt->bindParam(':common_unit_quantity', $common_unit_quantity, PDO::PARAM_INT);
+        $stmt->bindParam(':common_unit_ex', $common_unit_ex, PDO::PARAM_STR);
+        $stmt->bindParam(':protein', $protein, PDO::PARAM_INT);
+        $stmt->bindParam(':carb', $carb, PDO::PARAM_INT);
+        $stmt->bindParam(':fat', $fat, PDO::PARAM_INT);
+        $stmt->bindParam(':glycemicIndex', $glycemicIndex, PDO::PARAM_INT);
+        $stmt->bindParam(':isRecommended', $isRecommended, PDO::PARAM_INT);
+        $stmt->bindParam(':isAccepted', $isAccepted, PDO::PARAM_INT);
+        $stmt->bindParam(':isFromRecipe', $isFromRecipe, PDO::PARAM_INT);
+        $stmt->bindParam(':ingredientId', $ingredientRefId, PDO::PARAM_INT);
+
+        $stmt->execute();
+    }
+
+    public function getRecipeByIngredientId($id) {
+        $stmt = $this->pdo->prepare("SELECT * FROM `recipes` WHERE `ingredientRefId` = :id");
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+        $recipe = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $recipe;
+    }
+
+
     public function update($body, $files, $recipeId, $userId)
     {
         $recipeIngredients = json_decode($body["ingredients"], true);
@@ -94,7 +181,9 @@ class RecipeModel extends UserModel
         $isRecommended = isset($body["isRecommended"]) && $body["isRecommended"] === 'on' ? 1 : 0;
         $isAccepted = isset($isRecommended) ? 0 : "";
 
-        
+
+        $this->updateIngredientByRecipe($body, $recipeId, $macros);
+
 
         $stmt = $this->pdo->prepare(
             "UPDATE `recipes` SET 
@@ -141,7 +230,6 @@ class RecipeModel extends UserModel
 
             if ($files["files"]["name"][0] !== "") $this->updateRecipeImages($files, $recipeId);
         }
-
     }
 
     private function updateRecipeDiets($diets, $recipeId)
@@ -296,26 +384,49 @@ class RecipeModel extends UserModel
     public function addRecipe($body, $files, $userId)
     {
 
-     
-    
+        $macros = json_decode($body["macros"], true);
+        $ingredientInsertId = $this->insertIngredientByRecipe($body, $macros);
+        $recipeAllergens = json_decode($body["allergens"], true);
+        $ret = [];
+        foreach (ALLERGENS as $allergen) {
+            foreach ($recipeAllergens as $recipeAllergen) {
+                if ($recipeAllergen === $allergen["allergenId"]) {
+                    $ret[] = $allergen;
+                }
+            }
+        }
+
+
+        if ($ret && !empty($ret)) {
+            foreach ($ret as $allergen) {
+                $stmt = $this->pdo->prepare("INSERT INTO `ingredient_allergens` VALUES (NULL, :allergenNumber, :allergenName, :ingredientRefId);");
+                $stmt->bindParam(":allergenNumber", $allergen["allergenId"]);
+                $stmt->bindParam(":allergenName", $allergen["allergenName"]);
+                $stmt->bindParam(":ingredientRefId", $ingredientInsertId);
+                $stmt->execute();
+            }
+        }
+
+   
+
 
         $recipeIngredients = json_decode($body["ingredients"], true);
         $steps = $body["steps"];
-        $macros = json_decode($body["macros"], true);
         $recipe_name = $body["name"];
-        $meal = $body["meal"];
-        $diet = $body["diet"];
+        $meal = isset($body["meal"]) ? $body["meal"] : null;
+        $diet = isset($body["diet"]) ? $body["diet"] : null;
         $calorie = $macros["sumOfCalorie"];
         $protein = $macros["sumOfProtein"];
         $carb = $macros["sumOfCarb"];
         $fat = $macros["sumOfFat"];
         $GI = $body["glycemic_index_summary"];
         $allergens = $body["allergens"];
-        $isForDiab = $body["isForDiab"] === 'on' ? 1 : 0;
+        $isForDiab = (isset($body["isForDiab"]) && $body["isForDiab"]) === 'on' ? 1 : 0;
         $video = isset($body["video"]) ? $body["video"] : null;
         $description = $body["description"];
         $isRecommended = isset($body["isRecommended"]) && $body["isRecommended"] === 'on' ? 1 : 0;
         $isAccepted = isset($isRecommended) ? 0 : "";
+
 
         $stmt = $this->pdo->prepare(
             "INSERT INTO 
@@ -334,7 +445,9 @@ class RecipeModel extends UserModel
         :description,
         :isRecommended, 
         :isAccepted, 
-        :userRefId);"
+        :userRefId,
+        :ingredientRefId
+        );"
         );
 
 
@@ -351,6 +464,7 @@ class RecipeModel extends UserModel
         $stmt->bindParam(':isRecommended', $isRecommended, PDO::PARAM_INT);
         $stmt->bindParam(':isAccepted', $isAccepted, PDO::PARAM_INT);
         $stmt->bindParam(':userRefId', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':ingredientRefId', $ingredientInsertId, PDO::PARAM_INT);
 
         $stmt->execute();
 
@@ -364,6 +478,70 @@ class RecipeModel extends UserModel
             $this->insertRecipeDiets($diet, $lastInsertedId);
             $this->insertRecipeMeals($meal, $lastInsertedId);
         }
+    }
+
+    private function insertIngredientByRecipe($body, $macros)
+    {
+        $ingredientName = $body["name"];
+        $ingredientCategorie =  $body["ingredientCategorie"];
+        $unit = $body["unit"] === '100g' ? substr($body["unit"], -1) : substr($body["unit"], -2); // Az utolsó karakter (a "g") eltávolítása
+        $unit_quantity = substr($body["unit"], 0, -1); // Az utolsó karakter (a "g") kivágása
+        $common_unit =  isset($body["common_unit"]) ?  $body["common_unit"] : "";
+        $common_unit_quantity = isset($body["common_unit_quantity"]) ? (int)$body["common_unit_quantity"] : 0;
+        $common_unit_ex = isset($common_unit) ? $unit : '';
+        $calorie = $macros["sumOfCalorie"];
+        $protein = $macros["sumOfProtein"];
+        $carb = $macros["sumOfCarb"];
+        $fat = $macros["sumOfFat"];
+        $GI = $body["glycemic_index_summary"];
+        $isRecommended = isset($body["isRecommended"]) && $body["isRecommended"] === 'on' ? 1 : 0;
+        $isAccepted = isset($isRecommended) ? 0 : "";
+        $isFromRecipe = 1;
+        $userRefId = $_SESSION["userId"] ?? null;
+
+
+
+
+        $stmt = $this->pdo->prepare("INSERT INTO `ingredients` VALUES 
+        (NULL, 
+        :ingredientName, 
+        :ingredientCategorie, 
+        :unit, 
+        :unit_quantity, 
+        :calorie, 
+        :common_unit,
+        :common_unit_quantity,
+        :common_unit_ex,
+        :protein, 
+        :carb, 
+        :fat,
+        :glycemicIndex, 
+        :isRecommended, 
+        :isAccepted, 
+        :isFromRecipe, 
+        :userRefId);
+         ");
+
+        $stmt->bindParam(':ingredientName', $ingredientName, PDO::PARAM_STR);
+        $stmt->bindParam(':ingredientCategorie', $ingredientCategorie, PDO::PARAM_STR);
+        $stmt->bindParam(':unit', $unit, PDO::PARAM_STR);
+        $stmt->bindParam(':unit_quantity', $unit_quantity, PDO::PARAM_INT);
+        $stmt->bindParam(':calorie', $calorie, PDO::PARAM_INT);
+        $stmt->bindParam(':common_unit', $common_unit, PDO::PARAM_STR);
+        $stmt->bindParam(':common_unit_quantity', $common_unit_quantity, PDO::PARAM_INT);
+        $stmt->bindParam(':common_unit_ex', $common_unit_ex, PDO::PARAM_STR);
+        $stmt->bindParam(':protein', $protein, PDO::PARAM_INT);
+        $stmt->bindParam(':carb', $carb, PDO::PARAM_INT);
+        $stmt->bindParam(':fat', $fat, PDO::PARAM_INT);
+        $stmt->bindParam(':glycemicIndex', $GI, PDO::PARAM_INT);
+        $stmt->bindParam(':isRecommended', $isRecommended, PDO::PARAM_INT);
+        $stmt->bindParam(':isAccepted', $isAccepted, PDO::PARAM_INT);
+        $stmt->bindParam(':isFromRecipe', $isFromRecipe, PDO::PARAM_INT);
+        $stmt->bindParam(':userRefId', $userRefId, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $this->pdo->lastInsertId();
     }
 
 
@@ -528,7 +706,7 @@ class RecipeModel extends UserModel
         $stmt->bindParam(":id", $recipeRefId);
         $stmt->execute();
         $diets = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach($diets as $diet) {
+        foreach ($diets as $diet) {
             $ret[] = $diet["r_diet"];
         }
         return $ret;
@@ -542,7 +720,7 @@ class RecipeModel extends UserModel
         $stmt->execute();
         $meals = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach($meals as $meal) {
+        foreach ($meals as $meal) {
             $ret[] = $meal["r_meal"];
         }
 
