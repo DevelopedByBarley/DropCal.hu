@@ -55,6 +55,10 @@ class RecipeModel extends UserModel
         $stmt->bindParam(":id", $id);
         $isSuccess = $stmt->execute();
 
+        
+        $stmt = $this->pdo->prepare("DELETE FROM `ingredient_allergens` WHERE `ingredientRefId` = :id");
+        $stmt->bindParam(":id", $ingredientRefId);
+        $isSuccess = $stmt->execute();
 
 
         return $isSuccess;
@@ -101,6 +105,7 @@ class RecipeModel extends UserModel
         $protein = $macros["sumOfProtein"];
         $carb = $macros["sumOfCarb"];
         $fat = $macros["sumOfFat"];
+        $recipeAllergens = json_decode($body["allergens"], true);
         $glycemicIndex = $body["glychemicIndex"] !== '' ? (int)$body["glychemicIndex"] : null;
         $isRecommended = isset($body["isRecommended"]) && $body["isRecommended"] !== "" ? 1 : 0;
         $isAccepted = $isRecommended === 0 ? null : 0;
@@ -148,7 +153,11 @@ class RecipeModel extends UserModel
         $stmt->bindParam(':isFromRecipe', $isFromRecipe, PDO::PARAM_INT);
         $stmt->bindParam(':ingredientId', $ingredientRefId, PDO::PARAM_INT);
 
-        $stmt->execute();
+        $isSuccess = $stmt->execute();
+
+        if ($isSuccess) {
+            self::updateAllergensByRecipe($ingredientRefId, $recipeAllergens);
+        }
     }
 
     public function getRecipeByIngredientId($id)
@@ -159,6 +168,34 @@ class RecipeModel extends UserModel
         $recipe = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $recipe;
+    }
+
+
+    private function updateAllergensByRecipe($ingredientRefId, $recipeAllergens)
+    {
+        $ret = [];
+
+        foreach (ALLERGENS as $allergen) {
+            foreach ($recipeAllergens as $recipeAllergen) {
+                if ($recipeAllergen === $allergen["allergenId"]) {
+                    $ret[] = $allergen;
+                }
+            }
+        }
+
+        $stmt = $this->pdo->prepare("DELETE FROM `ingredient_allergens` WHERE `ingredientRefId` = :id");
+        $stmt->bindParam(":id", $ingredientRefId);
+        $isSuccess = $stmt->execute();
+
+        if ($isSuccess && ($ret && !empty($ret))) {
+            foreach ($ret as $allergen) {
+                $stmt = $this->pdo->prepare("INSERT INTO `ingredient_allergens` VALUES (NULL, :allergenNumber, :allergenName, :ingredientRefId);");
+                $stmt->bindParam(":allergenNumber", $allergen["allergenId"]);
+                $stmt->bindParam(":allergenName", $allergen["allergenName"]);
+                $stmt->bindParam(":ingredientRefId", $ingredientRefId);
+                $stmt->execute();
+            }
+        }
     }
 
 
